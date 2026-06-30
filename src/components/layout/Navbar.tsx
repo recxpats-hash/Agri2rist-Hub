@@ -4,6 +4,7 @@ import { LogOut, Menu, UserRound, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
+import { FARM_IMAGES } from "@/data/sampleData";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -25,7 +26,7 @@ export function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 flex-shrink-0">
             <img
-              src="https://cdn.enter.pro/resources/uid_100136259/dcf0f6b2-4631-4c.png"
+              src={FARM_IMAGES.logo}
               alt="Agri2rist Hub"
               className="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover"
             />

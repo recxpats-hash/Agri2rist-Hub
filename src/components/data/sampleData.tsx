@@ -65,14 +65,14 @@ export interface MemberListing {
 }
 
 export const FARM_IMAGES = {
-  dairy: "https://cdn.enter.pro/resources/uid_100136259/e1ea643c-6588-4c.JPG",
-  eggs: "https://cdn.enter.pro/resources/uid_100136259/72265524-6c53-49.JPG",
-  poultry: "https://cdn.enter.pro/resources/uid_100136259/76d17973-bc24-46.JPG",
-  fishPonds: "https://cdn.enter.pro/resources/uid_100136259/d884d998-4364-49.JPG",
-  fishNet: "https://cdn.enter.pro/resources/uid_100136259/5cb8e9b1-c40d-41.JPG",
-  tilapia: "https://cdn.enter.pro/resources/uid_100136259/5f93c5c1-25f8-4d.JPG",
-  groupTour: "https://cdn.enter.pro/resources/uid_100136259/aa0fe87d-8a2f-42.JPG",
-  logo: "https://cdn.enter.pro/resources/uid_100136259/dcf0f6b2-4631-4c.png",
+  dairy: "/locale/SAM_0212.JPG",
+  eggs: "/locale/SAM_1234.JPG",
+  poultry: "/locale/SAM_1239.JPG",
+  fishPonds: "/locale/SAM_3018.JPG",
+  fishNet: "/locale/SAM_3137.JPG",
+  tilapia: "/locale/SAM_3270.JPG",
+  groupTour: "/locale/1689956234753_1689956232942_IMG_20160414_104130.jpg",
+  logo: "/locale/Agri2rist%20Hub%20Logo.png",
 };
 
 export const SAMPLE_FARMS: Farm[] = [
