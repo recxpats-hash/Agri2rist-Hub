@@ -667,7 +667,13 @@ function BookingSidebar({ farm, nights, total, totalGuests }: { farm: (typeof SA
   return (
     <div>
       <div className="bg-card border border-border rounded-lg overflow-hidden sticky top-24">
-        <img src={farm.image} alt={farm.name} className="w-full h-40 object-cover" />
+        <img
+          src={farm.image}
+          alt={farm.name}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-40 object-cover"
+        />
         <div className="p-4">
           <h3 className="font-bold text-foreground mb-1">{farm.name}</h3>
           <p className="text-muted-foreground text-xs mb-3">{farm.location}</p>

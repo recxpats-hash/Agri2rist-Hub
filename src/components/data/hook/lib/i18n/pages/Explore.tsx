@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { FarmCard } from "@/components/farms/FarmCard";
 import { SAMPLE_FARMS } from "@/data/sampleData";
@@ -20,7 +19,7 @@ const typeLabels: Record<string, string> = {
   cultural: "Cultural",
 };
 
-export default function ExplorePage() {
+export function ExploreFarmSection({ showHero = true }: { showHero?: boolean }) {
   const [search, setSearch] = useState("");
   const [selectedType, setSelectedType] = useState("All");
   const [selectedRegion, setSelectedRegion] = useState("All Regions");
@@ -36,19 +35,29 @@ export default function ExplorePage() {
   });
 
   return (
-    <PageLayout>
+    <>
       {/* Hero */}
-      <section className="bg-primary py-14 px-4">
+      {showHero && (
+      <section id="explore" className="bg-primary py-14 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl md:text-5xl font-extrabold text-primary-foreground mb-3">
             Explore <span className="text-gradient-gold">Farm Experiences</span>
           </h1>
-          <p className="text-primary-foreground/75 text-lg mb-8 max-w-xl mx-auto">
-            Browse agritourism farms across Australia and find your perfect rural escape.
-          </p>
+          <div className="text-primary-foreground/80 text-base md:text-lg mb-8 max-w-4xl mx-auto space-y-3">
+            <p>
+              Explore farms, book unforgettable stays, pick fresh farm produce, buy fresh products,
+              connect with authentic experinced farmers & local communities, eat fresh organics
+              from farm-to-table, and experience agriculture like never before.
+            </p>
+            <p>
+              Visit real farms and meet local producers through unique, hands-on agricultural
+              experiences.
+            </p>
+            <p className="font-semibold text-primary-foreground">Book your farm tour today!</p>
+          </div>
 
           {/* Search Bar */}
-          <div className="max-w-lg mx-auto relative">
+          <div className="max-w-2xl mx-auto relative">
             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={search}
@@ -59,10 +68,39 @@ export default function ExplorePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Filters + Grid */}
-      <section className="py-10 bg-background">
+      <section id={showHero ? undefined : "explore"} className="py-10 bg-background">
         <div className="container mx-auto px-4">
+          {!showHero && (
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-3">
+                Explore <span className="text-primary">Farm Experiences</span>
+              </h2>
+              <div className="text-muted-foreground text-base md:text-lg max-w-4xl mx-auto space-y-3">
+                <p>
+                  Explore farms, book unforgettable stays, pick fresh farm produce, buy fresh
+                  products, connect with authentic experinced farmers & local communities, eat
+                  fresh organics from farm-to-table, and experience agriculture like never before.
+                </p>
+                <p>
+                  Visit real farms and meet local producers through unique, hands-on agricultural
+                  experiences.
+                </p>
+                <p className="font-semibold text-foreground">Book your farm tour today!</p>
+              </div>
+              <div className="max-w-2xl mx-auto relative mt-6">
+                <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search by farm name, location or activity..."
+                  className="pl-11 h-12 rounded-xl bg-card border-border text-foreground"
+                />
+              </div>
+            </div>
+          )}
           {/* Filter Chips */}
           <div className="flex flex-wrap gap-3 mb-6">
             {/* Type Filters */}
@@ -132,6 +170,35 @@ export default function ExplorePage() {
           )}
         </div>
       </section>
+      <section className="py-12 bg-muted">
+        <div className="container mx-auto px-4">
+          <div className="mb-6 text-center">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2">
+              Find Experiences on the Map
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Use the map to explore nearby farms, producer communities, and rural experiences.
+            </p>
+          </div>
+          <div className="overflow-hidden rounded-lg border border-border bg-card shadow-brand">
+            <iframe
+              title="Agri2rist Hub Google Map"
+              src="https://www.google.com/maps?q=Kampala%2C%20Uganda%20farms&output=embed"
+              className="h-[360px] w-full md:h-[460px]"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default function ExplorePage() {
+  return (
+    <PageLayout>
+      <ExploreFarmSection />
     </PageLayout>
   );
 }

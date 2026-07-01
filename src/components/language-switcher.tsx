@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { fallbackLng, languageOptions, normalizeLanguage } from "@/i18n/config";
+import { fallbackLng, languageOptions, normalizeLanguage } from "@/components/data/hook/lib/i18n/util";
 
 type LanguageSwitcherProps = {
   className?: string;

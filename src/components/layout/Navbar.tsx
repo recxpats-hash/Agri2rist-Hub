@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LogOut, Menu, UserRound, X } from "lucide-react";
+import { Clock, LogOut, Mail, Menu, MessageCircle, Phone, Search, UserRound, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { FARM_IMAGES } from "@/data/sampleData";
+import { OFFICIAL_CONTACT } from "@/lib/contact-info";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Explore", href: "/explore" },
+  { label: "Explore", href: "/#explore" },
   { label: "Marketplace", href: "/marketplace" },
   { label: "Community", href: "/community" },
   { label: "About", href: "/about" },
@@ -21,6 +23,51 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-primary shadow-hero">
+      <div className="border-b border-primary-light bg-primary-light/95 text-primary-foreground">
+        <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 py-2 text-xs md:justify-between">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            <a href={`tel:${OFFICIAL_CONTACT.phone.replace(/\s/g, "")}`} className="flex items-center gap-1 hover:text-secondary">
+              <Phone size={13} />
+              <span>Office Line: {OFFICIAL_CONTACT.phone}</span>
+            </a>
+            <a href={`https://wa.me/${OFFICIAL_CONTACT.whatsapp.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-secondary">
+              <MessageCircle size={13} />
+              <span>WhatsApp</span>
+            </a>
+            <a href={`mailto:${OFFICIAL_CONTACT.email}`} className="flex items-center gap-1 hover:text-secondary">
+              <Mail size={13} />
+              <span>{OFFICIAL_CONTACT.email}</span>
+            </a>
+            <span className="flex items-center gap-1 text-primary-foreground/85">
+              <Clock size={13} />
+              <span>Working Hours: Mon-Sat, 8:00 AM-6:00 PM</span>
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <LanguageSwitcher className="h-8 min-w-[118px] border-primary-foreground/25 bg-primary text-xs text-primary-foreground" />
+            <Link to="/#explore">
+              <Button size="sm" variant="outline" className="h-8 border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground">
+                <Search size={13} className="mr-1" />
+                Search
+              </Button>
+            </Link>
+            {user ? (
+              <Link to="/account" className="rounded-md bg-primary px-2.5 py-1.5 text-xs font-semibold hover:text-secondary">
+                {user.name}
+              </Link>
+            ) : (
+              <div className="flex items-center gap-1">
+                <Link to="/login" className="rounded-md px-2.5 py-1.5 font-semibold hover:bg-primary hover:text-secondary">
+                  Login
+                </Link>
+                <Link to="/signup" className="rounded-md bg-secondary px-2.5 py-1.5 font-semibold text-secondary-foreground hover:bg-secondary/90">
+                  Register
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
@@ -28,6 +75,10 @@ export function Navbar() {
             <img
               src={FARM_IMAGES.logo}
               alt="Agri2rist Hub"
+              width={48}
+              height={48}
+              loading="eager"
+              decoding="async"
               className="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover"
             />
             <div className="hidden sm:block">
@@ -66,15 +117,15 @@ export function Navbar() {
                 size="sm"
                 className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground font-semibold"
               >
-                Get Listed
+                Become a Host
               </Button>
             </Link>
-            <Link to="/explore">
+            <Link to="/#explore">
               <Button
                 size="sm"
                 className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold shadow-gold"
               >
-                Book a Farm Stay
+                Book Your Experience
               </Button>
             </Link>
             {user ? (
@@ -150,12 +201,12 @@ export function Navbar() {
             <div className="flex flex-col gap-2 pt-3 border-t border-primary-glow">
               <Link to="/get-listed" onClick={() => setMobileOpen(false)}>
                 <Button variant="outline" className="w-full border-secondary text-secondary">
-                  Get Listed
+                  Become a Host
                 </Button>
               </Link>
-              <Link to="/explore" onClick={() => setMobileOpen(false)}>
+              <Link to="/#explore" onClick={() => setMobileOpen(false)}>
                 <Button className="w-full bg-secondary text-secondary-foreground">
-                  Book a Farm Stay
+                  Book Your Experience
                 </Button>
               </Link>
               {user ? (

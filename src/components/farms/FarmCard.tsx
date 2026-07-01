@@ -41,6 +41,8 @@ export function FarmCard({ farm, className }: FarmCardProps) {
         <img
           src={farm.image}
           alt={farm.name}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
         />
         <div className="absolute inset-0 gradient-overlay" />

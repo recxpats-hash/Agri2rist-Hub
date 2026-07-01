@@ -115,10 +115,10 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <img src={FARM_IMAGES.groupTour} alt="Community" className="rounded-xl w-full h-52 object-cover" />
-              <img src={FARM_IMAGES.dairy} alt="Dairy" className="rounded-xl w-full h-52 object-cover mt-6" />
-              <img src={FARM_IMAGES.tilapia} alt="Fish" className="rounded-xl w-full h-52 object-cover -mt-6" />
-              <img src={FARM_IMAGES.eggs} alt="Eggs" className="rounded-xl w-full h-52 object-cover" />
+              <img src={FARM_IMAGES.groupTour} alt="Community" loading="lazy" decoding="async" className="rounded-xl w-full h-52 object-cover" />
+              <img src={FARM_IMAGES.dairy} alt="Dairy" loading="lazy" decoding="async" className="rounded-xl w-full h-52 object-cover mt-6" />
+              <img src={FARM_IMAGES.tilapia} alt="Fish" loading="lazy" decoding="async" className="rounded-xl w-full h-52 object-cover -mt-6" />
+              <img src={FARM_IMAGES.eggs} alt="Eggs" loading="lazy" decoding="async" className="rounded-xl w-full h-52 object-cover" />
             </div>
           </div>
         </div>
@@ -184,6 +184,8 @@ export default function AboutPage() {
                 <img
                   src={member.img}
                   alt={member.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-48 object-cover"
                 />
                 <div className="p-5">

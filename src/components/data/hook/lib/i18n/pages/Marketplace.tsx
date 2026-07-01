@@ -422,6 +422,8 @@ export default function MarketplacePage() {
                     <img
                       src={listing.image}
                       alt={listing.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                     />
                     <div className="absolute top-2 left-2">
@@ -543,6 +545,8 @@ export default function MarketplacePage() {
               <img
                 src={selectedListing.image}
                 alt={selectedListing.name}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
               <button
@@ -636,7 +640,15 @@ function RecXpatsProductModal({
       >
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
           <div className="flex items-center gap-3">
-            <img src={listing.image} alt="Agri2rist Hub" className="h-10 w-10 rounded-full object-cover" />
+            <img
+              src={listing.image}
+              alt="Agri2rist Hub"
+              width={40}
+              height={40}
+              loading="lazy"
+              decoding="async"
+              className="h-10 w-10 rounded-full object-cover"
+            />
             <div>
               <div className="text-sm font-bold text-foreground">{listing.name}</div>
               <div className="text-xs text-muted-foreground">Digital Solutions Products by {listing.farmName}</div>

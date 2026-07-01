@@ -19,6 +19,10 @@ export function Footer() {
             <img
               src={FARM_IMAGES.logo}
               alt="Agri2rist Hub"
+              width={44}
+              height={44}
+              loading="lazy"
+              decoding="async"
               className="h-11 w-11 rounded-full object-cover"
             />
             <div>

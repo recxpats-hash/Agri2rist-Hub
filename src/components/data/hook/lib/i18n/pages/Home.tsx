@@ -16,6 +16,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { FarmCard } from "@/components/farms/FarmCard";
 import { SAMPLE_FARMS, FARM_IMAGES } from "@/data/sampleData";
 import { openNewsletterPopup } from "@/lib/contact-info";
+import { ExploreFarmSection } from "./Explore";
 
 const features = [
   {
@@ -83,28 +84,46 @@ export default function HomePage() {
             <img
               src={FARM_IMAGES.logo}
               alt="Agri2rist Hub"
+              width={128}
+              height={128}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               className="h-24 w-24 md:h-32 md:w-32 rounded-full shadow-hero animate-float"
             />
           </div>
 
           <h1 className="text-4xl md:text-6xl font-extrabold text-primary-foreground leading-tight mb-4 animate-fade-in">
-            Welcome to{" "}
-            <span className="text-gradient-gold">Agritourism World</span>
+            Discover authentic hands-on agricultural experiences.
           </h1>
-          <p className="text-lg md:text-xl text-primary-foreground/85 max-w-2xl mx-auto mb-3 animate-slide-up">
-            Enjoy new travel planning ideas with friends, family and groups.
-          </p>
-          <p className="text-base md:text-lg text-primary-foreground/70 max-w-xl mx-auto mb-10 animate-slide-up">
-            A place for new and unique adventures.
-          </p>
+          <div className="text-base md:text-lg text-primary-foreground/80 max-w-4xl mx-auto mb-10 animate-slide-up space-y-3">
+            <p>
+              It isn't just agritourism but a transformational, authentic experience that connects
+              visitors with the land, cultures and farmers behind the food we eat.
+            </p>
+            <p>Enjoy new travel planning ideas with friends, family and groups.</p>
+            <p>
+              We are the forefront creating meaningful and immersive experiences that support
+              sustainable agriculture, rural development, and environmental conservation.
+            </p>
+            <p>
+              Whether you're a government agency, tourism board, farmer, investor, visitor or
+              development organization, our expertise in Agritourism strategy and implementation
+              ensures impact-ful and profitable initiatives that strengthen rural economies and
+              create regenerative tourism opportunities.
+            </p>
+            <p className="font-semibold text-primary-foreground">
+              Welcome to Agri2rsit Hub; A place for new and unique adventures.
+            </p>
+          </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
-            <Link to="/explore">
+            <Link to="/#explore">
               <Button
                 size="lg"
                 className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold px-8 shadow-gold"
               >
-                Explore Farms <ArrowRight size={18} className="ml-2" />
+                Book Your Experience <ArrowRight size={18} className="ml-2" />
               </Button>
             </Link>
             <Link to="/get-listed">
@@ -113,7 +132,7 @@ export default function HomePage() {
                 variant="outline"
                 className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 font-bold px-8"
               >
-                Get Listed Free
+                Become a Host
               </Button>
             </Link>
             <Button
@@ -140,6 +159,8 @@ export default function HomePage() {
       </section>
 
       {/* ── STATS ── */}
+      <ExploreFarmSection showHero={false} />
+
       <section className="bg-primary py-10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
@@ -232,6 +253,8 @@ export default function HomePage() {
                 <img
                   src={img.src}
                   alt={img.label}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover min-h-[180px] transition-transform duration-500 hover:scale-105"
                 />
                 <div className="absolute inset-0 gradient-overlay opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
@@ -244,6 +267,8 @@ export default function HomePage() {
                 <img
                   src={img.src}
                   alt={img.label}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover min-h-[180px] transition-transform duration-500 hover:scale-105"
                 />
                 <div className="absolute inset-0 gradient-overlay opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-4">

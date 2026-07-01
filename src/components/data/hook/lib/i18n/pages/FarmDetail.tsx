@@ -81,6 +81,9 @@ export default function FarmDetailPage() {
         <img
           src={farm.image}
           alt={farm.name}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 hero-overlay" />
@@ -160,6 +163,8 @@ export default function FarmDetailPage() {
                         key={i}
                         src={img}
                         alt={`${farm.name} ${i + 1}`}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-48 object-cover rounded-xl"
                       />
                     ))}
