@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Check,
   CheckCircle,
@@ -254,14 +255,14 @@ export default function GetListedPage() {
                   ))}
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <a href="/explore">
+                  <Link to="/explore">
                     <Button variant="outline" className="border-primary text-primary">
                       Browse Other Farms
                     </Button>
-                  </a>
-                  <a href="/">
+                  </Link>
+                  <Link to="/">
                     <Button className="bg-primary text-primary-foreground">Back to Home</Button>
-                  </a>
+                  </Link>
                 </div>
               </div>
             ) : step === 1 ? (

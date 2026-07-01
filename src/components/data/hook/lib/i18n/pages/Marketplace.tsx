@@ -38,53 +38,6 @@ import { FARM_IMAGES, SAMPLE_PRODUCTS } from "@/data/sampleData";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 
-const CATEGORIES = [
-  "All",
-  "Farm Produce",
-  "Livestock",
-  "Fish & Aquaculture",
-  "Farm Stays",
-  "Accommodation",
-  "Restaurants",
-  "Tours",
-  "Equipment",
-  "Farm Inputs",
-  "Events",
-  "Training",
-  "Jobs",
-  "Investors",
-  "Services",
-  "Digital Solutions Products",
-];
-
-const CATEGORY_GROUPS = [
-  {
-    title: "Agricultural Commerce",
-    icon: Tractor,
-    items: ["Vegetables", "Fruits", "Cereals", "Cash crops", "Seeds", "Seedlings", "Fertilizers", "Organic inputs"],
-  },
-  {
-    title: "Livestock & Aquaculture",
-    icon: Users,
-    items: ["Cattle", "Goats", "Poultry", "Bee products", "Live fish", "Fingerlings", "Fish feed", "Processing equipment"],
-  },
-  {
-    title: "Travel & Experiences",
-    icon: CalendarDays,
-    items: ["Farm houses", "Eco lodges", "Glamping", "Coffee tours", "Fish farming tours", "Cooking classes", "Farm festivals"],
-  },
-  {
-    title: "Services & Growth",
-    icon: Handshake,
-    items: ["Agronomists", "Veterinarians", "Soil testing", "Drone spraying", "Training", "Investment", "Jobs", "Insurance"],
-  },
-  {
-    title: "Digital Solutions Products",
-    icon: MonitorSmartphone,
-    items: ["Travel apps", "Expat tools", "Marketplace software", "Booking systems", "Dashboards", "Payments", "Support portals", "SaaS rentals"],
-  },
-];
-
 const MODULE_LISTINGS = [
   ...SAMPLE_PRODUCTS.map((product, index) => ({
     ...product,
@@ -220,6 +173,48 @@ const MARKETPLACE_CATEGORY_CARDS = [
   "Farm Equipment",
   "Training Services",
 ];
+
+const CATEGORY_LISTINGS = [
+  ["farm-produce", "Farm Produce", "Seasonal Farm Produce Box", "Community Harvest Cooperative", "A mixed box of fresh farm produce for families, restaurants, and local retailers.", 28, "box", FARM_IMAGES.groupTour],
+  ["organic-vegetables", "Organic Vegetables", "Organic Vegetable Basket", "Green Valley Market Garden", "Seasonal greens, carrots, tomatoes, and leafy vegetables from verified organic growers.", 18, "basket", FARM_IMAGES.groupTour],
+  ["honey-products", "Honey Products", "Raw Wildflower Honey", "Community Apiary Network", "Pure local honey packed for households, chefs, lodges, and farm shops.", 12, "500g jar", FARM_IMAGES.groupTour],
+  ["dairy-products", "Dairy Products", "Farm Dairy Pack", "Green Valley Dairy Farm", "Fresh milk, yoghurt, and cheese prepared from pasture-fed dairy herds.", 24, "bundle", FARM_IMAGES.dairy],
+  ["fish-aquaculture", "Fish & Aquaculture", "Fresh Fish and Pond Support", "Blue Lagoon Aquaculture", "Fresh fish, fingerlings, pond setup support, and aquaculture advisory services.", 45, "order", FARM_IMAGES.tilapia],
+  ["livestock", "Livestock", "Verified Goat Supply", "Regional Livestock Cooperative", "Healthy goats for breeding, meat production, and community farm projects.", 85, "per animal", FARM_IMAGES.groupTour],
+  ["poultry", "Poultry", "Free-Range Poultry Pack", "Sunrise Poultry & Egg Farm", "Eggs, broiler chicken, chicks, and poultry farm supply requests.", 18, "pack", FARM_IMAGES.poultry],
+  ["seeds-seedlings", "Seeds & Seedlings", "Vegetable Seedling Tray", "Agri2rist Nursery", "Ready-to-plant seedlings for gardens, farms, schools, and community growers.", 15, "tray", FARM_IMAGES.groupTour],
+  ["tree-seedlings", "Tree Seedlings", "Fruit Tree Seedlings", "Agri2rist Nursery", "Mango, avocado, citrus, and shade tree seedlings for farms and homesteads.", 6, "seedling", FARM_IMAGES.groupTour],
+  ["flowers", "Flowers", "Fresh Farm Flowers", "Rural Flower Growers", "Seasonal flower bunches for events, hospitality, homes, and local markets.", 14, "bunch", FARM_IMAGES.groupTour],
+  ["fruits", "Fruits", "Tropical Fruit Box", "Community Harvest Cooperative", "Bananas, mangoes, passion fruit, papaya, and seasonal farm fruit.", 20, "box", FARM_IMAGES.groupTour],
+  ["coffee", "Coffee", "Single-Origin Coffee Beans", "Uganda Highlands Coffee Farm", "Washed arabica beans sourced from highland farmers and roasted to order.", 16, "500g bag", FARM_IMAGES.groupTour],
+  ["cocoa", "Cocoa", "Farm Cocoa Nibs", "Western Cocoa Growers", "Fermented and dried cocoa nibs for chocolate makers, bakeries, and cafes.", 19, "500g pack", FARM_IMAGES.groupTour],
+  ["herbs-spices", "Herbs & Spices", "Fresh Herb and Spice Pack", "Organic Roots Farm", "Basil, rosemary, ginger, turmeric, chili, and seasonal farm spices.", 10, "pack", FARM_IMAGES.groupTour],
+  ["handicrafts", "Handicrafts", "Rural Artisan Gift Set", "Village Makers Collective", "Handmade baskets, woven decor, and local craft items from rural artisans.", 35, "set", FARM_IMAGES.groupTour],
+  ["local-beverages", "Local Beverages", "Farm Beverage Tasting Pack", "Harvest Table Kitchen", "Local juices, herbal drinks, coffee samples, and farm-made refreshments.", 22, "pack", FARM_IMAGES.groupTour],
+  ["farm-stay-accommodation", "Farm Stay Accommodation", "Farm Stay Booking Request", "Green Valley Dairy Farm", "Request cottages, farm lodges, homestays, and guided rural accommodation.", 95, "night", FARM_IMAGES.dairy],
+  ["farm-equipment", "Farm Equipment", "Tractor and Tool Rental", "Regional Farm Equipment Pool", "Book tractors, sprayers, irrigation tools, and processing equipment by day.", 120, "day", FARM_IMAGES.groupTour],
+  ["training-services", "Training Services", "Agritourism Training Session", "Agri2rist Professional Network", "Training for farm hosting, product sales, visitor safety, and rural experience design.", 55, "seat", FARM_IMAGES.groupTour],
+].map(([id, category, name, farmName, description, price, unit, image]) => ({
+  id: `cat-${id}`,
+  farmId: "category-service",
+  farmName,
+  name,
+  category,
+  marketplaceCategory: category,
+  description,
+  price,
+  unit,
+  image,
+  available: true,
+  minimumOrder: "1 unit",
+  availability: "Available now",
+  certification: "Vendor verified",
+  delivery: "Pickup, delivery, booking, or quote request",
+  rating: 4.7,
+}));
+
+const ALL_MARKETPLACE_LISTINGS = [...MODULE_LISTINGS, ...CATEGORY_LISTINGS];
+
 const FARM_EXPERIENCES = [
   ["Coffee Harvest Experience", "3 hours", "Uganda Highlands", "$35", "4.9"],
   ["Dairy Farm Tour", "2 hours", "Green Valley Dairy", "$28", "4.8"],
@@ -333,11 +328,13 @@ const RECXPATS_SLIDES = [
   },
 ];
 
-type Listing = (typeof MODULE_LISTINGS)[number];
+type Listing = (typeof ALL_MARKETPLACE_LISTINGS)[number];
 
 export default function MarketplacePage() {
   const [search, setSearch] = useState("");
+  const [subscriberEmail, setSubscriberEmail] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [cart, setCart] = useState<string[]>([]);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [recxpatsSlide, setRecxpatsSlide] = useState(0);
@@ -352,7 +349,7 @@ export default function MarketplacePage() {
 
   const filtered = useMemo(
     () =>
-      MODULE_LISTINGS.filter((listing) => {
+      ALL_MARKETPLACE_LISTINGS.filter((listing) => {
         const query = search.toLowerCase();
         const matchSearch =
           listing.name.toLowerCase().includes(query) ||
@@ -384,6 +381,48 @@ export default function MarketplacePage() {
 
   const isInCart = (id: string) => cart.includes(id);
   const selectedRecxpatsPlan = RECXPATS_PLANS.find((plan) => plan.id === recxpatsPlan) ?? RECXPATS_PLANS[0];
+
+  const viewCart = () => {
+    toast({
+      title: cart.length > 0 ? "Cart ready" : "Cart is empty",
+      description:
+        cart.length > 0
+          ? `${cart.length} item${cart.length !== 1 ? "s are" : " is"} saved for checkout, booking, or quote request.`
+          : "Choose Buy Now or the cart icon on a listing to add items.",
+    });
+  };
+
+  const runMarketplaceSearch = () => {
+    toast({
+      title: "Search updated",
+      description: search
+        ? `Showing marketplace results for "${search}".`
+        : "Showing all available marketplace listings.",
+    });
+  };
+
+  const subscribeToUpdates = () => {
+    if (!subscriberEmail.trim()) {
+      toast({
+        title: "Email required",
+        description: "Enter an email address to receive marketplace updates.",
+      });
+      return;
+    }
+
+    const saved = JSON.parse(localStorage.getItem("agri2rist_marketplace_subscribers") || "[]");
+    if (!saved.includes(subscriberEmail.trim())) {
+      localStorage.setItem(
+        "agri2rist_marketplace_subscribers",
+        JSON.stringify([...saved, subscriberEmail.trim()])
+      );
+    }
+    toast({
+      title: "Subscribed",
+      description: "You will receive rural experience and marketplace updates.",
+    });
+    setSubscriberEmail("");
+  };
 
   const openListing = (listing: Listing) => {
     setSelectedListing(listing);
@@ -434,7 +473,7 @@ export default function MarketplacePage() {
                 ))}
               </SelectContent>
             </Select>
-            <Button size="sm" className="bg-secondary text-secondary-foreground">
+            <Button size="sm" className="bg-secondary text-secondary-foreground" onClick={viewCart}>
               <ShoppingCart size={14} className="mr-2" />
               Cart {cart.length > 0 ? `(${cart.length})` : ""}
             </Button>
@@ -475,11 +514,15 @@ export default function MarketplacePage() {
                     className="h-10 pl-11"
                   />
                 </div>
-                <Button className="bg-primary text-primary-foreground">
+                <Button className="bg-primary text-primary-foreground" onClick={runMarketplaceSearch}>
                   <Search size={16} className="mr-2" />
                   Search
                 </Button>
-                <Button variant="outline" className="border-primary text-primary">
+                <Button
+                  variant="outline"
+                  className="border-primary text-primary"
+                  onClick={() => setShowAdvancedFilters((value) => !value)}
+                >
                   Advanced Search
                 </Button>
               </div>
@@ -494,7 +537,7 @@ export default function MarketplacePage() {
             <span className="text-sm text-secondary-foreground font-medium">
               {cart.length} item{cart.length !== 1 ? "s" : ""} in cart, booking list, or quote request
             </span>
-            <Button size="sm" className="bg-secondary text-secondary-foreground">
+            <Button size="sm" className="bg-secondary text-secondary-foreground" onClick={viewCart}>
               <ShoppingCart size={14} className="mr-2" />
               View Cart
             </Button>
@@ -505,9 +548,24 @@ export default function MarketplacePage() {
       <section className="py-10 bg-background">
         <div className="container mx-auto px-4">
           <SectionHeader
-            title="Marketplace Categories"
-            body="Browse the commercial center by product, stay, service, training, equipment, and experience type."
+            title="Shop by Category"
+            body="Choose a category to display matching products, services, rentals, stays, or training below."
           />
+          <div className="mb-4 flex justify-center">
+            <button
+              onClick={() => {
+                setSelectedCategory("All");
+                setSearch("");
+              }}
+              className={`rounded-lg border px-5 py-2 text-sm font-semibold transition-colors ${
+                selectedCategory === "All"
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
+              }`}
+            >
+              All Marketplace
+            </button>
+          </div>
           <div className="mb-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {MARKETPLACE_CATEGORY_CARDS.map((item, index) => {
               const icons = [Tractor, ShoppingCart, Users, CalendarDays, GraduationCap, Truck, Handshake, MonitorSmartphone];
@@ -515,55 +573,28 @@ export default function MarketplacePage() {
               return (
                 <button
                   key={item}
-                  onClick={() => setSearch(item)}
-                  className="rounded-lg border border-border bg-card p-4 text-left transition-colors hover:border-primary hover:text-primary"
+                  onClick={() => {
+                    setSelectedCategory(item);
+                    setSearch("");
+                  }}
+                  className={`rounded-lg border p-4 text-left transition-colors ${
+                    selectedCategory === item
+                      ? "border-primary bg-primary text-primary-foreground shadow-brand"
+                      : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
+                  }`}
                 >
-                  <Icon size={20} className="mb-3 text-secondary" />
+                  <Icon
+                    size={20}
+                    className={`mb-3 ${selectedCategory === item ? "text-secondary" : "text-secondary"}`}
+                  />
                   <span className="text-sm font-semibold">{item}</span>
                 </button>
               );
             })}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-2 mb-8">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-2 rounded-lg text-xs font-medium border transition-colors ${
-                  selectedCategory === cat
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card text-foreground border-border hover:border-primary hover:text-primary"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-10">
-            {CATEGORY_GROUPS.map((group) => {
-              const Icon = group.icon;
-              return (
-                <div key={group.title} className="bg-card rounded-lg border border-border p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Icon size={18} className="text-primary" />
-                    <h2 className="font-bold text-foreground text-sm">{group.title}</h2>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {group.items.map((item) => (
-                      <Badge key={item} variant="outline" className="text-[11px]">
-                        {item}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_1fr]">
-            <aside className="h-fit rounded-lg border border-border bg-card p-4 lg:sticky lg:top-32">
+            <aside className={`${showAdvancedFilters ? "" : "hidden lg:block"} h-fit rounded-lg border border-border bg-card p-4 lg:sticky lg:top-32`}>
               <h2 className="mb-3 font-bold text-foreground">Marketplace Filters</h2>
               <div className="space-y-4">
                 {FILTER_GROUPS.map(([title, ...items]) => (
@@ -572,7 +603,12 @@ export default function MarketplacePage() {
                     <div className="space-y-2">
                       {items.map((item) => (
                         <label key={item} className="flex items-center gap-2 text-sm text-foreground/75">
-                          <input type="checkbox" className="h-4 w-4 rounded border-border" />
+                          <input
+                            type="checkbox"
+                            checked={search === item}
+                            onChange={() => setSearch(search === item ? "" : item)}
+                            className="h-4 w-4 rounded border-border"
+                          />
                           {item}
                         </label>
                       ))}
@@ -599,10 +635,29 @@ export default function MarketplacePage() {
             </aside>
 
             <div>
-              <p className="text-muted-foreground text-sm mb-6">
-                Showing <strong className="text-foreground">{filtered.length}</strong> marketplace listing
-                {filtered.length !== 1 ? "s" : ""}
-              </p>
+              <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h2 className="text-2xl font-extrabold text-foreground">
+                    {selectedCategory === "All" ? "All Products & Services" : selectedCategory}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Showing <strong className="text-foreground">{filtered.length}</strong> marketplace listing
+                    {filtered.length !== 1 ? "s" : ""}
+                  </p>
+                </div>
+                {selectedCategory !== "All" && (
+                  <Button
+                    variant="outline"
+                    className="border-primary text-primary"
+                    onClick={() => {
+                      setSelectedCategory("All");
+                      setSearch("");
+                    }}
+                  >
+                    Clear Category
+                  </Button>
+                )}
+              </div>
 
               {filtered.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -679,6 +734,7 @@ export default function MarketplacePage() {
                 price={price}
                 rating={rating}
                 action="Book Now"
+                onAction={() => navigate("/explore")}
               />
             ))}
           </div>
@@ -710,7 +766,7 @@ export default function MarketplacePage() {
                     <span className="font-bold text-primary">{price}</span>
                     <span className="text-muted-foreground">{availability}</span>
                   </div>
-                  <Button className="w-full bg-primary text-primary-foreground">Book Now</Button>
+                  <Button className="w-full bg-primary text-primary-foreground" onClick={() => navigate("/explore")}>Book Now</Button>
                 </div>
               </div>
             ))}
@@ -738,7 +794,18 @@ export default function MarketplacePage() {
                 <div className="mb-4 inline-flex rounded-md bg-secondary px-3 py-2 text-sm font-bold text-secondary-foreground">{date}</div>
                 <h3 className="mb-2 font-bold text-foreground">{name}</h3>
                 <p className="mb-4 text-sm text-muted-foreground">{venue}</p>
-                <Button variant="outline" className="w-full border-primary text-primary">Register</Button>
+                <Button
+                  variant="outline"
+                  className="w-full border-primary text-primary"
+                  onClick={() =>
+                    toast({
+                      title: "Event selected",
+                      description: `${name} registration has been added to your interest list.`,
+                    })
+                  }
+                >
+                  Register
+                </Button>
               </div>
             ))}
           </div>
@@ -777,7 +844,7 @@ export default function MarketplacePage() {
                   <div key={item} className="rounded-md bg-muted p-3 text-sm text-foreground/80">{item}</div>
                 ))}
               </div>
-              <Button className="mt-5 bg-primary text-primary-foreground">View Farm Profile</Button>
+              <Button className="mt-5 bg-primary text-primary-foreground" onClick={() => navigate("/farm/farm-001")}>View Farm Profile</Button>
             </div>
           </div>
         </div>
@@ -823,8 +890,8 @@ export default function MarketplacePage() {
                 {MEMBER_BENEFITS.map((item) => <Badge key={item} variant="outline" className="border-primary-foreground/30 text-primary-foreground">{item}</Badge>)}
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Button className="bg-secondary text-secondary-foreground">Become a Vendor</Button>
-                <Button variant="outline" className="border-primary-foreground text-primary-foreground">Register as Farmer</Button>
+                <Button className="bg-secondary text-secondary-foreground" onClick={() => navigate("/get-listed")}>Become a Vendor</Button>
+                <Button variant="outline" className="border-primary-foreground text-primary-foreground" onClick={() => navigate("/get-listed")}>Register as Farmer</Button>
               </div>
             </div>
             <div className="rounded-lg bg-primary-foreground p-6 text-foreground">
@@ -860,8 +927,13 @@ export default function MarketplacePage() {
           <h2 className="mb-3 text-3xl font-extrabold text-foreground">Stay Connected with Rural Experiences</h2>
           <p className="mx-auto mb-6 max-w-2xl text-muted-foreground">Receive marketplace updates, new farm stays, product launches, festivals, and vendor opportunities.</p>
           <div className="mx-auto grid max-w-xl grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
-            <Input placeholder="Email Address" className="h-11" />
-            <Button className="bg-primary text-primary-foreground">Subscribe</Button>
+            <Input
+              value={subscriberEmail}
+              onChange={(event) => setSubscriberEmail(event.target.value)}
+              placeholder="Email Address"
+              className="h-11"
+            />
+            <Button className="bg-primary text-primary-foreground" onClick={subscribeToUpdates}>Subscribe</Button>
           </div>
         </div>
       </section>
@@ -924,7 +996,16 @@ export default function MarketplacePage() {
                   <span className="text-muted-foreground text-sm ml-2">per {selectedListing.unit}</span>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      window.open(
+                        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedListing.farmName)}`,
+                        "_blank",
+                        "noreferrer"
+                      );
+                    }}
+                  >
                     <MapPin size={16} className="mr-2" />
                     View Location
                   </Button>
@@ -1300,6 +1381,7 @@ function ExperienceCard({
   price,
   rating,
   action,
+  onAction,
 }: {
   name: string;
   image: string;
@@ -1307,6 +1389,7 @@ function ExperienceCard({
   price: string;
   rating: string;
   action: string;
+  onAction: () => void;
 }) {
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-brand">
@@ -1321,7 +1404,7 @@ function ExperienceCard({
             {rating}
           </span>
         </div>
-        <Button className="w-full bg-secondary text-secondary-foreground">{action}</Button>
+        <Button className="w-full bg-secondary text-secondary-foreground" onClick={onAction}>{action}</Button>
       </div>
     </div>
   );
@@ -1332,18 +1415,26 @@ function FeatureCard({
   title,
   body,
   action,
+  onAction,
 }: {
   icon: typeof ShoppingCart;
   title: string;
   body: string;
   action: string;
+  onAction?: () => void;
 }) {
   return (
     <div className="rounded-lg border border-border bg-card p-5">
       <Icon size={22} className="mb-3 text-primary" />
       <h3 className="mb-2 font-bold text-foreground">{title}</h3>
       <p className="mb-4 text-sm text-muted-foreground">{body}</p>
-      <Button variant="outline" className="border-primary text-primary">{action}</Button>
+      <Button
+        variant="outline"
+        className="border-primary text-primary"
+        onClick={onAction ?? (() => window.alert(`${title} selected.`))}
+      >
+        {action}
+      </Button>
     </div>
   );
 }

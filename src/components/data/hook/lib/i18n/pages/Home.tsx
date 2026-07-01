@@ -16,7 +16,6 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { FarmCard } from "@/components/farms/FarmCard";
 import { SAMPLE_FARMS, FARM_IMAGES } from "@/data/sampleData";
 import { openNewsletterPopup } from "@/lib/contact-info";
-import { ExploreFarmSection } from "./Explore";
 
 const features = [
   {
@@ -118,7 +117,7 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
-            <Link to="/#explore">
+            <Link to="/explore">
               <Button
                 size="lg"
                 className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold px-8 shadow-gold"
@@ -159,8 +158,6 @@ export default function HomePage() {
       </section>
 
       {/* ── STATS ── */}
-      <ExploreFarmSection showHero={false} />
-
       <section className="bg-primary py-10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">

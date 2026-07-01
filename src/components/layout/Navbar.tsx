@@ -10,7 +10,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Explore", href: "/#explore" },
+  { label: "Explore", href: "/explore" },
   { label: "Marketplace", href: "/marketplace" },
   { label: "Community", href: "/community" },
   { label: "About", href: "/about" },
@@ -45,7 +45,7 @@ export function Navbar() {
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2">
             <LanguageSwitcher className="h-8 min-w-[118px] border-primary-foreground/25 bg-primary text-xs text-primary-foreground" />
-            <Link to="/#explore">
+            <Link to="/explore">
               <Button size="sm" variant="outline" className="h-8 border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground">
                 <Search size={13} className="mr-1" />
                 Search
@@ -120,7 +120,7 @@ export function Navbar() {
                 Become a Host
               </Button>
             </Link>
-            <Link to="/#explore">
+            <Link to="/explore">
               <Button
                 size="sm"
                 className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold shadow-gold"
@@ -184,7 +184,7 @@ export function Navbar() {
                   Become a Host
                 </Button>
               </Link>
-              <Link to="/#explore" onClick={() => setMobileOpen(false)}>
+              <Link to="/explore" onClick={() => setMobileOpen(false)}>
                 <Button className="w-full bg-secondary text-secondary-foreground">
                   Book Your Experience
                 </Button>
