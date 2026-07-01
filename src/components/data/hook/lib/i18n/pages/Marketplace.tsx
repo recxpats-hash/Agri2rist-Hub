@@ -197,6 +197,87 @@ const CUSTOMER_TOOLS = ["Orders", "Bookings", "Favorites", "Wallet", "Messages",
 const SELLER_TOOLS = ["Products", "Bookings", "Inventory", "Revenue", "Analytics", "Coupons", "Withdrawals", "Performance", "Reviews"];
 const ADMIN_TOOLS = ["Total sales", "Commission revenue", "Pending approvals", "Disputes", "Refunds", "Fraud monitoring", "Vendor performance"];
 const AI_FEATURES = ["Smart recommendations", "Personalized travel suggestions", "Support chatbot", "Dynamic pricing insights", "Automated translation", "Image search", "Fraud detection", "Demand forecasting"];
+const CURRENCIES = ["USD", "UGX", "EUR", "GBP", "AUD"];
+const UNIVERSAL_SEARCH_TYPES = ["Farm Products", "Farm Stay", "Tours", "Experiences", "Restaurants", "Guides", "Location"];
+const MARKETPLACE_CATEGORY_CARDS = [
+  "Farm Produce",
+  "Organic Vegetables",
+  "Honey Products",
+  "Dairy Products",
+  "Fish & Aquaculture",
+  "Livestock",
+  "Poultry",
+  "Seeds & Seedlings",
+  "Tree Seedlings",
+  "Flowers",
+  "Fruits",
+  "Coffee",
+  "Cocoa",
+  "Herbs & Spices",
+  "Handicrafts",
+  "Local Beverages",
+  "Farm Stay Accommodation",
+  "Farm Equipment",
+  "Training Services",
+];
+const FARM_EXPERIENCES = [
+  ["Coffee Harvest Experience", "3 hours", "Uganda Highlands", "$35", "4.9"],
+  ["Dairy Farm Tour", "2 hours", "Green Valley Dairy", "$28", "4.8"],
+  ["Tea Plantation Visit", "Half day", "Fort Portal", "$42", "4.7"],
+  ["Beekeeping Experience", "2.5 hours", "Community Apiary", "$30", "4.9"],
+  ["Fishing Adventure", "4 hours", "Blue Lagoon Aquaculture", "$45", "4.8"],
+  ["Organic Vegetable Harvest", "2 hours", "Market Garden", "$22", "4.6"],
+  ["Vineyard Experience", "Half day", "Rural Estate", "$58", "4.8"],
+  ["Cultural Village Tour", "Full day", "Local Community", "$65", "5.0"],
+];
+const ACCOMMODATIONS = [
+  ["Farm Lodge Suite", "Green Valley Dairy Farm", "Family room", "$120/night", "WiFi, Breakfast, Farm tour", "Available"],
+  ["Eco Cottage", "Blue Lagoon Aquaculture", "Private cottage", "$95/night", "Lake view, Breakfast, Fishing", "3 rooms left"],
+  ["Village Homestay", "Cultural Farm Stay", "Shared home", "$60/night", "Meals, Guide, Cultural evening", "Request booking"],
+];
+const RESTAURANTS = [
+  ["Harvest Table Kitchen", "Farm-to-table", "1.2 km", "4.8"],
+  ["Organic Roots Cafe", "Fresh organic plates", "2.4 km", "4.7"],
+  ["Village Cuisine House", "Traditional cuisine", "3.1 km", "4.9"],
+];
+const UPCOMING_EVENTS = [
+  ["Harvest Festival", "Aug 16", "Community Farm Grounds"],
+  ["Farmers Market", "Sep 02", "Agri2rist Market Square"],
+  ["Coffee Festival", "Sep 21", "Uganda Highlands"],
+  ["Agricultural Show", "Oct 05", "Regional Expo Center"],
+];
+const FILTER_GROUPS = [
+  ["Product Type", "Produce", "Livestock", "Experiences", "Accommodation", "Equipment", "Services"],
+  ["Availability", "Available now", "Organic certified", "Free delivery", "Instant booking"],
+  ["Amenities", "Family friendly", "Swimming pool", "WiFi", "Pet friendly", "Breakfast included"],
+];
+const SUSTAINABILITY_BADGES = [
+  "Sustainable Farming",
+  "Organic Practices",
+  "Eco Tourism",
+  "Community Impact",
+  "Biodiversity",
+  "Water Conservation",
+];
+const REVIEWS = [
+  ["Amazing coffee farm tour in Uganda.", "Grace M.", "5.0"],
+  ["Fresh organic produce delivered quickly.", "Daniel K.", "5.0"],
+  ["Best rural experience ever.", "Amina R.", "5.0"],
+];
+const MEMBER_BENEFITS = ["Sell Products", "List Accommodation", "Promote Farm Tours", "Access Global Buyers", "Analytics Dashboard", "Secure Payments"];
+const MOBILE_FEATURES = ["Instant Booking", "GPS Navigation", "QR Check-in", "Mobile Payments", "Notifications"];
+const RECOMMENDED_FEATURES = [
+  "AI-powered search and personalized recommendations",
+  "Multi-vendor dashboards for farmers, artisans, and tourism providers",
+  "Secure cards, mobile money, and international payments",
+  "Real-time calendars for farm stays, tours, and experiences",
+  "Multi-language and multi-currency support",
+  "QR code e-tickets and digital check-in",
+  "Vendor analytics for sales, bookings, visitor trends, and reviews",
+  "Wishlist, product comparison, and order tracking",
+  "Integrated visitor-to-vendor messaging",
+  "Sustainability badges for Organic, Fair Trade, Eco-Certified, and Community Impact",
+];
 const RECXPATS_PAYMENT_METHODS = ["MTN Mobile Money", "Airtel Money", "Visa", "Mastercard", "Bank transfer", "PayPal", "Stripe"];
 const RECXPATS_PLANS = [
   {
@@ -262,6 +343,8 @@ export default function MarketplacePage() {
   const [recxpatsSlide, setRecxpatsSlide] = useState(0);
   const [recxpatsPlan, setRecxpatsPlan] = useState("rent");
   const [recxpatsPayment, setRecxpatsPayment] = useState("MTN Mobile Money");
+  const [currency, setCurrency] = useState("USD");
+  const [searchType, setSearchType] = useState("Farm Products");
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -331,23 +414,76 @@ export default function MarketplacePage() {
 
   return (
     <PageLayout>
-      <section className="bg-primary py-14 px-4">
-        <div className="container mx-auto text-center">
-          <Badge className="mb-4 bg-secondary text-secondary-foreground">One-stop agriculture and agritourism hub</Badge>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-primary-foreground mb-3">
-            Agri2rist Hub <span className="text-gradient-gold">Marketplace</span>
-          </h1>
-          <p className="text-primary-foreground/75 text-lg mb-8 max-w-3xl mx-auto">
-            Buy farm products, book farm stays and experiences, hire professionals, rent equipment, access training, and discover investment opportunities from verified providers.
-          </p>
-          <div className="max-w-2xl mx-auto relative">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search products, farm stays, experiences, services..."
-              className="pl-11 h-12 rounded-xl bg-card border-border text-foreground"
-            />
+      <section className="relative overflow-hidden bg-primary py-16 px-4">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-35"
+          style={{ backgroundImage: `url(${FARM_IMAGES.fishPonds})` }}
+        />
+        <div className="absolute inset-0 bg-primary/75" />
+        <div className="relative container mx-auto">
+          <div className="mb-6 flex flex-wrap items-center justify-center gap-2 md:justify-end">
+            <Select value={currency} onValueChange={setCurrency}>
+              <SelectTrigger className="h-9 w-[110px] border-primary-foreground/30 bg-primary/80 text-primary-foreground">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {CURRENCIES.map((item) => (
+                  <SelectItem key={item} value={item}>
+                    {item}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button size="sm" className="bg-secondary text-secondary-foreground">
+              <ShoppingCart size={14} className="mr-2" />
+              Cart {cart.length > 0 ? `(${cart.length})` : ""}
+            </Button>
+          </div>
+
+          <div className="mx-auto max-w-5xl text-center">
+            <Badge className="mb-4 bg-secondary text-secondary-foreground">Commercial center for rural experiences</Badge>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-primary-foreground mb-3">
+              Discover Authentic Farm Experiences, Products, Service & Rural Adventures
+            </h1>
+            <p className="text-primary-foreground/80 text-lg mb-5 max-w-3xl mx-auto">
+              Book farm stays, buy fresh farm products, discover local experiences, and connect directly with farmers worldwide.
+            </p>
+            <p className="text-primary-foreground/75 mb-8 max-w-3xl mx-auto">
+              Agri2rist Hub helps members create unique and memorable visitor experiences for tourists seeking authentic rural experiences.
+            </p>
+
+            <div className="rounded-lg bg-card p-3 shadow-hero">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-[180px_1fr_auto_auto]">
+                <Select value={searchType} onValueChange={setSearchType}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {UNIVERSAL_SEARCH_TYPES.map((item) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="relative">
+                  <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search farm products, stays, tours, restaurants, guides, and locations..."
+                    className="h-10 pl-11"
+                  />
+                </div>
+                <Button className="bg-primary text-primary-foreground">
+                  <Search size={16} className="mr-2" />
+                  Search
+                </Button>
+                <Button variant="outline" className="border-primary text-primary">
+                  Advanced Search
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -368,6 +504,27 @@ export default function MarketplacePage() {
 
       <section className="py-10 bg-background">
         <div className="container mx-auto px-4">
+          <SectionHeader
+            title="Marketplace Categories"
+            body="Browse the commercial center by product, stay, service, training, equipment, and experience type."
+          />
+          <div className="mb-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {MARKETPLACE_CATEGORY_CARDS.map((item, index) => {
+              const icons = [Tractor, ShoppingCart, Users, CalendarDays, GraduationCap, Truck, Handshake, MonitorSmartphone];
+              const Icon = icons[index % icons.length];
+              return (
+                <button
+                  key={item}
+                  onClick={() => setSearch(item)}
+                  className="rounded-lg border border-border bg-card p-4 text-left transition-colors hover:border-primary hover:text-primary"
+                >
+                  <Icon size={20} className="mb-3 text-secondary" />
+                  <span className="text-sm font-semibold">{item}</span>
+                </button>
+              );
+            })}
+          </div>
+
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-2 mb-8">
             {CATEGORIES.map((cat) => (
               <button
@@ -384,7 +541,7 @@ export default function MarketplacePage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 mb-10">
             {CATEGORY_GROUPS.map((group) => {
               const Icon = group.icon;
               return (
@@ -405,93 +562,83 @@ export default function MarketplacePage() {
             })}
           </div>
 
-          <p className="text-muted-foreground text-sm mb-6">
-            Showing <strong className="text-foreground">{filtered.length}</strong> marketplace listing
-            {filtered.length !== 1 ? "s" : ""}
-          </p>
-
-          {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filtered.map((listing) => (
-                <div
-                  key={listing.id}
-                  className="bg-card rounded-lg border border-border overflow-hidden card-hover cursor-pointer"
-                  onClick={() => openListing(listing)}
-                >
-                  <div className="relative h-44 overflow-hidden">
-                    <img
-                      src={listing.image}
-                      alt={listing.name}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                    <div className="absolute top-2 left-2">
-                      <Badge className="bg-primary/85 text-primary-foreground text-xs">
-                        {listing.marketplaceCategory}
-                      </Badge>
-                    </div>
-                    <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-md bg-black/60 px-2 py-1 text-xs text-white">
-                      <Star size={12} className="fill-secondary text-secondary" />
-                      {listing.rating.toFixed(1)}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_1fr]">
+            <aside className="h-fit rounded-lg border border-border bg-card p-4 lg:sticky lg:top-32">
+              <h2 className="mb-3 font-bold text-foreground">Marketplace Filters</h2>
+              <div className="space-y-4">
+                {FILTER_GROUPS.map(([title, ...items]) => (
+                  <div key={title}>
+                    <div className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">{title}</div>
+                    <div className="space-y-2">
+                      {items.map((item) => (
+                        <label key={item} className="flex items-center gap-2 text-sm text-foreground/75">
+                          <input type="checkbox" className="h-4 w-4 rounded border-border" />
+                          {item}
+                        </label>
+                      ))}
                     </div>
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-bold text-foreground mb-1 text-sm">{listing.name}</h3>
-                    <p className="text-xs text-muted-foreground mb-2">{listing.farmName}</p>
-                    <p className="text-xs text-foreground/60 line-clamp-2 mb-3">{listing.description}</p>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-lg font-extrabold text-primary">${listing.price}</span>
-                        <span className="text-xs text-muted-foreground ml-1">/ {listing.unit}</span>
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (listing.id === "recxpats-app") {
-                            openListing(listing);
-                          } else {
-                            addToCart(listing.id, listing.name);
-                          }
-                        }}
-                        className={
-                          isInCart(listing.id)
-                            ? "bg-accent text-accent-foreground hover:bg-accent/90"
-                            : "bg-secondary text-secondary-foreground hover:bg-secondary/90"
-                        }
-                      >
-                        {listing.id === "recxpats-app" ? (
-                          <>
-                            <Sparkles size={14} className="mr-1" /> View MVP
-                          </>
-                        ) : isInCart(listing.id) ? (
-                          <>
-                            <Check size={14} className="mr-1" /> Added
-                          </>
-                        ) : (
-                          "Add"
-                        )}
-                      </Button>
-                    </div>
-                  </div>
+                ))}
+                <div>
+                  <div className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Price Range</div>
+                  <input type="range" min="0" max="500" defaultValue="180" className="w-full" />
                 </div>
-              ))}
+                <Select defaultValue="Uganda">
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {["Uganda", "Kenya", "Australia", "South Africa", "Ghana"].map((item) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </aside>
+
+            <div>
+              <p className="text-muted-foreground text-sm mb-6">
+                Showing <strong className="text-foreground">{filtered.length}</strong> marketplace listing
+                {filtered.length !== 1 ? "s" : ""}
+              </p>
+
+              {filtered.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {filtered.map((listing) => (
+                    <MarketplaceListingCard
+                      key={listing.id}
+                      listing={listing}
+                      isInCart={isInCart(listing.id)}
+                      onOpen={() => openListing(listing)}
+                      onAdd={(event) => {
+                        event.stopPropagation();
+                        if (listing.id === "recxpats-app") {
+                          openListing(listing);
+                        } else {
+                          addToCart(listing.id, listing.name);
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-20">
+                  <p className="text-muted-foreground text-lg mb-4">No marketplace listings found.</p>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSearch("");
+                      setSelectedCategory("All");
+                    }}
+                  >
+                    Clear Filters
+                  </Button>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground text-lg mb-4">No marketplace listings found.</p>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearch("");
-                  setSelectedCategory("All");
-                }}
-              >
-                Clear Filters
-              </Button>
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
@@ -516,6 +663,206 @@ export default function MarketplacePage() {
               <p className="text-sm text-muted-foreground">{body}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="py-14 bg-muted">
+        <div className="container mx-auto px-4">
+          <SectionHeader title="Farm Experiences" body="Book authentic hands-on agricultural adventures with real producers and local communities." />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {FARM_EXPERIENCES.map(([name, duration, place, price, rating], index) => (
+              <ExperienceCard
+                key={name}
+                name={name}
+                image={[FARM_IMAGES.groupTour, FARM_IMAGES.dairy, FARM_IMAGES.fishPonds, FARM_IMAGES.fishNet][index % 4]}
+                meta={`${duration} · ${place}`}
+                price={price}
+                rating={rating}
+                action="Book Now"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 bg-background">
+        <div className="container mx-auto px-4">
+          <SectionHeader title="Farm Stay Accommodation" body="Stay close to the land with lodges, cottages, homestays, and working farm accommodation." />
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+            {ACCOMMODATIONS.map(([name, farm, room, price, amenities, availability], index) => (
+              <div key={name} className="overflow-hidden rounded-lg border border-border bg-card shadow-brand">
+                <img
+                  src={[FARM_IMAGES.dairy, FARM_IMAGES.fishPonds, FARM_IMAGES.groupTour][index % 3]}
+                  alt={name}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-48 w-full object-cover"
+                />
+                <div className="p-5">
+                  <div className="mb-1 text-lg font-extrabold text-foreground">{name}</div>
+                  <div className="mb-3 text-sm text-muted-foreground">{farm} · {room}</div>
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    {amenities.split(", ").map((item) => (
+                      <Badge key={item} variant="outline">{item}</Badge>
+                    ))}
+                  </div>
+                  <div className="mb-4 flex items-center justify-between text-sm">
+                    <span className="font-bold text-primary">{price}</span>
+                    <span className="text-muted-foreground">{availability}</span>
+                  </div>
+                  <Button className="w-full bg-primary text-primary-foreground">Book Now</Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 bg-muted">
+        <div className="container mx-auto px-4">
+          <SectionHeader title="Restaurants & Local Cuisine" body="Reserve farm-to-table meals, traditional cuisine, and fresh organic dining close to your route." />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {RESTAURANTS.map(([name, style, distance, rating]) => (
+              <FeatureCard key={name} icon={ShoppingCart} title={name} body={`${style} · ${distance} away · ${rating} rating`} action="Reserve Table" />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 bg-background">
+        <div className="container mx-auto px-4">
+          <SectionHeader title="Upcoming Events" body="Discover harvest festivals, farmers markets, coffee festivals, agricultural shows, and cultural events." />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+            {UPCOMING_EVENTS.map(([name, date, venue]) => (
+              <div key={name} className="rounded-lg border border-border bg-card p-5">
+                <div className="mb-4 inline-flex rounded-md bg-secondary px-3 py-2 text-sm font-bold text-secondary-foreground">{date}</div>
+                <h3 className="mb-2 font-bold text-foreground">{name}</h3>
+                <p className="mb-4 text-sm text-muted-foreground">{venue}</p>
+                <Button variant="outline" className="w-full border-primary text-primary">Register</Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 bg-muted">
+        <div className="container mx-auto px-4">
+          <SectionHeader title="Interactive Map" body="Zoom into farms, lodges, experiences, restaurants, and markets by country or region." />
+          <div className="overflow-hidden rounded-lg border border-border bg-card shadow-brand">
+            <iframe
+              title="Agri2rist Hub Marketplace Map"
+              src="https://www.google.com/maps?q=Uganda%20farms%20agritourism&output=embed"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="h-[360px] w-full md:h-[460px]"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="overflow-hidden rounded-lg border border-border bg-card">
+              <img src={FARM_IMAGES.groupTour} alt="Featured farmer" loading="lazy" decoding="async" className="h-full min-h-[320px] w-full object-cover" />
+            </div>
+            <div className="rounded-lg border border-border bg-card p-6">
+              <Badge className="mb-4 bg-secondary text-secondary-foreground">Vendor Spotlight</Badge>
+              <h2 className="mb-3 text-3xl font-extrabold text-foreground">Featured Farmer: Community Harvest Cooperative</h2>
+              <p className="mb-5 text-muted-foreground">
+                A farmer-led cooperative combining organic produce, cultural village tours, coffee experiences, and water-conscious growing practices.
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {["Products: coffee, vegetables, honey", "Experiences: harvest tours, cooking classes", "Sustainability: composting, water conservation", "Community: youth training and local jobs"].map((item) => (
+                  <div key={item} className="rounded-md bg-muted p-3 text-sm text-foreground/80">{item}</div>
+                ))}
+              </div>
+              <Button className="mt-5 bg-primary text-primary-foreground">View Farm Profile</Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 bg-muted">
+        <div className="container mx-auto px-4">
+          <SectionHeader title="Sustainability & Trust" body="Badges help visitors choose providers that support responsible rural economies and regenerative tourism." />
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+            {SUSTAINABILITY_BADGES.map((item) => (
+              <div key={item} className="rounded-lg border border-border bg-card p-4 text-center">
+                <ShieldCheck size={22} className="mx-auto mb-2 text-accent" />
+                <div className="text-sm font-semibold text-foreground">{item}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 bg-background">
+        <div className="container mx-auto px-4">
+          <SectionHeader title="Customer Reviews" body="Trust signals from visitors buying products, booking stays, and joining rural experiences." />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {REVIEWS.map(([quote, name, rating]) => (
+              <div key={quote} className="rounded-lg border border-border bg-card p-5">
+                <div className="mb-3 flex gap-1 text-secondary">{Array.from({ length: 5 }).map((_, i) => <Star key={i} size={16} className="fill-secondary" />)}</div>
+                <p className="mb-4 text-foreground/80">"{quote}"</p>
+                <div className="text-sm font-bold text-foreground">{name} · {rating}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 gradient-hero">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
+            <div>
+              <Badge className="mb-4 bg-secondary text-secondary-foreground">Join Agri2rist Hub</Badge>
+              <h2 className="mb-3 text-3xl font-extrabold text-primary-foreground">Become a Vendor, Farmer, Host, or Rural Partner</h2>
+              <p className="mb-5 text-primary-foreground/80">Sell products, list accommodation, promote tours, access global buyers, view analytics, and receive secure payments.</p>
+              <div className="mb-6 flex flex-wrap gap-2">
+                {MEMBER_BENEFITS.map((item) => <Badge key={item} variant="outline" className="border-primary-foreground/30 text-primary-foreground">{item}</Badge>)}
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button className="bg-secondary text-secondary-foreground">Become a Vendor</Button>
+                <Button variant="outline" className="border-primary-foreground text-primary-foreground">Register as Farmer</Button>
+              </div>
+            </div>
+            <div className="rounded-lg bg-primary-foreground p-6 text-foreground">
+              <div className="mb-4 flex items-center gap-3">
+                <Smartphone className="text-primary" />
+                <h3 className="text-xl font-extrabold">Download the Mobile App</h3>
+              </div>
+              <p className="mb-4 text-muted-foreground">Android and iPhone features for instant booking, GPS navigation, QR check-in, mobile payments, and notifications.</p>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {MOBILE_FEATURES.map((item) => <div key={item} className="rounded-md bg-muted p-3 text-sm">{item}</div>)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 bg-background">
+        <div className="container mx-auto px-4">
+          <SectionHeader title="Recommended Marketplace Features" body="These features make Agri2rist Hub stronger as a global agritourism platform." />
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            {RECOMMENDED_FEATURES.map((item) => (
+              <div key={item} className="flex items-start gap-3 rounded-lg border border-border bg-card p-4">
+                <Check size={18} className="mt-0.5 text-accent" />
+                <span className="text-sm text-foreground/80">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 bg-muted">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="mb-3 text-3xl font-extrabold text-foreground">Stay Connected with Rural Experiences</h2>
+          <p className="mx-auto mb-6 max-w-2xl text-muted-foreground">Receive marketplace updates, new farm stays, product launches, festivals, and vendor opportunities.</p>
+          <div className="mx-auto grid max-w-xl grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
+            <Input placeholder="Email Address" className="h-11" />
+            <Button className="bg-primary text-primary-foreground">Subscribe</Button>
+          </div>
         </div>
       </section>
 
@@ -858,6 +1205,145 @@ function RecXpatsProductModal({
           </aside>
         </div>
       </div>
+    </div>
+  );
+}
+
+function SectionHeader({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="mx-auto mb-8 max-w-3xl text-center">
+      <h2 className="mb-3 text-3xl font-extrabold text-foreground md:text-4xl">{title}</h2>
+      <p className="text-muted-foreground">{body}</p>
+    </div>
+  );
+}
+
+function MarketplaceListingCard({
+  listing,
+  isInCart,
+  onOpen,
+  onAdd,
+}: {
+  listing: Listing;
+  isInCart: boolean;
+  onOpen: () => void;
+  onAdd: (event: { stopPropagation: () => void }) => void;
+}) {
+  return (
+    <div
+      className="bg-card rounded-lg border border-border overflow-hidden card-hover cursor-pointer"
+      onClick={onOpen}
+    >
+      <div className="relative h-44 overflow-hidden">
+        <img
+          src={listing.image}
+          alt={listing.name}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+        />
+        <div className="absolute top-2 left-2">
+          <Badge className="bg-primary/85 text-primary-foreground text-xs">
+            {listing.marketplaceCategory}
+          </Badge>
+        </div>
+        <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded-md bg-black/60 px-2 py-1 text-xs text-white">
+          <Star size={12} className="fill-secondary text-secondary" />
+          {listing.rating.toFixed(1)}
+        </div>
+      </div>
+      <div className="p-4">
+        <h3 className="font-bold text-foreground mb-1 text-sm">{listing.name}</h3>
+        <p className="text-xs text-muted-foreground mb-2">{listing.farmName}</p>
+        <p className="text-xs text-foreground/60 line-clamp-2 mb-3">{listing.description}</p>
+        <div className="mb-3 grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
+          <span>Qty: {listing.minimumOrder}</span>
+          <span>{listing.delivery}</span>
+        </div>
+        <div className="flex items-center justify-between gap-2">
+          <div>
+            <span className="text-lg font-extrabold text-primary">${listing.price}</span>
+            <span className="text-xs text-muted-foreground ml-1">/ {listing.unit}</span>
+          </div>
+          <div className="flex gap-1">
+            <Button size="sm" variant="outline" className="border-primary text-primary" onClick={onAdd}>
+              Buy Now
+            </Button>
+            <Button
+              size="sm"
+              onClick={onAdd}
+              className={
+                isInCart
+                  ? "bg-accent text-accent-foreground hover:bg-accent/90"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/90"
+              }
+            >
+              {listing.id === "recxpats-app" ? (
+                <Sparkles size={14} />
+              ) : isInCart ? (
+                <Check size={14} />
+              ) : (
+                <ShoppingCart size={14} />
+              )}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ExperienceCard({
+  name,
+  image,
+  meta,
+  price,
+  rating,
+  action,
+}: {
+  name: string;
+  image: string;
+  meta: string;
+  price: string;
+  rating: string;
+  action: string;
+}) {
+  return (
+    <div className="overflow-hidden rounded-lg border border-border bg-card shadow-brand">
+      <img src={image} alt={name} loading="lazy" decoding="async" className="h-44 w-full object-cover" />
+      <div className="p-4">
+        <h3 className="mb-2 font-bold text-foreground">{name}</h3>
+        <p className="mb-3 text-sm text-muted-foreground">{meta}</p>
+        <div className="mb-4 flex items-center justify-between text-sm">
+          <span className="font-bold text-primary">{price}</span>
+          <span className="flex items-center gap-1 text-muted-foreground">
+            <Star size={14} className="fill-secondary text-secondary" />
+            {rating}
+          </span>
+        </div>
+        <Button className="w-full bg-secondary text-secondary-foreground">{action}</Button>
+      </div>
+    </div>
+  );
+}
+
+function FeatureCard({
+  icon: Icon,
+  title,
+  body,
+  action,
+}: {
+  icon: typeof ShoppingCart;
+  title: string;
+  body: string;
+  action: string;
+}) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <Icon size={22} className="mb-3 text-primary" />
+      <h3 className="mb-2 font-bold text-foreground">{title}</h3>
+      <p className="mb-4 text-sm text-muted-foreground">{body}</p>
+      <Button variant="outline" className="border-primary text-primary">{action}</Button>
     </div>
   );
 }
