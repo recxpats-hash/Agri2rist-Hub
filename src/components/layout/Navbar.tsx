@@ -128,7 +128,7 @@ export function Navbar() {
                 Book Your Experience
               </Button>
             </Link>
-            {user ? (
+            {user && (
               <div className="flex items-center gap-2 rounded-md bg-primary-light px-3 py-2">
                 <UserRound size={16} className="text-secondary" />
                 <Link
@@ -145,26 +145,6 @@ export function Navbar() {
                   <LogOut size={15} />
                 </button>
               </div>
-            ) : (
-              <>
-                <Link to="/login">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-primary-foreground hover:bg-primary-light hover:text-secondary font-semibold"
-                  >
-                    Login
-                  </Button>
-                </Link>
-                <Link to="/signup">
-                  <Button
-                    size="sm"
-                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 font-semibold"
-                  >
-                    Sign Up
-                  </Button>
-                </Link>
-              </>
             )}
           </div>
 
@@ -209,7 +189,7 @@ export function Navbar() {
                   Book Your Experience
                 </Button>
               </Link>
-              {user ? (
+              {user && (
                 <div className="rounded-md bg-primary px-4 py-3">
                   <div className="flex items-center justify-between gap-3">
                     <Link
@@ -232,19 +212,6 @@ export function Navbar() {
                       Logout
                     </Button>
                   </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-2">
-                  <Link to="/login" onClick={() => setMobileOpen(false)}>
-                    <Button variant="outline" className="w-full border-secondary text-secondary">
-                      Login
-                    </Button>
-                  </Link>
-                  <Link to="/signup" onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full bg-primary-foreground text-primary">
-                      Sign Up
-                    </Button>
-                  </Link>
                 </div>
               )}
             </div>
