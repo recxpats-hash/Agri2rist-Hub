@@ -3,17 +3,24 @@ import { X, ChevronLeft, ChevronRight, Grid3X3, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+const ALL_PUBLIC_IMAGES = import.meta.glob("/locale/**/*.{jpg,jpeg,png,webp,gif}", { eager: true, query: "?url" });
+
 type GalleryMode = "grid" | "slideshow";
 
 export function CategoryGalleryModal({
   categoryName,
-  images,
+  folderPath,
   onClose,
 }: {
   categoryName: string;
-  images: string[];
+  folderPath: string;
   onClose: () => void;
 }) {
+  const images = Object.entries(ALL_PUBLIC_IMAGES)
+    .filter(([path]) => path.startsWith(folderPath))
+    .map(([, mod]) => (mod as { default: string }).default)
+    .filter(Boolean);
+
   const [mode, setMode] = useState<GalleryMode>("grid");
   const [slideIndex, setSlideIndex] = useState(0);
 
