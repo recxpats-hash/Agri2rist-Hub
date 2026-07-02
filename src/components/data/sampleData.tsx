@@ -73,6 +73,13 @@ export const FARM_IMAGES = {
   tilapia: "/locale/tilapia.webp",
   groupTour: "/locale/group-tour.webp",
   logo: "/locale/agri2rist-logo.webp",
+  equipment: "/locale/Equipments/HG101 (1).jpg",
+  eventHosting: "/locale/Event hosting/IMG-20230920-WA0053.jpg",
+  fishFarm: "/locale/Farm fish/Tilapia-Table size.webp",
+  fishFarmPonds: "/locale/Farm fish/2debc39ccdafd3e9eb3f96ceadfdfee2.jpg",
+  farmFruits: "/locale/Farm fruits/0069c4be0a7e9413b9c613a5e52aa4c2.jpg",
+  farmStay: "/locale/farm stay/1b3dc19aecb5ac5cb903a3994a4473ac.jpg",
+  training: "/locale/Training/IMG-20170903-WA0024.jpg",
 };
 
 export const SAMPLE_FARMS: Farm[] = [
@@ -80,8 +87,8 @@ export const SAMPLE_FARMS: Farm[] = [
     id: "farm-001",
     name: "Green Valley Dairy Farm",
     type: "dairy",
-    location: "Hunter Valley, NSW",
-    region: "New South Wales",
+    location: "Nairobi, Kenya",
+    region: "Kenya",
     description:
       "Experience authentic dairy farming at its finest. Watch our Holstein cows being milked with state-of-the-art DeLaval equipment, learn about sustainable dairy practices, and enjoy fresh milk products straight from the farm. Our 300-acre property offers breathtaking views and a genuine connection to rural life.",
     shortDesc: "Authentic dairy farm experience with modern milking technology and farm-to-table products.",
@@ -99,8 +106,8 @@ export const SAMPLE_FARMS: Farm[] = [
     id: "farm-002",
     name: "Sunrise Poultry & Egg Farm",
     type: "poultry",
-    location: "Barossa Valley, SA",
-    region: "South Australia",
+    location: "Arusha, Tanzania",
+    region: "Tanzania",
     description:
       "Discover the world of egg production and poultry farming at our state-of-the-art facility. From hen houses to automated egg grading and sorting, guests get an incredible behind-the-scenes look at how fresh eggs are produced and distributed. Perfect for families and school groups.",
     shortDesc: "Behind-the-scenes look at modern poultry and egg production with hands-on experiences.",
@@ -118,8 +125,8 @@ export const SAMPLE_FARMS: Farm[] = [
     id: "farm-003",
     name: "Blue Lagoon Aquaculture",
     type: "aquaculture",
-    location: "Bundaberg, QLD",
-    region: "Queensland",
+    location: "Jinja, Uganda",
+    region: "Uganda",
     description:
       "Nestled against mountain backdrops, our tilapia and freshwater fish farm offers one of the most unique agritourism experiences in Australia. Watch professional fish harvesting with nets, learn about sustainable aquaculture practices, and taste the freshest fish you've ever had.",
     shortDesc: "Freshwater fish farming with stunning mountain views and net-harvesting demonstrations.",
@@ -137,8 +144,8 @@ export const SAMPLE_FARMS: Farm[] = [
     id: "farm-004",
     name: "Red Tilapia Premium Fish Farm",
     type: "aquaculture",
-    location: "Cairns, QLD",
-    region: "Queensland",
+    location: "Kampala, Uganda",
+    region: "Uganda",
     description:
       "Specialising in premium red tilapia, our farm welcomes guests to experience the full cycle of commercial fish farming. From fingerling to harvest, learn about water quality management, feeding programs, and sustainable aquaculture. Fresh fish available for purchase directly from the farm.",
     shortDesc: "Premium red tilapia farming with harvest experiences and fresh produce sales.",
@@ -156,8 +163,8 @@ export const SAMPLE_FARMS: Farm[] = [
     id: "farm-005",
     name: "Horizon Broiler Farm",
     type: "poultry",
-    location: "Toowoomba, QLD",
-    region: "Queensland",
+    location: "Addis Ababa, Ethiopia",
+    region: "Ethiopia",
     description:
       "One of Australia's most modern broiler chicken operations, our farm showcases how technology and animal husbandry combine to produce high-quality poultry. Educational tours available for all ages, focusing on biosecurity, animal welfare, and the science of modern chicken farming.",
     shortDesc: "Modern broiler chicken facility with educational tours on animal welfare and technology.",
@@ -175,8 +182,8 @@ export const SAMPLE_FARMS: Farm[] = [
     id: "farm-006",
     name: "Dreamtime Cultural Farm Stay",
     type: "cultural",
-    location: "Katherine, NT",
-    region: "Northern Territory",
+    location: "Maasai Mara, Kenya",
+    region: "Kenya",
     description:
       "A unique Aboriginal-led cultural agritourism experience combining traditional land management practices with modern farming. Learn about bush tucker, traditional fishing, indigenous aquaculture, and the deep connection between Aboriginal communities and the land. A truly transformative journey.",
     shortDesc: "Aboriginal-led cultural farming experience connecting traditional wisdom with modern agritourism.",

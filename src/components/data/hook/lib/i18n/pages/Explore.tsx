@@ -7,7 +7,7 @@ import { FarmCard } from "@/components/farms/FarmCard";
 import { SAMPLE_FARMS } from "@/data/sampleData";
 
 const TYPES = ["All", "dairy", "poultry", "aquaculture", "crop", "mixed", "cultural"];
-const REGIONS = ["All Regions", "Queensland", "New South Wales", "South Australia", "Northern Territory", "Victoria", "Western Australia"];
+const REGIONS = ["All Regions", "Kenya", "Tanzania", "Uganda", "South Africa", "Ethiopia", "Ghana", "Morocco", "Rwanda"];
 
 const typeLabels: Record<string, string> = {
   All: "All Types",

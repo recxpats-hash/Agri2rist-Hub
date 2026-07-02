@@ -63,7 +63,7 @@ const MODULE_LISTINGS = [
     description: "Two-night farmhouse stay with dairy tour, farm-fresh meals, and morning milking orientation.",
     price: 180,
     unit: "per guest/night",
-    image: FARM_IMAGES.dairy,
+    image: FARM_IMAGES.farmStay,
     available: true,
     minimumOrder: "1 night",
     availability: "Calendar booking",
@@ -81,7 +81,7 @@ const MODULE_LISTINGS = [
     description: "Guided pond tour, water quality briefing, net fishing demonstration, and fresh fish tasting.",
     price: 45,
     unit: "per guest",
-    image: FARM_IMAGES.fishPonds,
+    image: FARM_IMAGES.fishFarmPonds,
     available: true,
     minimumOrder: "2 guests",
     availability: "Weekends",
@@ -99,7 +99,7 @@ const MODULE_LISTINGS = [
     description: "Book a certified agronomist for soil review, crop planning, irrigation advice, and production diagnostics.",
     price: 95,
     unit: "per appointment",
-    image: FARM_IMAGES.groupTour,
+    image: FARM_IMAGES.training,
     available: true,
     minimumOrder: "1 appointment",
     availability: "Request quote",
@@ -117,7 +117,7 @@ const MODULE_LISTINGS = [
     description: "Rent tractors, sprayers, power tillers, harvesters, and processing machines from verified equipment owners.",
     price: 120,
     unit: "per day",
-    image: FARM_IMAGES.groupTour,
+    image: FARM_IMAGES.equipment,
     available: true,
     minimumOrder: "1 day",
     availability: "Request schedule",
@@ -175,25 +175,25 @@ const MARKETPLACE_CATEGORY_CARDS = [
 ];
 
 const CATEGORY_LISTINGS = [
-  ["farm-produce", "Farm Produce", "Seasonal Farm Produce Box", "Community Harvest Cooperative", "A mixed box of fresh farm produce for families, restaurants, and local retailers.", 28, "box", FARM_IMAGES.groupTour],
-  ["organic-vegetables", "Organic Vegetables", "Organic Vegetable Basket", "Green Valley Market Garden", "Seasonal greens, carrots, tomatoes, and leafy vegetables from verified organic growers.", 18, "basket", FARM_IMAGES.groupTour],
+  ["farm-produce", "Farm Produce", "Seasonal Farm Produce Box", "Community Harvest Cooperative", "A mixed box of fresh farm produce for families, restaurants, and local retailers.", 28, "box", FARM_IMAGES.farmFruits],
+  ["organic-vegetables", "Organic Vegetables", "Organic Vegetable Basket", "Green Valley Market Garden", "Seasonal greens, carrots, tomatoes, and leafy vegetables from verified organic growers.", 18, "basket", FARM_IMAGES.farmFruits],
   ["honey-products", "Honey Products", "Raw Wildflower Honey", "Community Apiary Network", "Pure local honey packed for households, chefs, lodges, and farm shops.", 12, "500g jar", FARM_IMAGES.groupTour],
   ["dairy-products", "Dairy Products", "Farm Dairy Pack", "Green Valley Dairy Farm", "Fresh milk, yoghurt, and cheese prepared from pasture-fed dairy herds.", 24, "bundle", FARM_IMAGES.dairy],
-  ["fish-aquaculture", "Fish & Aquaculture", "Fresh Fish and Pond Support", "Blue Lagoon Aquaculture", "Fresh fish, fingerlings, pond setup support, and aquaculture advisory services.", 45, "order", FARM_IMAGES.tilapia],
+  ["fish-aquaculture", "Fish & Aquaculture", "Fresh Fish and Pond Support", "Blue Lagoon Aquaculture", "Fresh fish, fingerlings, pond setup support, and aquaculture advisory services.", 45, "order", FARM_IMAGES.fishFarm],
   ["livestock", "Livestock", "Verified Goat Supply", "Regional Livestock Cooperative", "Healthy goats for breeding, meat production, and community farm projects.", 85, "per animal", FARM_IMAGES.groupTour],
   ["poultry", "Poultry", "Free-Range Poultry Pack", "Sunrise Poultry & Egg Farm", "Eggs, broiler chicken, chicks, and poultry farm supply requests.", 18, "pack", FARM_IMAGES.poultry],
   ["seeds-seedlings", "Seeds & Seedlings", "Vegetable Seedling Tray", "Agri2rist Nursery", "Ready-to-plant seedlings for gardens, farms, schools, and community growers.", 15, "tray", FARM_IMAGES.groupTour],
   ["tree-seedlings", "Tree Seedlings", "Fruit Tree Seedlings", "Agri2rist Nursery", "Mango, avocado, citrus, and shade tree seedlings for farms and homesteads.", 6, "seedling", FARM_IMAGES.groupTour],
   ["flowers", "Flowers", "Fresh Farm Flowers", "Rural Flower Growers", "Seasonal flower bunches for events, hospitality, homes, and local markets.", 14, "bunch", FARM_IMAGES.groupTour],
-  ["fruits", "Fruits", "Tropical Fruit Box", "Community Harvest Cooperative", "Bananas, mangoes, passion fruit, papaya, and seasonal farm fruit.", 20, "box", FARM_IMAGES.groupTour],
+  ["fruits", "Fruits", "Tropical Fruit Box", "Community Harvest Cooperative", "Bananas, mangoes, passion fruit, papaya, and seasonal farm fruit.", 20, "box", FARM_IMAGES.farmFruits],
   ["coffee", "Coffee", "Single-Origin Coffee Beans", "Uganda Highlands Coffee Farm", "Washed arabica beans sourced from highland farmers and roasted to order.", 16, "500g bag", FARM_IMAGES.groupTour],
   ["cocoa", "Cocoa", "Farm Cocoa Nibs", "Western Cocoa Growers", "Fermented and dried cocoa nibs for chocolate makers, bakeries, and cafes.", 19, "500g pack", FARM_IMAGES.groupTour],
   ["herbs-spices", "Herbs & Spices", "Fresh Herb and Spice Pack", "Organic Roots Farm", "Basil, rosemary, ginger, turmeric, chili, and seasonal farm spices.", 10, "pack", FARM_IMAGES.groupTour],
   ["handicrafts", "Handicrafts", "Rural Artisan Gift Set", "Village Makers Collective", "Handmade baskets, woven decor, and local craft items from rural artisans.", 35, "set", FARM_IMAGES.groupTour],
   ["local-beverages", "Local Beverages", "Farm Beverage Tasting Pack", "Harvest Table Kitchen", "Local juices, herbal drinks, coffee samples, and farm-made refreshments.", 22, "pack", FARM_IMAGES.groupTour],
-  ["farm-stay-accommodation", "Farm Stay Accommodation", "Farm Stay Booking Request", "Green Valley Dairy Farm", "Request cottages, farm lodges, homestays, and guided rural accommodation.", 95, "night", FARM_IMAGES.dairy],
-  ["farm-equipment", "Farm Equipment", "Tractor and Tool Rental", "Regional Farm Equipment Pool", "Book tractors, sprayers, irrigation tools, and processing equipment by day.", 120, "day", FARM_IMAGES.groupTour],
-  ["training-services", "Training Services", "Agritourism Training Session", "Agri2rist Professional Network", "Training for farm hosting, product sales, visitor safety, and rural experience design.", 55, "seat", FARM_IMAGES.groupTour],
+  ["farm-stay-accommodation", "Farm Stay Accommodation", "Farm Stay Booking Request", "Green Valley Dairy Farm", "Request cottages, farm lodges, homestays, and guided rural accommodation.", 95, "night", FARM_IMAGES.farmStay],
+  ["farm-equipment", "Farm Equipment", "Tractor and Tool Rental", "Regional Farm Equipment Pool", "Book tractors, sprayers, irrigation tools, and processing equipment by day.", 120, "day", FARM_IMAGES.equipment],
+  ["training-services", "Training Services", "Agritourism Training Session", "Agri2rist Professional Network", "Training for farm hosting, product sales, visitor safety, and rural experience design.", 55, "seat", FARM_IMAGES.training],
 ].map(([id, category, name, farmName, description, price, unit, image]) => ({
   id: `cat-${id}`,
   farmId: "category-service",
@@ -236,10 +236,106 @@ const RESTAURANTS = [
   ["Village Cuisine House", "Traditional cuisine", "3.1 km", "4.9"],
 ];
 const UPCOMING_EVENTS = [
-  ["Harvest Festival", "Aug 16", "Community Farm Grounds"],
-  ["Farmers Market", "Sep 02", "Agri2rist Market Square"],
-  ["Coffee Festival", "Sep 21", "Uganda Highlands"],
-  ["Agricultural Show", "Oct 05", "Regional Expo Center"],
+  ["Harvest Festival", "Aug 16", "Community Farm Grounds", FARM_IMAGES.eventHosting],
+  ["Farmers Market", "Sep 02", "Agri2rist Market Square", FARM_IMAGES.farmFruits],
+  ["Coffee Festival", "Sep 21", "Uganda Highlands", FARM_IMAGES.training],
+  ["Agricultural Show", "Oct 05", "Regional Expo Center", FARM_IMAGES.equipment],
+];
+const EVENT_HOSTS = [
+  "Farmers",
+  "Agricultural cooperatives",
+  "Agribusiness companies",
+  "Tourism operators",
+  "Farm stay hosts",
+  "Hotels and lodges",
+  "Local communities",
+  "Cultural institutions",
+  "Educational institutions",
+  "NGOs",
+  "Government agencies",
+  "Youth organizations",
+  "Women’s associations",
+  "Event companies",
+  "Food vendors",
+  "Handicraft producers",
+];
+const EVENT_TYPE_GROUPS = [
+  {
+    title: "Agricultural Events",
+    items: ["Agricultural shows", "Farm open days", "Livestock exhibitions", "Poultry shows", "Dairy competitions", "Fish farming exhibitions", "Apiary demonstrations", "Irrigation demonstrations"],
+  },
+  {
+    title: "Tourism Events",
+    items: ["Farm tours", "Nature walks", "Bird watching", "Camping weekends", "Eco-tourism adventures", "Recreational fishing", "Cycling tours", "Hiking expeditions"],
+  },
+  {
+    title: "Educational Events",
+    items: ["Farmer training", "Workshops", "Seminars", "Conferences", "Field days", "Student study tours", "Research visits", "Innovation forums"],
+  },
+  {
+    title: "Cultural and Food Events",
+    items: ["Traditional dance festivals", "Heritage celebrations", "Music festivals", "Traditional food festivals", "Farm-to-table experiences", "Coffee festivals", "Fruit festivals", "Farmers markets"],
+  },
+  {
+    title: "Business Events",
+    items: ["Trade fairs", "Investment forums", "Agribusiness networking", "Product launches", "Business matchmaking", "Startup pitch competitions"],
+  },
+];
+const EVENT_CREATION_FIELDS = [
+  "Event title and category",
+  "Description and objectives",
+  "Organizer and contact person",
+  "Farm, venue, address, GPS and map location",
+  "Date, time, multi-day schedule and deadline",
+  "Free, paid, VIP, early bird, student and group tickets",
+  "Participant capacity and waiting list",
+  "Banner, photos, videos, sponsor logos and venue images",
+  "Facilities, parking, accommodation, first aid and security",
+];
+const EVENT_DASHBOARD = [
+  "Create and edit events",
+  "Publish event pages",
+  "Sell tickets online",
+  "Track registrations",
+  "Manage attendance",
+  "Send announcements",
+  "View financial reports",
+  "Download participant lists",
+  "Manage sponsors and exhibitors",
+  "Collect feedback",
+];
+const EVENT_VISITOR_TOOLS = [
+  "Search by country, region, farm, date, category and price",
+  "Register participants and special requirements",
+  "Receive instant confirmation and booking number",
+  "Use QR code tickets and digital receipts",
+  "Get event directions and calendar reminders",
+  "Download event programmes",
+  "Reserve accommodation and book farm tours",
+  "Check in using the mobile app",
+  "Leave reviews and download certificates",
+];
+const EVENT_STANDARDS = [
+  "Safe visitor access",
+  "Clear health and safety guidance",
+  "Emergency response procedures",
+  "Qualified event coordinators",
+  "Clean sanitation facilities",
+  "Food hygiene compliance",
+  "Parking and traffic management",
+  "Visitor liability information where required",
+  "Environmental sustainability practices",
+];
+const EVENT_BENEFITS = [
+  "Reach local and international visitors",
+  "Increase farm and business income",
+  "Promote products and services",
+  "Build your brand",
+  "Strengthen community partnerships",
+  "Support rural tourism development",
+  "Generate repeat visitors",
+  "Sell products directly during events",
+  "Access event performance analytics",
 ];
 const FILTER_GROUPS = [
   ["Product Type", "Produce", "Livestock", "Experiences", "Accommodation", "Equipment", "Services"],
@@ -748,7 +844,7 @@ export default function MarketplacePage() {
             {ACCOMMODATIONS.map(([name, farm, room, price, amenities, availability], index) => (
               <div key={name} className="overflow-hidden rounded-lg border border-border bg-card shadow-brand">
                 <img
-                  src={[FARM_IMAGES.dairy, FARM_IMAGES.fishPonds, FARM_IMAGES.groupTour][index % 3]}
+                  src={[FARM_IMAGES.farmStay, FARM_IMAGES.farmStay, FARM_IMAGES.farmStay][index % 3]}
                   alt={name}
                   loading="lazy"
                   decoding="async"
@@ -787,13 +883,82 @@ export default function MarketplacePage() {
 
       <section className="py-14 bg-background">
         <div className="container mx-auto px-4">
+          <SectionHeader
+            title="Agri2rist Hub Events"
+            body="Create, promote, manage, and join agricultural, rural tourism, cultural, educational, food, and business events through one integrated platform."
+          />
+
+          <div className="mb-10 rounded-lg border border-border bg-card p-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+              <div>
+                <Badge className="mb-3 bg-secondary text-secondary-foreground">Host an Event</Badge>
+                <h3 className="mb-3 text-2xl font-extrabold text-foreground">
+                  Showcase your farm, business, products, services, culture, or destination.
+                </h3>
+                <p className="text-muted-foreground">
+                  Event organizers can promote farm festivals, exhibitions, farmers markets, workshops, cultural celebrations, food fairs, livestock competitions, eco-tourism experiences, and more.
+                </p>
+              </div>
+              <div>
+                <h4 className="mb-3 font-extrabold text-foreground">Who Can Host Events?</h4>
+                <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+                  {EVENT_HOSTS.map((item) => (
+                    <div key={item} className="rounded-md bg-muted p-2 text-xs font-medium text-foreground/75">
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
+            {EVENT_TYPE_GROUPS.map((group) => (
+              <div key={group.title} className="rounded-lg border border-border bg-card p-4">
+                <h3 className="mb-3 font-extrabold text-foreground">{group.title}</h3>
+                <div className="space-y-2">
+                  {group.items.map((item) => (
+                    <div key={item} className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <Check size={13} className="mt-0.5 flex-shrink-0 text-accent" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <EventFeaturePanel title="Create an Event" items={EVENT_CREATION_FIELDS} />
+            <EventFeaturePanel title="Event Management Dashboard" items={EVENT_DASHBOARD} />
+            <EventFeaturePanel title="Join an Event" items={EVENT_VISITOR_TOOLS} />
+            <EventFeaturePanel title="Safety and Event Standards" items={EVENT_STANDARDS} />
+          </div>
+
+          <div className="mt-10 rounded-lg border border-border bg-card p-6">
+            <h3 className="mb-4 text-xl font-extrabold text-foreground">Benefits of Hosting Events</h3>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {EVENT_BENEFITS.map((item) => (
+                <div key={item} className="rounded-md bg-muted p-3 text-sm text-foreground/80">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-14 bg-muted">
+        <div className="container mx-auto px-4">
           <SectionHeader title="Upcoming Events" body="Discover harvest festivals, farmers markets, coffee festivals, agricultural shows, and cultural events." />
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-            {UPCOMING_EVENTS.map(([name, date, venue]) => (
-              <div key={name} className="rounded-lg border border-border bg-card p-5">
-                <div className="mb-4 inline-flex rounded-md bg-secondary px-3 py-2 text-sm font-bold text-secondary-foreground">{date}</div>
-                <h3 className="mb-2 font-bold text-foreground">{name}</h3>
-                <p className="mb-4 text-sm text-muted-foreground">{venue}</p>
+            {UPCOMING_EVENTS.map(([name, date, venue, image]) => (
+              <div key={name} className="overflow-hidden rounded-lg border border-border bg-card">
+                <img src={image} alt={name} loading="lazy" decoding="async" className="h-40 w-full object-cover" />
+                <div className="p-5">
+                  <div className="mb-4 inline-flex rounded-md bg-secondary px-3 py-2 text-sm font-bold text-secondary-foreground">{date}</div>
+                  <h3 className="mb-2 font-bold text-foreground">{name}</h3>
+                  <p className="mb-4 text-sm text-muted-foreground">{venue}</p>
                 <Button
                   variant="outline"
                   className="w-full border-primary text-primary"
@@ -806,6 +971,7 @@ export default function MarketplacePage() {
                 >
                   Register
                 </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -1459,6 +1625,22 @@ function FeaturePanel({
           <Badge key={item} variant="outline" className="text-xs">
             {item}
           </Badge>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function EventFeaturePanel({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <h3 className="mb-3 font-extrabold text-foreground">{title}</h3>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {items.map((item) => (
+          <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+            <Check size={14} className="mt-0.5 flex-shrink-0 text-accent" />
+            <span>{item}</span>
+          </div>
         ))}
       </div>
     </div>

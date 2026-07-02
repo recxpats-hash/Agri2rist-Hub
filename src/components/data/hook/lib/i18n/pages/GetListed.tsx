@@ -17,7 +17,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { useToast } from "@/hooks/use-toast";
 
 const FARM_TYPES = ["Dairy", "Poultry", "Aquaculture", "Crop Farming", "Mixed Farm", "Cultural Tourism", "Eco Farm", "Winery / Orchard"];
-const REGIONS = ["Queensland", "New South Wales", "Victoria", "South Australia", "Western Australia", "Northern Territory", "Tasmania", "ACT"];
+const REGIONS = ["Kenya", "Tanzania", "Uganda", "South Africa", "Ethiopia", "Ghana", "Morocco", "Rwanda"];
 const ACTIVITIES_LIST = [
   "Farm Tours", "Farm Stays", "Cooking Classes", "Workshops", "Pick-Your-Own",
   "Farmers Market", "Farm-to-Table Dining", "Wildlife Watching", "Cultural Experiences",
@@ -27,6 +27,101 @@ const ACCOMMODATION_LIST = [
   "Farmhouse B&B", "Private Cottage", "Glamping Tent", "Farm Cabin",
   "Eco Tent", "Outback Cabin", "Self-Contained Unit", "Shared Dormitory",
   "Cultural Camp", "No Accommodation",
+];
+
+const HOST_TYPES = [
+  "Crop farmers",
+  "Livestock farmers",
+  "Poultry farms",
+  "Dairy farms",
+  "Fish farms and aquaculture centers",
+  "Beekeeping farms",
+  "Coffee, tea and cocoa plantations",
+  "Fruit orchards",
+  "Farm stay operators",
+  "Eco-lodges and guest houses",
+  "Community tourism groups",
+  "Agricultural cooperatives",
+  "Youth farmer groups",
+  "Women's farming associations",
+];
+
+const HOST_OFFERINGS = [
+  {
+    title: "Farm Stay Accommodation",
+    items: ["Farm houses", "Eco-lodges", "Country cottages", "Cabins", "Tree houses", "Tiny homes", "Glamping", "Camping sites", "Luxury farm villas"],
+  },
+  {
+    title: "Farm Experiences",
+    items: ["Guided farm tours", "Animal feeding", "Crop harvesting", "Fruit picking", "Fishing experiences", "Milking demonstrations", "Tractor rides", "Coffee tours", "Farm-to-table dining"],
+  },
+  {
+    title: "Farm Products",
+    items: ["Fresh fruits", "Vegetables", "Organic produce", "Eggs", "Milk", "Honey", "Fish", "Coffee", "Herbs and spices", "Seedlings", "Handmade crafts"],
+  },
+];
+
+const HOST_BENEFITS = [
+  "Reach local and international visitors",
+  "Receive online bookings 24/7",
+  "Promote your farm globally",
+  "Increase farm income",
+  "Sell products directly to customers",
+  "Advertise special events",
+  "Manage availability calendars",
+  "Receive secure online payments",
+  "Build reviews and ratings",
+  "Access booking reports and business insights",
+];
+
+const HOST_REQUIREMENTS = [
+  "Personal or business information",
+  "National identification or passport",
+  "Farm or business registration where applicable",
+  "Farm location and contact details",
+  "High-quality photos",
+  "Property and experience descriptions",
+  "Pricing and availability calendar",
+  "Emergency contact",
+  "Bank or mobile money payment details",
+];
+
+const HOST_STANDARDS = [
+  "Maintain clean accommodation",
+  "Provide safe visitor areas",
+  "Follow food hygiene practices",
+  "Ensure guest safety around animals and equipment",
+  "Respect environmental sustainability",
+  "Offer honest descriptions of services",
+  "Respond promptly to booking requests",
+];
+
+const HOST_PROCESS = [
+  "Create your host account",
+  "Verify your identity",
+  "Add your farm or property",
+  "Upload photos and videos",
+  "List accommodation and experiences",
+  "Set prices and availability",
+  "Receive booking requests",
+  "Welcome guests",
+  "Get paid securely",
+  "Build your reputation through reviews",
+];
+
+const HOST_DASHBOARD = [
+  "Booking management",
+  "Calendar",
+  "Guest messaging",
+  "Earnings dashboard",
+  "Reservation reports",
+  "Product marketplace",
+  "Tour management",
+  "Event management",
+  "Promotions",
+  "Customer reviews",
+  "Analytics",
+  "Notifications",
 ];
 
 const PLANS = [
@@ -140,16 +235,67 @@ export default function GetListedPage() {
       <section className="gradient-hero py-16 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl md:text-5xl font-extrabold text-primary-foreground mb-4">
-            Get <span className="text-gradient-gold">Listed</span>
+            Become a <span className="text-gradient-gold">Host</span>
           </h1>
           <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto mb-2">
-            If you are an agritourism destination, our free listings only take a couple steps.
+            Share your farm, welcome the world, and grow your income with authentic agritourism experiences.
           </p>
           <p className="text-primary-foreground/60 text-base max-w-xl mx-auto">
-            Join hundreds of farm operators already growing their visitor numbers with Agri2rist Hub.
+            Turn your farm, fish farm, orchard, lodge, campsite, or rural property into a destination.
           </p>
         </div>
       </section>
+
+      {step === 1 && (
+        <section className="bg-background py-12">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto mb-10 max-w-4xl text-center">
+              <h2 className="mb-3 text-3xl font-extrabold text-foreground">
+                Share Your Farm. Welcome the World. Grow Your Income.
+              </h2>
+              <p className="text-muted-foreground">
+                Agri2rist Hub connects farmers, rural communities, accommodation providers, and tourism entrepreneurs with visitors seeking authentic agricultural and cultural experiences.
+              </p>
+            </div>
+
+            <div className="mb-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
+              {HOST_OFFERINGS.map((group) => (
+                <div key={group.title} className="rounded-lg border border-border bg-card p-5 shadow-brand">
+                  <h3 className="mb-3 font-extrabold text-foreground">{group.title}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {group.items.map((item) => (
+                      <span key={item} className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground/75">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <FeatureGrid title="Who Can Become a Host?" items={HOST_TYPES} />
+            <FeatureGrid title="Benefits of Becoming a Host" items={HOST_BENEFITS} />
+
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              <FeaturePanel title="Registration Requirements" items={HOST_REQUIREMENTS} />
+              <FeaturePanel title="Safety and Quality Standards" items={HOST_STANDARDS} />
+              <FeaturePanel title="Host Dashboard Features" items={HOST_DASHBOARD} />
+            </div>
+
+            <div className="mt-10 rounded-lg border border-border bg-card p-6">
+              <h3 className="mb-5 text-xl font-extrabold text-foreground">Simple Hosting Process</h3>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                {HOST_PROCESS.map((item, index) => (
+                  <div key={item} className="rounded-md bg-muted p-3">
+                    <div className="mb-1 text-xs font-bold uppercase text-primary">Step {index + 1}</div>
+                    <div className="text-sm font-medium text-foreground">{item}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Plans Overview */}
       {step === 1 && (
@@ -552,5 +698,36 @@ export default function GetListedPage() {
         </div>
       </div>
     </PageLayout>
+  );
+}
+
+function FeatureGrid({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div className="mb-10">
+      <h3 className="mb-4 text-xl font-extrabold text-foreground">{title}</h3>
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
+        {items.map((item) => (
+          <div key={item} className="rounded-md border border-border bg-card p-3 text-sm text-foreground/80">
+            {item}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FeaturePanel({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <h3 className="mb-3 font-extrabold text-foreground">{title}</h3>
+      <div className="space-y-2">
+        {items.map((item) => (
+          <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+            <Check size={14} className="mt-0.5 flex-shrink-0 text-accent" />
+            <span>{item}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
