@@ -3,23 +3,17 @@ import { X, ChevronLeft, ChevronRight, Grid3X3, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-const ALL_PUBLIC_IMAGES = import.meta.glob("/locale/**/*.{jpg,jpeg,png,webp}", { eager: true, query: "?url" });
-
 type GalleryMode = "grid" | "slideshow";
 
 export function CategoryGalleryModal({
   categoryName,
-  folderPath,
+  images,
   onClose,
 }: {
   categoryName: string;
-  folderPath: string;
+  images: string[];
   onClose: () => void;
 }) {
-  const images = Object.entries(ALL_PUBLIC_IMAGES)
-    .filter(([path]) => path.startsWith(folderPath))
-    .map(([, url]) => url as string);
-
   const [mode, setMode] = useState<GalleryMode>("grid");
   const [slideIndex, setSlideIndex] = useState(0);
 
@@ -51,12 +45,12 @@ export function CategoryGalleryModal({
   const currentImage = images[slideIndex] || images[0];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 animate-fade-in" onClick={onClose}>
-      <div className="bg-card rounded-lg max-w-5xl w-full max-h-[90vh] overflow-hidden shadow-hero" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between border-b border-border p-4">
+    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 md:p-8 animate-fade-in" onClick={onClose}>
+      <div className="bg-card rounded-xl w-full max-w-7xl max-h-[95vh] overflow-hidden shadow-hero flex flex-col" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between border-b border-border p-4 md:p-6">
           <div>
             <Badge className="bg-secondary text-secondary-foreground">Gallery</Badge>
-            <h2 className="text-2xl font-extrabold text-foreground">{categoryName}</h2>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-foreground">{categoryName}</h2>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={() => setMode(mode === "grid" ? "slideshow" : "grid")}>
@@ -78,9 +72,9 @@ export function CategoryGalleryModal({
           </div>
         </div>
 
-        <div className="p-4 overflow-y-auto" style={{ maxHeight: "calc(90vh - 80px)" }}>
+        <div className="flex-1 overflow-y-auto p-4 md:p-6">
           {mode === "grid" ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {images.map((src, i) => (
                 <div
                   key={i}
@@ -96,8 +90,8 @@ export function CategoryGalleryModal({
             </div>
           ) : (
             <div className="flex flex-col items-center">
-              <div className="relative w-full max-w-3xl">
-                <img src={currentImage} alt={`${categoryName} ${slideIndex + 1}`} className="w-full max-h-[60vh] object-contain rounded-lg bg-muted" />
+              <div className="relative w-full">
+                <img src={currentImage} alt={`${categoryName} ${slideIndex + 1}`} className="w-full max-h-[70vh] object-contain rounded-lg bg-muted" />
               </div>
               <div className="flex items-center justify-center gap-4 mt-4">
                 <Button variant="outline" onClick={() => setSlideIndex((prev) => (prev - 1 + images.length) % images.length)}>
@@ -116,7 +110,7 @@ export function CategoryGalleryModal({
                 {images.map((src, i) => (
                   <div
                     key={i}
-                    className={`w-16 h-16 rounded-md overflow-hidden border-2 cursor-pointer transition-colors ${
+                    className={`w-16 h-16 md:w-20 md:h-20 rounded-md overflow-hidden border-2 cursor-pointer transition-colors ${
                       i === slideIndex ? "border-primary" : "border-transparent"
                     }`}
                     onClick={() => setSlideIndex(i)}

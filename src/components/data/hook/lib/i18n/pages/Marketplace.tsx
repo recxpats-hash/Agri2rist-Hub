@@ -36,6 +36,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { FARM_IMAGES, SAMPLE_PRODUCTS } from "@/data/sampleData";
 import { CategoryGalleryModal } from "@/components/CategoryGalleryModal";
+import { CATEGORY_GALLERY_IMAGES } from "@/data/categoryGalleryImages";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -175,17 +176,7 @@ const MARKETPLACE_CATEGORY_CARDS = [
   "Training Services",
 ];
 
-const CATEGORY_FOLDER_MAP: Record<string, string> = {
-  "Farm Stay Accommodation": "/locale/farm stay",
-  "Fish & Aquaculture": "/locale/Farm fish",
-  "Farm Equipment": "/locale/Equipments",
-  "Training Services": "/locale/Training",
-  "Farm Produce": "/locale/Farm fruits",
-  "Organic Vegetables": "/locale/Farm fruits",
-  "Fruits": "/locale/Farm fruits",
-};
-
-const CATEGORY_GALLERY_CATEGORIES = Object.keys(CATEGORY_FOLDER_MAP);
+const CATEGORY_GALLERY_CATEGORIES = Object.keys(CATEGORY_GALLERY_IMAGES);
 
 const CATEGORY_LISTINGS = [
   ["farm-produce", "Farm Produce", "Seasonal Farm Produce Box", "Community Harvest Cooperative", "A mixed box of fresh farm produce for families, restaurants, and local retailers.", 28, "box", FARM_IMAGES.farmFruits],
@@ -684,8 +675,8 @@ export default function MarketplacePage() {
                 <button
                   key={item}
                   onClick={() => {
-                    const folder = CATEGORY_FOLDER_MAP[item];
-                    if (folder) {
+                    const galleryImages = CATEGORY_GALLERY_IMAGES[item];
+                    if (galleryImages) {
                       setGalleryCategory(item);
                     } else {
                       setSelectedCategory(item);
@@ -693,7 +684,7 @@ export default function MarketplacePage() {
                     }
                   }}
                   className={`rounded-lg border p-4 text-left transition-colors ${
-                    selectedCategory === item && !CATEGORY_FOLDER_MAP[item]
+                    selectedCategory === item && !CATEGORY_GALLERY_IMAGES[item]
                       ? "border-primary bg-primary text-primary-foreground shadow-brand"
                       : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
                   }`}
@@ -1211,10 +1202,10 @@ export default function MarketplacePage() {
         </div>
       ) : null}
 
-      {galleryCategory && CATEGORY_FOLDER_MAP[galleryCategory] && (
+      {galleryCategory && CATEGORY_GALLERY_IMAGES[galleryCategory] && (
         <CategoryGalleryModal
           categoryName={galleryCategory}
-          folderPath={CATEGORY_FOLDER_MAP[galleryCategory]}
+          images={CATEGORY_GALLERY_IMAGES[galleryCategory]}
           onClose={() => setGalleryCategory(null)}
         />
       )}
