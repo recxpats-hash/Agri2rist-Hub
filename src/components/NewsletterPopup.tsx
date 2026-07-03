@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
-import { OFFICIAL_CONTACT, SOCIAL_LINKS } from "@/lib/contact-info";
+import { OFFICIAL_CONTACT, SOCIAL_LINKS, getSupportEmailHref } from "@/lib/contact-info";
 
 const SUBSCRIBERS_KEY = "agri2rist_newsletter_subscribers";
 
@@ -128,7 +128,7 @@ export function NewsletterPopup() {
           <div className="md:col-span-2 rounded-lg border border-border bg-muted p-4">
             <h3 className="font-bold text-foreground mb-3">Official Contact</h3>
             <div className="space-y-3 text-sm">
-              <a href={`mailto:${OFFICIAL_CONTACT.email}`} className="flex items-start gap-2 text-muted-foreground hover:text-primary">
+              <a href={getSupportEmailHref()} target="_blank" rel="noreferrer" className="flex items-start gap-2 text-muted-foreground hover:text-primary">
                 <Mail size={16} className="mt-0.5 text-primary" />
                 <span>{OFFICIAL_CONTACT.email}</span>
               </a>

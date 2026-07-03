@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { FARM_IMAGES } from "@/data/sampleData";
-import { OFFICIAL_CONTACT } from "@/lib/contact-info";
+import { OFFICIAL_CONTACT, getSupportEmailHref } from "@/lib/contact-info";
 import { LanguageSwitcher } from "@/components/language-switcher";
 
 const navLinks = [
@@ -34,7 +34,7 @@ export function Navbar() {
               <MessageCircle size={13} />
               <span>WhatsApp</span>
             </a>
-            <a href={`mailto:${OFFICIAL_CONTACT.email}`} className="flex items-center gap-1 hover:text-secondary">
+            <a href={getSupportEmailHref()} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-secondary">
               <Mail size={13} />
               <span>{OFFICIAL_CONTACT.email}</span>
             </a>
@@ -72,15 +72,17 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 flex-shrink-0">
-            <img
-              src={FARM_IMAGES.logo}
-              alt="Agri2rist Hub"
-              width={48}
-              height={48}
-              loading="eager"
-              decoding="async"
-              className="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover"
-            />
+            <span className="h-10 w-10 overflow-hidden rounded-full bg-primary-foreground md:h-12 md:w-12">
+              <img
+                src={FARM_IMAGES.logo}
+                alt="Agri2rist Hub"
+                width={48}
+                height={48}
+                loading="eager"
+                decoding="async"
+                className="h-full w-full scale-125 object-cover"
+              />
+            </span>
             <div className="hidden sm:block">
               <div className="text-primary-foreground font-bold text-lg leading-tight">
                 Agri2rist Hub

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FARM_IMAGES } from "@/data/sampleData";
-import { OFFICIAL_CONTACT, SOCIAL_LINKS, openNewsletterPopup } from "@/lib/contact-info";
+import { OFFICIAL_CONTACT, SOCIAL_LINKS, getSupportEmailHref, openNewsletterPopup } from "@/lib/contact-info";
 
 const footerLinks = [
   { label: "Explore", href: "/explore" },
@@ -16,15 +16,17 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <img
-              src={FARM_IMAGES.logo}
-              alt="Agri2rist Hub"
-              width={44}
-              height={44}
-              loading="lazy"
-              decoding="async"
-              className="h-11 w-11 rounded-full object-cover"
-            />
+            <span className="h-11 w-11 overflow-hidden rounded-full bg-primary-foreground">
+              <img
+                src={FARM_IMAGES.logo}
+                alt="Agri2rist Hub"
+                width={44}
+                height={44}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full scale-125 object-cover"
+              />
+            </span>
             <div>
               <div className="font-bold leading-tight">Agri2rist Hub</div>
               <div className="text-sm text-secondary">Local Roots, Global Impacts</div>
@@ -54,7 +56,7 @@ export function Footer() {
         <div className="mt-6 grid grid-cols-1 gap-4 border-t border-primary-light pt-5 text-sm md:grid-cols-3">
           <div>
             <div className="font-semibold text-secondary">Email</div>
-            <a className="text-primary-foreground/75 hover:text-secondary" href={`mailto:${OFFICIAL_CONTACT.email}`}>
+            <a className="text-primary-foreground/75 hover:text-secondary" href={getSupportEmailHref()} target="_blank" rel="noreferrer">
               {OFFICIAL_CONTACT.email}
             </a>
           </div>

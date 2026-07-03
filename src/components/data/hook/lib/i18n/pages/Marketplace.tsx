@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Filter, MapPin, Search, ShieldCheck, ShoppingCart, Star } from "lucide-react";
+import { ArrowRight, Filter, MapPin, Minus, Plus, Search, ShieldCheck, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -193,20 +193,40 @@ const CATEGORIES = [
 ];
 
 const FEATURED_LISTINGS = [
-  { name: "Tropical Fruit Box", category: "Fruits", seller: "Community Harvest Cooperative", price: "UGX 38,000 / box", location: "Masaka", image: MARKETPLACE_IMAGES.pineapple },
-  { name: "Fresh Nile Perch Order", category: "Fish & Aquaculture", seller: "Blue Lagoon Aquaculture", price: "UGX 18,000 / kg", location: "Jinja", image: MARKETPLACE_IMAGES.nilePerch },
-  { name: "Safari Farm Lodge Weekend", category: "Farm Stay Accommodation", seller: "Green Valley Farm Stay", price: "UGX 240,000 / night", location: "Fort Portal", image: MARKETPLACE_IMAGES.farmStay },
-  { name: "Tractor Rental", category: "Farm Equipment", seller: "Regional Equipment Pool", price: "UGX 300,000 / day", location: "Mbarara", image: MARKETPLACE_IMAGES.equipment },
-  { name: "Youth Agribusiness Training", category: "Training Services", seller: "Agri2rist Training Hub", price: "UGX 60,000 / seat", location: "Kampala", image: MARKETPLACE_IMAGES.training },
-  { name: "Free-Range Egg Tray", category: "Poultry", seller: "Sunrise Poultry Farm", price: "UGX 14,000 / tray", location: "Mukono", image: MARKETPLACE_IMAGES.eggs },
+  { id: "fruit-box", name: "Tropical Fruit Box", category: "Fruits", seller: "Community Harvest Cooperative", price: 38000, unit: "box", location: "Masaka", image: MARKETPLACE_IMAGES.pineapple },
+  { id: "nile-perch", name: "Fresh Nile Perch Order", category: "Fish & Aquaculture", seller: "Blue Lagoon Aquaculture", price: 18000, unit: "kg", location: "Jinja", image: MARKETPLACE_IMAGES.nilePerch },
+  { id: "farm-lodge", name: "Safari Farm Lodge Weekend", category: "Farm Stay Accommodation", seller: "Green Valley Farm Stay", price: 240000, unit: "night", location: "Fort Portal", image: MARKETPLACE_IMAGES.farmStay },
+  { id: "tractor-rental", name: "Tractor Rental", category: "Farm Equipment", seller: "Regional Equipment Pool", price: 300000, unit: "day", location: "Mbarara", image: MARKETPLACE_IMAGES.equipment },
+  { id: "training-seat", name: "Youth Agribusiness Training", category: "Training Services", seller: "Agri2rist Training Hub", price: 60000, unit: "seat", location: "Kampala", image: MARKETPLACE_IMAGES.training },
+  { id: "egg-tray", name: "Free-Range Egg Tray", category: "Poultry", seller: "Sunrise Poultry Farm", price: 14000, unit: "tray", location: "Mukono", image: MARKETPLACE_IMAGES.eggs },
 ];
 
 const PRODUCT_CLASSES = ["All", "Primary", "ValueAdded", "ByProduct"];
+const PAYMENT_METHODS = ["MTN Mobile Money", "Airtel Money", "Visa / Mastercard", "Bank Transfer", "Pay on Pickup"];
+const EVENT_HOSTS = ["Farmers", "Agricultural cooperatives", "Agribusiness companies", "Tourism operators", "Farm stay hosts", "Hotels and lodges", "Local communities", "Cultural institutions", "Educational institutions", "NGOs", "Government agencies", "Youth organizations", "Women’s associations", "Food vendors", "Handicraft producers"];
+const EVENT_TYPES = [
+  { title: "Agricultural Events", items: ["Agricultural shows", "Farm open days", "Livestock exhibitions", "Fish farming exhibitions", "Apiary demonstrations", "Greenhouse tours"] },
+  { title: "Tourism Events", items: ["Farm tours", "Nature walks", "Bird watching", "Camping weekends", "Eco-tourism adventures", "Recreational fishing"] },
+  { title: "Educational Events", items: ["Farmer training", "Workshops", "Seminars", "Field days", "Student study tours", "Technology demonstrations"] },
+  { title: "Cultural and Food Events", items: ["Traditional dance festivals", "Heritage celebrations", "Music festivals", "Farm-to-table experiences", "Coffee festivals", "Farmers markets"] },
+  { title: "Business Events", items: ["Trade fairs", "Investment forums", "Agribusiness networking", "Product launches", "Business matchmaking", "Startup pitches"] },
+];
+const EVENT_DASHBOARD = ["Create and edit events", "Publish event pages", "Sell tickets online", "Track registrations", "Manage attendance", "Send announcements", "View reports", "Download participant lists", "Manage sponsors", "Collect feedback"];
+const EVENT_VISITOR_TOOLS = ["Search by region, date, category and price", "Register participants", "Receive instant confirmation", "Use QR code tickets", "Get directions and calendar reminders", "Download programmes", "Reserve accommodation", "Book farm tours", "Leave reviews"];
+const EVENT_STANDARDS = ["Safe visitor access", "Health and safety guidance", "Emergency response procedures", "Qualified coordinators", "Clean sanitation", "Food hygiene compliance", "Parking and traffic management", "Sustainability practices"];
+const EVENT_BENEFITS = ["Reach local and international visitors", "Increase farm and business income", "Promote products and services", "Build your brand", "Strengthen community partnerships", "Support rural tourism", "Generate repeat visitors", "Access performance analytics"];
+
+type Listing = (typeof FEATURED_LISTINGS)[number];
+type Cart = Record<string, number>;
+
+const formatUgx = (amount: number) => `UGX ${amount.toLocaleString()}`;
 
 export default function MarketplacePage() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [productClass, setProductClass] = useState("All");
+  const [cart, setCart] = useState<Cart>({});
+  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS[0]);
   const { toast } = useToast();
 
   const filteredCategories = useMemo(() => {
@@ -226,8 +246,56 @@ export default function MarketplacePage() {
 
   const listings = FEATURED_LISTINGS.filter((listing) => category === "All" || listing.category === category);
 
-  const addToCart = (name: string) => {
-    toast({ title: "Added to cart", description: `${name} is ready for checkout or quote request.` });
+  const cartItems = useMemo(
+    () =>
+      FEATURED_LISTINGS.map((listing) => ({ ...listing, quantity: cart[listing.id] || 0 }))
+        .filter((item) => item.quantity > 0),
+    [cart]
+  );
+  const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const serviceFee = itemCount > 0 ? Math.round(subtotal * 0.025) : 0;
+  const total = subtotal + serviceFee;
+
+  const setQuantity = (listing: Listing, quantity: number) => {
+    const nextQuantity = Math.max(0, quantity);
+    setCart((current) => {
+      const next = { ...current };
+      if (nextQuantity === 0) {
+        delete next[listing.id];
+      } else {
+        next[listing.id] = nextQuantity;
+      }
+      return next;
+    });
+  };
+
+  const addToCart = (listing: Listing) => {
+    setQuantity(listing, (cart[listing.id] || 0) + 1);
+    toast({ title: "Added to basket", description: `${listing.name} quantity updated.` });
+  };
+
+  const checkout = () => {
+    if (cartItems.length === 0) {
+      toast({ title: "Basket is empty", description: "Add at least one marketplace item before checkout." });
+      return;
+    }
+
+    const order = {
+      items: cartItems,
+      paymentMethod,
+      subtotal,
+      serviceFee,
+      total,
+      status: "payment_pending",
+      createdAt: new Date().toISOString(),
+    };
+    const saved = JSON.parse(localStorage.getItem("agri2rist_marketplace_orders") || "[]");
+    localStorage.setItem("agri2rist_marketplace_orders", JSON.stringify([...saved, order]));
+    toast({
+      title: "Payment flow started",
+      description: `${formatUgx(total)} via ${paymentMethod}. Your order is saved as payment pending.`,
+    });
   };
 
   return (
@@ -322,7 +390,77 @@ export default function MarketplacePage() {
             </div>
           </div>
 
-          <aside>
+          <aside className="space-y-5">
+            <div className="rounded-lg border border-border bg-card p-5">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <h2 className="text-xl font-extrabold text-foreground">Shopping Basket</h2>
+                  <p className="text-sm text-muted-foreground">{itemCount} product unit{itemCount === 1 ? "" : "s"} selected</p>
+                </div>
+                <div className="relative rounded-full bg-primary p-3 text-primary-foreground">
+                  <ShoppingCart size={20} />
+                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-secondary px-1 text-xs font-bold text-secondary-foreground">
+                    {itemCount}
+                  </span>
+                </div>
+              </div>
+
+              {cartItems.length > 0 ? (
+                <div className="space-y-3">
+                  {cartItems.map((item) => (
+                    <div key={item.id} className="rounded-md border border-border p-3">
+                      <div className="mb-2 flex justify-between gap-3">
+                        <div>
+                          <div className="font-semibold text-foreground">{item.name}</div>
+                          <div className="text-xs text-muted-foreground">{formatUgx(item.price)} / {item.unit}</div>
+                        </div>
+                        <div className="text-right text-sm font-bold text-primary">{formatUgx(item.price * item.quantity)}</div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Units</span>
+                        <div className="flex items-center rounded-md border border-border">
+                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => setQuantity(item, item.quantity - 1)} aria-label={`Decrease ${item.name}`}>
+                            <Minus size={14} />
+                          </Button>
+                          <span className="w-10 text-center text-sm font-bold">{item.quantity}</span>
+                          <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => setQuantity(item, item.quantity + 1)} aria-label={`Increase ${item.name}`}>
+                            <Plus size={14} />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-md bg-muted p-4 text-sm text-muted-foreground">
+                  Add products from Featured Listings to calculate basket totals and start payment.
+                </div>
+              )}
+
+              <div className="mt-4 space-y-2 border-t border-border pt-4 text-sm">
+                <PriceRow label="Subtotal" value={subtotal} />
+                <PriceRow label="Service fee" value={serviceFee} />
+                <div className="flex justify-between pt-2 text-base font-extrabold">
+                  <span>Total</span>
+                  <span className="text-primary">{formatUgx(total)}</span>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {PAYMENT_METHODS.map((method) => (
+                      <SelectItem key={method} value={method}>{method}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button className="mt-3 w-full bg-secondary text-secondary-foreground" onClick={checkout}>
+                  Proceed to Payment
+                </Button>
+              </div>
+            </div>
+
             <div className="rounded-lg border border-border bg-card p-5">
               <h2 className="text-xl font-extrabold text-foreground">Featured Listings</h2>
               <div className="mt-4 space-y-4">
@@ -332,9 +470,9 @@ export default function MarketplacePage() {
                     <div>
                       <div className="font-bold text-foreground">{listing.name}</div>
                       <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><MapPin size={12} />{listing.location}</div>
-                      <div className="mt-1 text-sm font-semibold text-primary">{listing.price}</div>
-                      <Button size="sm" variant="outline" className="mt-2 h-8" onClick={() => addToCart(listing.name)}>
-                        <ShoppingCart size={14} className="mr-1" /> Add
+                      <div className="mt-1 text-sm font-semibold text-primary">{formatUgx(listing.price)} / {listing.unit}</div>
+                      <Button size="sm" variant="outline" className="mt-2 h-8" onClick={() => addToCart(listing)}>
+                        <ShoppingCart size={14} className="mr-1" /> Add {cart[listing.id] ? `(${cart[listing.id]})` : ""}
                       </Button>
                     </div>
                   </div>
@@ -346,6 +484,48 @@ export default function MarketplacePage() {
       </section>
 
       <section className="bg-muted py-12">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto mb-10 max-w-4xl text-center">
+            <Badge className="mb-3 bg-secondary text-secondary-foreground">Agri2rist Hub Events</Badge>
+            <h2 className="mb-3 text-3xl font-extrabold text-foreground">
+              Connect People Through Agriculture, Tourism, Culture, and Community
+            </h2>
+            <p className="text-muted-foreground">
+              Create, promote, manage, and join farm festivals, exhibitions, farmers markets, workshops, cultural celebrations, food fairs, livestock competitions, and eco-tourism experiences.
+            </p>
+          </div>
+
+          <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+            <EventPanel title="Who Can Host Events?" items={EVENT_HOSTS} />
+            <div className="rounded-lg border border-border bg-card p-5">
+              <h3 className="mb-4 font-extrabold text-foreground">Types of Events</h3>
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                {EVENT_TYPES.map((group) => (
+                  <div key={group.title} className="rounded-md bg-muted p-3">
+                    <div className="mb-2 font-bold text-foreground">{group.title}</div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {group.items.map((item) => (
+                        <span key={item} className="rounded-full bg-card px-2 py-1 text-[11px] text-muted-foreground">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <EventPanel title="Event Management Dashboard" items={EVENT_DASHBOARD} />
+            <EventPanel title="Visitor Registration and Booking" items={EVENT_VISITOR_TOOLS} />
+            <EventPanel title="Safety and Event Standards" items={EVENT_STANDARDS} />
+            <EventPanel title="Benefits of Hosting Events" items={EVENT_BENEFITS} />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-background py-12">
         <div className="container mx-auto grid grid-cols-1 gap-6 px-4 lg:grid-cols-3">
           <TrustPoint icon={ShieldCheck} title="Verified Sellers" body="Identity, contact, business, location, and product validation before publishing." />
           <TrustPoint icon={ShoppingCart} title="Cart or Quote" body="Buy products directly, reserve farm stays, or request pricing for services and equipment." />
@@ -377,6 +557,15 @@ function Metric({ value, label }: { value: string; label: string }) {
   );
 }
 
+function PriceRow({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="flex justify-between">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-semibold text-foreground">{formatUgx(value)}</span>
+    </div>
+  );
+}
+
 function CategoryImages({ name, images }: { name: string; images: string[] }) {
   return (
     <div className="flex w-[88px] shrink-0 -space-x-3">
@@ -390,6 +579,22 @@ function CategoryImages({ name, images }: { name: string; images: string[] }) {
           decoding="async"
         />
       ))}
+    </div>
+  );
+}
+
+function EventPanel({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <h3 className="mb-3 font-extrabold text-foreground">{title}</h3>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {items.map((item) => (
+          <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+            <ShieldCheck size={14} className="mt-0.5 flex-shrink-0 text-accent" />
+            <span>{item}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -80,16 +80,18 @@ export default function HomePage() {
 
         <div className="relative z-10 container mx-auto px-4 text-center py-20">
           <div className="flex justify-center mb-6">
-            <img
-              src={FARM_IMAGES.logo}
-              alt="Agri2rist Hub"
-              width={128}
-              height={128}
-              loading="eager"
-              decoding="async"
-              fetchPriority="high"
-              className="h-24 w-24 md:h-32 md:w-32 rounded-full shadow-hero animate-float"
-            />
+            <span className="h-24 w-24 overflow-hidden rounded-full shadow-hero animate-float md:h-32 md:w-32">
+              <img
+                src={FARM_IMAGES.logo}
+                alt="Agri2rist Hub"
+                width={128}
+                height={128}
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                className="h-full w-full scale-125 object-cover"
+              />
+            </span>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-extrabold text-primary-foreground leading-tight mb-4 animate-fade-in">

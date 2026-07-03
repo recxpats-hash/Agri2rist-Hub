@@ -51,6 +51,74 @@ const SUSTAINABILITY_ITEMS = [
   "Responsible tourism commitment",
 ];
 
+const HOST_TYPES = [
+  "Crop farmers",
+  "Livestock farmers",
+  "Poultry farms",
+  "Dairy farms",
+  "Fish farms and aquaculture centers",
+  "Beekeeping farms",
+  "Coffee, tea and cocoa plantations",
+  "Fruit orchards",
+  "Farm stay operators",
+  "Eco-lodges and guest houses",
+  "Cultural villages",
+  "Agricultural cooperatives",
+  "Youth farmer groups",
+  "Women's farming associations",
+];
+
+const HOST_OFFERINGS = [
+  "Farm stay accommodation",
+  "Guided farm tours",
+  "Animal feeding",
+  "Crop harvesting",
+  "Fruit picking",
+  "Fishing experiences",
+  "Milking demonstrations",
+  "Coffee and tea tours",
+  "Farm-to-table dining",
+  "Fresh produce and handmade products",
+];
+
+const HOST_BENEFITS = [
+  "Reach local and international visitors",
+  "Receive online bookings 24/7",
+  "Promote your farm globally",
+  "Increase farm income",
+  "Sell products directly to customers",
+  "Advertise special events",
+  "Manage availability calendars",
+  "Receive secure online payments",
+  "Build customer reviews and ratings",
+  "Access booking reports and business insights",
+];
+
+const HOST_STANDARDS = [
+  "Maintain clean accommodation",
+  "Provide safe visitor areas",
+  "Follow food hygiene practices",
+  "Ensure guest safety around animals and equipment",
+  "Respect environmental sustainability",
+  "Offer honest service descriptions",
+  "Respond promptly to booking requests",
+];
+
+const HOST_DASHBOARD = [
+  "Booking management",
+  "Calendar",
+  "Guest messaging",
+  "Earnings dashboard",
+  "Reservation reports",
+  "Product marketplace",
+  "Tour management",
+  "Event management",
+  "Promotions",
+  "Customer reviews",
+  "Analytics",
+  "Notifications",
+];
+
 const PLANS = [
   {
     name: "Starter Host",
@@ -79,6 +147,20 @@ const PLANS = [
 ];
 
 type Step = 1 | 2 | 3 | 4 | 5;
+
+const STEPS = [
+  { id: 1, label: "Business", title: "Create the public host profile" },
+  { id: 2, label: "Location", title: "Add contact, directions, and emergency details" },
+  { id: 3, label: "Offerings", title: "Choose what guests can book or buy" },
+  { id: 4, label: "Payment", title: "Select membership and payout method" },
+] as const;
+
+const STEP_GUIDANCE: Record<1 | 2 | 3 | 4, string[]> = {
+  1: ["Creates the host profile shown to travelers.", "Supports admin verification of business identity.", "Feeds listing name, story, registration, and host type into the review queue."],
+  2: ["Enables map discovery and guest directions.", "Gives Agri2rist support a verified contact path.", "Captures emergency and operational contact details."],
+  3: ["Defines searchable categories in the marketplace.", "Controls bookable experiences, accommodation, dining, events, and services.", "Helps reviewers check safety readiness before publishing."],
+  4: ["Stores membership choice and payout details.", "Confirms the UGX 100,000 verification review.", "Submits the application into pending verification."],
+};
 
 export default function GetListedPage() {
   const [step, setStep] = useState<Step>(1);
@@ -115,6 +197,7 @@ export default function GetListedPage() {
   });
 
   const selectedPlan = useMemo(() => PLANS.find((plan) => plan.name === form.plan) || PLANS[0], [form.plan]);
+  const activeStep = Math.min(step, 4) as 1 | 2 | 3 | 4;
 
   const update = (field: keyof typeof form, value: string | boolean | string[]) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -154,22 +237,70 @@ export default function GetListedPage() {
               Share your farm, restaurant, lodge, campsite, or rural experience with travelers while Agri2rist Hub handles discovery, bookings, trust, and payments.
             </p>
           </div>
-          <div className="rounded-lg border border-primary-foreground/20 bg-primary-foreground/10 p-5 text-primary-foreground">
+          <button
+            type="button"
+            onClick={() => setStep(4)}
+            className="rounded-lg border border-primary-foreground/20 bg-primary-foreground/10 p-5 text-left text-primary-foreground transition hover:bg-primary-foreground/15"
+          >
             <p className="text-sm uppercase tracking-wide text-primary-foreground/70">One-time verification</p>
             <p className="mt-1 text-3xl font-extrabold">UGX 100,000</p>
             <p className="mt-2 text-sm text-primary-foreground/75">
               Covers identity checks, business verification, farm inspection where applicable, digital certificate, and Agri2rist Host Badge.
             </p>
+          </button>
+        </div>
+      </section>
+
+      <section className="bg-background py-12">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto mb-10 max-w-4xl text-center">
+            <h2 className="mb-3 text-3xl font-extrabold text-foreground">
+              Turn Your Farm into a Destination
+            </h2>
+            <p className="text-muted-foreground">
+              Agri2rist Hub welcomes farmers, landowners, accommodation providers, tour operators, and local communities ready to earn income through authentic agritourism.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <HostFeatureCard title="Who Can Become a Host?" items={HOST_TYPES} />
+            <HostFeatureCard title="What Can You Offer?" items={HOST_OFFERINGS} />
+            <HostFeatureCard title="Benefits of Hosting" items={HOST_BENEFITS} />
+            <HostFeatureCard title="Safety and Quality Standards" items={HOST_STANDARDS} />
+            <HostFeatureCard title="Host Dashboard Features" items={HOST_DASHBOARD} />
+            <div className="rounded-lg border border-border bg-card p-5">
+              <h3 className="mb-3 font-extrabold text-foreground">Simple Hosting Process</h3>
+              <div className="grid grid-cols-1 gap-2 text-sm text-muted-foreground">
+                {["Create account", "Verify identity", "Add farm or property", "Upload photos and videos", "List accommodation and experiences", "Set prices and availability", "Receive requests", "Welcome guests", "Get paid securely", "Build reviews"].map((item, index) => (
+                  <div key={item} className="rounded-md bg-muted p-2">
+                    <span className="font-bold text-primary">Step {index + 1}:</span> {item}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="border-b border-border bg-background py-6">
         <div className="container mx-auto flex flex-wrap gap-2 px-4">
-          {["Business", "Location", "Offerings", "Payment"].map((label, index) => (
-            <div key={label} className={`rounded-full px-4 py-2 text-sm font-semibold ${step > index ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
-              {index + 1}. {label}
-            </div>
+          {STEPS.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setStep(item.id)}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                step === item.id
+                  ? "bg-primary text-primary-foreground"
+                  : step > item.id
+                    ? "bg-primary/10 text-primary hover:bg-primary/15"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+              aria-current={step === item.id ? "step" : undefined}
+              title={item.title}
+            >
+              {item.id}. {item.label}
+            </button>
           ))}
         </div>
       </section>
@@ -209,7 +340,7 @@ export default function GetListedPage() {
                 <Field label="Mission / Story" id="story">
                   <Textarea id="story" rows={4} className="resize-none" value={form.story} onChange={(event) => update("story", event.target.value)} />
                 </Field>
-                <Next disabled={!form.businessName || !form.story} onClick={() => setStep(2)} />
+                <Next onClick={() => setStep(2)} />
               </FormSection>
             )}
 
@@ -244,7 +375,7 @@ export default function GetListedPage() {
                 <Field label="Physical Address and Directions" id="address">
                   <Textarea id="address" rows={3} className="resize-none" value={form.address} onChange={(event) => update("address", event.target.value)} />
                 </Field>
-                <NavButtons back={() => setStep(1)} next={() => setStep(3)} disabled={!form.email || !form.phone || !form.country} />
+                <NavButtons back={() => setStep(1)} next={() => setStep(3)} />
               </FormSection>
             )}
 
@@ -263,7 +394,7 @@ export default function GetListedPage() {
                     <Input id="emergencyContact" value={form.emergencyContact} onChange={(event) => update("emergencyContact", event.target.value)} />
                   </Field>
                 </div>
-                <NavButtons back={() => setStep(2)} next={() => setStep(4)} disabled={form.categories.length === 0 || form.services.length === 0} />
+                <NavButtons back={() => setStep(2)} next={() => setStep(4)} />
               </FormSection>
             )}
 
@@ -317,7 +448,7 @@ export default function GetListedPage() {
                 </label>
                 <div className="flex gap-3">
                   <Button variant="outline" onClick={() => setStep(3)} className="flex-1"><ChevronLeft size={16} className="mr-1" />Back</Button>
-                  <Button onClick={submit} disabled={!form.declaration} className="flex-1 bg-secondary text-secondary-foreground">Submit Application</Button>
+                  <Button onClick={submit} className="flex-1 bg-secondary text-secondary-foreground">Submit Application</Button>
                 </div>
               </FormSection>
             )}
@@ -337,6 +468,13 @@ export default function GetListedPage() {
           </div>
 
           <aside className="space-y-4">
+            {step < 5 && (
+              <SidePanel
+                icon={BadgeCheck}
+                title={STEPS[activeStep - 1].title}
+                items={STEP_GUIDANCE[activeStep]}
+              />
+            )}
             <SidePanel icon={FileCheck} title="Verification Documents" items={COMPLIANCE_ITEMS} />
             <SidePanel icon={ShieldCheck} title="Sustainability Review" items={SUSTAINABILITY_ITEMS} />
           </aside>
@@ -383,19 +521,19 @@ function ChoiceGroup({ title, items, selected, onToggle }: { title: string; item
   );
 }
 
-function Next({ disabled, onClick }: { disabled: boolean; onClick: () => void }) {
+function Next({ onClick }: { onClick: () => void }) {
   return (
-    <Button disabled={disabled} onClick={onClick} className="w-full bg-primary text-primary-foreground">
+    <Button onClick={onClick} className="w-full bg-primary text-primary-foreground">
       Continue <ArrowRight size={16} className="ml-2" />
     </Button>
   );
 }
 
-function NavButtons({ back, next, disabled }: { back: () => void; next: () => void; disabled: boolean }) {
+function NavButtons({ back, next }: { back: () => void; next: () => void }) {
   return (
     <div className="flex gap-3">
       <Button variant="outline" onClick={back} className="flex-1"><ChevronLeft size={16} className="mr-1" />Back</Button>
-      <Button disabled={disabled} onClick={next} className="flex-1 bg-primary text-primary-foreground">Continue <ArrowRight size={16} className="ml-2" /></Button>
+      <Button onClick={next} className="flex-1 bg-primary text-primary-foreground">Continue <ArrowRight size={16} className="ml-2" /></Button>
     </div>
   );
 }
@@ -413,6 +551,21 @@ function SidePanel({ icon: Icon, title, items }: { icon: typeof FileCheck; title
             <Check size={14} className="mt-0.5 text-accent" />
             <span>{item}</span>
           </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HostFeatureCard({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <h3 className="mb-3 font-extrabold text-foreground">{title}</h3>
+      <div className="flex flex-wrap gap-2">
+        {items.map((item) => (
+          <span key={item} className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground/75">
+            {item}
+          </span>
         ))}
       </div>
     </div>
