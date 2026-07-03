@@ -8,6 +8,7 @@ import {
   Zap,
   Crown,
   ChevronLeft,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -226,6 +227,11 @@ export default function GetListedPage() {
   });
   const { toast } = useToast();
 
+  const [expandedOfferings, setExpandedOfferings] = useState<string[]>([]);
+  const [expandedFeatures, setExpandedFeatures] = useState<string[]>([]);
+  const [expandedPanels, setExpandedPanels] = useState<string[]>([]);
+  const [expandedProcess, setExpandedProcess] = useState<boolean>(false);
+
   const update = (field: string, value: string | string[]) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
@@ -237,6 +243,16 @@ export default function GetListedPage() {
         : [...prev[field], item],
     }));
   };
+
+  const toggleSection = (
+    section: string,
+    current: string[],
+    setter: (value: string[]) => void
+  ) => {
+    setter(current.includes(section) ? current.filter((s) => s !== section) : [...current, section]);
+  };
+
+  const toggleProcess = () => setExpandedProcess((prev) => !prev);
 
   const handleSubmit = () => {
     const listing = {
@@ -288,60 +304,147 @@ export default function GetListedPage() {
 
             <div className="mb-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
               {HOST_OFFERINGS.map((group) => (
-                <div key={group.title} className="rounded-lg border border-border bg-card p-5 shadow-brand">
-                  <h3 className="mb-3 font-extrabold text-foreground">{group.title}</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {group.items.map((item) => (
-                      <span key={item} className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground/75">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
+                <div key={group.title} className="rounded-lg border border-border bg-card shadow-brand overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => toggleSection(group.title, expandedOfferings, setExpandedOfferings)}
+                    className="w-full flex items-center justify-between p-5 text-left"
+                  >
+                    <h3 className="font-extrabold text-foreground">{group.title}</h3>
+                    <ChevronDown
+                      size={20}
+                      className={`text-muted-foreground transition-transform ${
+                        expandedOfferings.includes(group.title) ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {expandedOfferings.includes(group.title) && (
+                    <div className="px-5 pb-5">
+                      <div className="flex flex-wrap gap-2">
+                        {group.items.map((item) => (
+                          <span key={item} className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground/75">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
 
-            <FeatureGrid title="Who Can Become a Host?" items={HOST_TYPES} />
-            <FeatureGrid title="Benefits of Becoming a Host" items={HOST_BENEFITS} />
+            <div className="space-y-4">
+              <FeatureGrid
+                title="Who Can Become a Host?"
+                items={HOST_TYPES}
+                expanded={expandedFeatures}
+                onToggle={(title) => toggleSection(title, expandedFeatures, setExpandedFeatures)}
+              />
+              <FeatureGrid
+                title="Benefits of Becoming a Host"
+                items={HOST_BENEFITS}
+                expanded={expandedFeatures}
+                onToggle={(title) => toggleSection(title, expandedFeatures, setExpandedFeatures)}
+              />
+            </div>
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <FeaturePanel title="Registration Requirements" items={HOST_REQUIREMENTS} />
-              <FeaturePanel title="Safety and Quality Standards" items={HOST_STANDARDS} />
-              <FeaturePanel title="Host Dashboard Features" items={HOST_DASHBOARD} />
+              <FeaturePanel
+                title="Registration Requirements"
+                items={HOST_REQUIREMENTS}
+                expanded={expandedPanels}
+                onToggle={(title) => toggleSection(title, expandedPanels, setExpandedPanels)}
+              />
+              <FeaturePanel
+                title="Safety and Quality Standards"
+                items={HOST_STANDARDS}
+                expanded={expandedPanels}
+                onToggle={(title) => toggleSection(title, expandedPanels, setExpandedPanels)}
+              />
+              <FeaturePanel
+                title="Host Dashboard Features"
+                items={HOST_DASHBOARD}
+                expanded={expandedPanels}
+                onToggle={(title) => toggleSection(title, expandedPanels, setExpandedPanels)}
+              />
             </div>
 
-            <div className="mt-10 rounded-lg border border-border bg-card p-6">
-              <h3 className="mb-5 text-xl font-extrabold text-foreground">Simple Hosting Process</h3>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-                {HOST_PROCESS.map((item, index) => (
-                  <div key={item} className="rounded-md bg-muted p-3">
-                    <div className="mb-1 text-xs font-bold uppercase text-primary">Step {index + 1}</div>
-                    <div className="text-sm font-medium text-foreground">{item}</div>
+            <div className="mt-10 rounded-lg border border-border bg-card shadow-brand overflow-hidden">
+              <button
+                type="button"
+                onClick={toggleProcess}
+                className="w-full flex items-center justify-between p-6 text-left"
+              >
+                <h3 className="text-xl font-extrabold text-foreground">Simple Hosting Process</h3>
+                <ChevronDown
+                  size={22}
+                  className={`text-muted-foreground transition-transform ${
+                    expandedProcess ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {expandedProcess && (
+                <div className="px-6 pb-6">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                    {HOST_PROCESS.map((item, index) => (
+                      <div key={item} className="rounded-md bg-muted p-3">
+                        <div className="mb-1 text-xs font-bold uppercase text-primary">Step {index + 1}</div>
+                        <div className="text-sm font-medium text-foreground">{item}</div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
 
             <div className="mt-10">
-              <h3 className="text-xl font-extrabold text-foreground mb-4 text-center">Training Gallery</h3>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                {TRAINING_IMAGES.map((src, i) => (
-                  <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-border bg-card">
-                    <img src={src} alt={`Training ${i + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
-                  </div>
-                ))}
-              </div>
+              <button
+                type="button"
+                onClick={() => toggleSection("Training Gallery", expandedFeatures, setExpandedFeatures)}
+                className="w-full flex items-center justify-between mb-4 text-left"
+              >
+                <h3 className="text-xl font-extrabold text-foreground">Training Gallery</h3>
+                <ChevronDown
+                  size={20}
+                  className={`text-muted-foreground transition-transform ${
+                    expandedFeatures.includes("Training Gallery") ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {expandedFeatures.includes("Training Gallery") && (
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                  {TRAINING_IMAGES.map((src, i) => (
+                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-border bg-card">
+                      <img src={src} alt={`Training ${i + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="mt-10">
-              <h3 className="text-xl font-extrabold text-foreground mb-4 text-center">Events Hosting Gallery</h3>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                {EVENT_HOSTING_IMAGES.map((src, i) => (
-                  <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-border bg-card">
-                    <img src={src} alt={`Event hosting ${i + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
-                  </div>
-                ))}
-              </div>
+              <button
+                type="button"
+                onClick={() => toggleSection("Events Hosting Gallery", expandedFeatures, setExpandedFeatures)}
+                className="w-full flex items-center justify-between mb-4 text-left"
+              >
+                <h3 className="text-xl font-extrabold text-foreground">Events Hosting Gallery</h3>
+                <ChevronDown
+                  size={20}
+                  className={`text-muted-foreground transition-transform ${
+                    expandedFeatures.includes("Events Hosting Gallery") ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {expandedFeatures.includes("Events Hosting Gallery") && (
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                  {EVENT_HOSTING_IMAGES.map((src, i) => (
+                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-border bg-card">
+                      <img src={src} alt={`Event hosting ${i + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -751,33 +854,65 @@ export default function GetListedPage() {
   );
 }
 
-function FeatureGrid({ title, items }: { title: string; items: string[] }) {
+function FeatureGrid({ title, items, expanded, onToggle }: { title: string; items: string[]; expanded: string[]; onToggle: (title: string) => void }) {
   return (
-    <div className="mb-10">
-      <h3 className="mb-4 text-xl font-extrabold text-foreground">{title}</h3>
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
-        {items.map((item) => (
-          <div key={item} className="rounded-md border border-border bg-card p-3 text-sm text-foreground/80">
-            {item}
+    <div className="mb-6 rounded-lg border border-border bg-card shadow-brand overflow-hidden">
+      <button
+        type="button"
+        onClick={() => onToggle(title)}
+        className="w-full flex items-center justify-between p-5 text-left"
+      >
+        <h3 className="text-xl font-extrabold text-foreground">{title}</h3>
+        <ChevronDown
+          size={20}
+          className={`text-muted-foreground transition-transform ${
+            expanded.includes(title) ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+      {expanded.includes(title) && (
+        <div className="px-5 pb-5">
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
+            {items.map((item) => (
+              <div key={item} className="rounded-md border border-border bg-muted p-3 text-sm text-foreground/80">
+                {item}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
 
-function FeaturePanel({ title, items }: { title: string; items: string[] }) {
+function FeaturePanel({ title, items, expanded, onToggle }: { title: string; items: string[]; expanded: string[]; onToggle: (title: string) => void }) {
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
-      <h3 className="mb-3 font-extrabold text-foreground">{title}</h3>
-      <div className="space-y-2">
-        {items.map((item) => (
-          <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-            <Check size={14} className="mt-0.5 flex-shrink-0 text-accent" />
-            <span>{item}</span>
+    <div className="rounded-lg border border-border bg-card shadow-brand overflow-hidden">
+      <button
+        type="button"
+        onClick={() => onToggle(title)}
+        className="w-full flex items-center justify-between p-5 text-left"
+      >
+        <h3 className="text-xl font-extrabold text-foreground">{title}</h3>
+        <ChevronDown
+          size={20}
+          className={`text-muted-foreground transition-transform ${
+            expanded.includes(title) ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+      {expanded.includes(title) && (
+        <div className="px-5 pb-5">
+          <div className="space-y-2">
+            {items.map((item) => (
+              <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+                <Check size={14} className="mt-0.5 flex-shrink-0 text-accent" />
+                <span>{item}</span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
