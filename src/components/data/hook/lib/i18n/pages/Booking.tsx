@@ -1,558 +1,320 @@
 import { useMemo, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import {
-  ArrowRight,
-  CalendarCheck,
-  CheckCircle,
-  ChevronLeft,
-  ClipboardList,
-  CreditCard,
-  FileText,
-  HeartHandshake,
-  Hotel,
-  Plane,
-  User,
-} from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import { CalendarCheck, CheckCircle, ChevronLeft, Clock, CreditCard, MapPin, QrCode, Utensils } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { SAMPLE_FARMS } from "@/data/sampleData";
+import { FARM_IMAGES, SAMPLE_FARMS } from "@/data/sampleData";
 
-const ACCOMMODATION_CATALOG = [
-  "Entire Farm House",
-  "Family Farm House",
-  "Luxury Farm Villa",
-  "Traditional Farm Cottage",
-  "Standard Cottage",
-  "Deluxe Cottage",
-  "Wooden Cabin",
-  "Lake View Cabin",
-  "Luxury Safari Tent",
-  "Glamping Tent",
-  "Premium Camping Pitch",
-  "Mixed Dormitory",
-  "Family Room",
-  "Luxury Tree House",
-  "Eco Suite",
-  "Barn Stay",
-  "Tiny House",
-  "Floating Farm Cabin",
+const RESTAURANTS = [
+  {
+    id: "harvest-table",
+    name: "Harvest Table Kitchen",
+    cuisine: "Farm-to-table Ugandan cuisine",
+    location: "Fort Portal",
+    rating: "4.8",
+    price: "$$",
+    image: FARM_IMAGES.farmFruits,
+    badges: ["Farm-to-Table", "Organic Food", "Traditional Cuisine"],
+    hours: "11:00 - 21:30",
+  },
+  {
+    id: "lake-bbq",
+    name: "Blue Lagoon Fish Barbecue",
+    cuisine: "Seafood and fish farm dining",
+    location: "Jinja",
+    rating: "4.7",
+    price: "$$",
+    image: FARM_IMAGES.tilapia,
+    badges: ["Lake View", "Fresh Fish", "Outdoor Dining"],
+    hours: "12:00 - 22:00",
+  },
+  {
+    id: "coffee-breakfast",
+    name: "Highlands Coffee Breakfast",
+    cuisine: "Coffee, bakery, and breakfast",
+    location: "Kapchorwa",
+    rating: "4.9",
+    price: "$",
+    image: FARM_IMAGES.training,
+    badges: ["Coffee Tour", "Mountain View", "Vegetarian"],
+    hours: "07:00 - 16:00",
+  },
 ];
 
-const PURPOSES = [
-  "Leisure",
-  "Holiday",
-  "Business",
-  "Honeymoon",
-  "Family Vacation",
-  "School Tour",
-  "Agricultural Training",
-  "Farm Experience",
-  "Retreat",
-  "Conference",
-  "Photography",
-  "Bird Watching",
-  "Volunteer",
-  "Research",
+const EXPERIENCES = [
+  "Harvest & Cook Experience",
+  "Pick Your Own Vegetables",
+  "Coffee Farm Breakfast",
+  "Tea Plantation Lunch",
+  "Organic Farm Dinner",
+  "Fish Farm Barbecue",
+  "Traditional Cooking Class",
+  "Sunset Garden Dinner",
 ];
 
-const MEAL_PLANS = ["Room Only", "Bed & Breakfast", "Half Board", "Full Board", "All Inclusive", "Farm Fresh Meals", "Organic Meals", "Vegetarian", "Vegan", "Halal", "Gluten Free"];
-const FARM_EXPERIENCES = ["Dairy Farm Tour", "Poultry Tour", "Fish Farming", "Goat Farming", "Apiary Visit", "Greenhouse Tour", "Coffee Tour", "Tea Tour", "Fruit Orchard Tour", "Vegetable Harvest"];
-const ACTIVITIES = ["Horse Riding", "Tractor Ride", "Nature Walk", "Hiking", "Cycling", "Canoeing", "Fishing", "Bird Watching", "Camp Fire", "BBQ Night", "Cultural Dance", "Traditional Cooking", "Fruit Picking", "Milking Cows", "Egg Collection", "Tree Planting"];
-const EXTRAS = ["Baby Cot", "Extra Bed", "Laundry", "Spa", "Swimming Pool", "Gym", "WiFi", "Conference Room", "BBQ Equipment", "Bicycle Rental", "Fishing Equipment", "Horse Rental"];
-const ROOM_PREFERENCES = ["Ground Floor", "Upper Floor", "Lake View", "Garden View", "Farm View", "Quiet Area", "Near Restaurant", "Pet Friendly"];
-const DOCUMENTS = ["Passport", "National ID", "Visa", "Vaccination Card", "Travel Insurance", "Digital Signature"];
-const CHECK_IN = ["Identity Verified", "Payment Confirmed", "Room Assigned", "Welcome Drink", "Farm Orientation", "Safety Briefing", "Keys Issued", "WiFi Password Shared"];
-const CHECK_OUT = ["Room Inspection", "Keys Returned", "Outstanding Balance Cleared", "Feedback Collected", "Next Visit Discount Issued"];
-const HOST_KPIS = ["Total Bookings", "Occupancy Rate", "Available Units", "Check-ins Today", "Check-outs Today", "Revenue", "Average Length of Stay", "Guest Satisfaction", "Repeat Guests", "Cancellation Rate"];
-const GUEST_NOTIFICATIONS = ["Booking confirmation", "Deposit payment reminder", "Pre-arrival information", "Check-in reminder", "Daily activity schedule", "Weather updates", "Review request"];
-const HOST_NOTIFICATIONS = ["New booking received", "Payment received", "Guest special request", "Upcoming arrival", "Housekeeping assignment", "Maintenance issue reported", "Overbooking warning"];
+const EVENTS = ["Food Festival", "Cultural Dinner Night", "BBQ Weekend", "Coffee Tasting", "Chef Masterclass", "Farm Brunch"];
+const OCCASIONS = ["Casual Dining", "Birthday", "Anniversary", "Business Meeting", "Wedding Dinner", "Honeymoon", "Family Gathering"];
+const SEATING = ["Indoor Dining", "Outdoor Dining", "Garden Restaurant", "Lake View", "Mountain View", "Wheelchair Accessible"];
+const PAYMENT_OPTIONS = ["Pay at Restaurant", "Deposit Payment", "Full Payment", "Group Payment", "Corporate Billing", "Mobile Money", "Credit Card"];
+const DASHBOARD_FEATURES = ["Upcoming reservations", "Saved menus", "Payment history", "Loyalty points", "Modify bookings", "Cancel reservations"];
+const PARTNER_TOOLS = ["Menu management", "Table layout", "Availability calendar", "Reservation queue", "Promotions", "Revenue dashboard"];
 
-type Step = 1 | 2 | 3 | 4 | 5;
+type Step = 1 | 2 | 3 | 4;
 
 export default function BookingPage() {
   const { farmId } = useParams();
-  const farm = SAMPLE_FARMS.find((f) => f.id === farmId) || SAMPLE_FARMS[0];
-  const accommodationOptions = Array.from(new Set([...farm.accommodationTypes, ...ACCOMMODATION_CATALOG]));
-
+  const farm = SAMPLE_FARMS.find((item) => item.id === farmId) || SAMPLE_FARMS[0];
   const [step, setStep] = useState<Step>(1);
-  const bookingRef = useMemo(() => `A2H-${Math.random().toString(36).substring(2, 8).toUpperCase()}`, []);
+  const [selectedRestaurant, setSelectedRestaurant] = useState(RESTAURANTS[0].id);
   const [form, setForm] = useState({
-    checkIn: "",
-    checkOut: "",
-    arrivalTime: "",
-    departureTime: "",
-    adults: 2,
-    children: 0,
-    infants: 0,
-    accommodationType: farm.accommodationTypes[0] || ACCOMMODATION_CATALOG[0],
-    roomNumber: "",
-    guestName: "",
-    guestEmail: "",
-    guestPhone: "",
-    nationality: "",
-    gender: "",
-    dateOfBirth: "",
-    idNumber: "",
-    homeAddress: "",
-    emergencyContact: "",
-    purpose: "Farm Experience",
-    mealPlan: "Farm Fresh Meals",
-    bedPreference: "Queen",
-    paymentMethod: "Mobile Money",
-    paymentStatus: "Pending",
-    transportRequired: false,
-    vehicleType: "SUV",
-    arrivalFlight: "",
-    departureFlight: "",
-    selectedExperiences: [] as string[],
-    selectedActivities: [] as string[],
-    selectedExtras: [] as string[],
-    selectedPreferences: [] as string[],
-    uploadedDocuments: [] as string[],
-    specialNeeds: "",
-    specialRequests: "",
-    dietaryRequirements: "",
-    allergyInformation: "",
+    date: "",
+    time: "18:30",
+    guests: 2,
+    seating: "Outdoor Dining",
+    occasion: "Casual Dining",
+    name: "",
+    email: "",
+    phone: "",
+    country: "",
+    dietary: "",
+    allergies: "",
+    accessibility: "",
+    requests: "",
+    payment: "Deposit Payment",
+    experiences: [] as string[],
+    events: [] as string[],
   });
 
-  const nights =
-    form.checkIn && form.checkOut
-      ? Math.max(
-          0,
-          Math.ceil(
-            (new Date(form.checkOut).getTime() - new Date(form.checkIn).getTime()) /
-              (1000 * 60 * 60 * 24)
-          )
-        )
-      : 0;
-  const totalGuests = form.adults + form.children + form.infants;
-  const experienceTotal = (form.selectedExperiences.length + form.selectedActivities.length) * 18;
-  const extrasTotal = form.selectedExtras.length * 12;
-  const subtotal = nights * farm.pricePerNight * Math.max(form.adults + form.children, 1);
-  const taxes = Math.round((subtotal + experienceTotal + extrasTotal) * 0.08);
-  const total = subtotal + experienceTotal + extrasTotal + taxes;
+  const restaurant = useMemo(() => RESTAURANTS.find((item) => item.id === selectedRestaurant) || RESTAURANTS[0], [selectedRestaurant]);
+  const bookingRef = useMemo(() => `A2R-${Math.random().toString(36).slice(2, 8).toUpperCase()}`, []);
+  const deposit = form.payment === "Pay at Restaurant" ? 0 : form.guests * 15000;
 
-  const update = (field: string, value: string | number | boolean | string[]) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
-
-  const toggleList = (field: keyof typeof form, value: string) => {
-    const current = form[field];
-    if (!Array.isArray(current)) return;
-    update(field, current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
+  const update = (field: keyof typeof form, value: string | number | string[]) => {
+    setForm((current) => ({ ...current, [field]: value }));
   };
 
-  const steps = [
-    { id: 1, label: "Stay", icon: CalendarCheck },
-    { id: 2, label: "Guests", icon: User },
-    { id: 3, label: "Packages", icon: HeartHandshake },
-    { id: 4, label: "Review", icon: ClipboardList },
-  ];
+  const toggle = (field: "experiences" | "events", value: string) => {
+    setForm((current) => ({
+      ...current,
+      [field]: current[field].includes(value)
+        ? current[field].filter((item) => item !== value)
+        : [...current[field], value],
+    }));
+  };
 
-  const handleConfirm = () => {
-    const booking = {
-      ...form,
-      farmId: farm.id,
-      farmName: farm.name,
-      numGuests: totalGuests,
-      bookingRef,
-      bookingStatus: "Reserved",
-      amountPaid: 0,
-      balance: total,
-      taxes,
-      createdAt: new Date().toISOString(),
-    };
-    const saved = JSON.parse(localStorage.getItem("agri2rist_bookings") || "[]");
-    localStorage.setItem("agri2rist_bookings", JSON.stringify([...saved, booking]));
-    setStep(5);
+  const confirm = () => {
+    const saved = JSON.parse(localStorage.getItem("agri2rist_restaurant_bookings") || "[]");
+    localStorage.setItem(
+      "agri2rist_restaurant_bookings",
+      JSON.stringify([...saved, { ...form, restaurant: restaurant.name, bookingRef, deposit, status: "confirmed", createdAt: new Date().toISOString() }])
+    );
+    setStep(4);
   };
 
   return (
     <PageLayout>
-      <div className="bg-muted border-b border-border py-3">
+      <div className="border-b border-border bg-muted py-3">
         <div className="container mx-auto px-4">
-          <Link
-            to={`/farm/${farm.id}`}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
+          <Link to={`/farm/${farm.id}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
             <ChevronLeft size={16} />
             Back to {farm.name}
           </Link>
         </div>
       </div>
 
-      {step < 5 && (
-        <div className="bg-primary py-8">
-          <div className="container mx-auto px-4">
-            <Badge className="mb-3 bg-secondary text-secondary-foreground">Guest booking module</Badge>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-primary-foreground mb-6">
-              Reserve <span className="text-secondary">{farm.name}</span>
-            </h1>
-            <div className="flex gap-2 md:gap-6 overflow-x-auto pb-1">
-              {steps.map((s, i) => (
-                <div key={s.id} className="flex items-center gap-2 shrink-0">
-                  <div
-                    className={`flex items-center justify-center w-8 h-8 rounded-full border-2 font-bold text-sm transition-colors ${
-                      step >= s.id
-                        ? "bg-secondary border-secondary text-secondary-foreground"
-                        : "border-primary-foreground/40 text-primary-foreground/40"
-                    }`}
-                  >
-                    {step > s.id ? <CheckCircle size={16} /> : s.id}
-                  </div>
-                  <span
-                    className={`hidden md:block text-sm font-medium ${
-                      step >= s.id ? "text-secondary" : "text-primary-foreground/40"
-                    }`}
-                  >
-                    {s.label}
-                  </span>
-                  {i < steps.length - 1 && <div className="w-8 md:w-16 h-0.5 bg-primary-foreground/20 mx-1" />}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="py-10 bg-background">
-        <div className="container mx-auto px-4">
-          {step === 5 ? (
-            <Confirmation
-              farmName={farm.name}
-              bookingRef={bookingRef}
-              form={form}
-              total={total}
-              nights={nights}
-              totalGuests={totalGuests}
-            />
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
-              <div className="lg:col-span-2">
-                {step === 1 && (
-                  <Section title="Stay Information" icon={Hotel}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Field label="Check-in Date" id="checkIn">
-                        <Input
-                          id="checkIn"
-                          type="date"
-                          value={form.checkIn}
-                          min={new Date().toISOString().split("T")[0]}
-                          onChange={(e) => update("checkIn", e.target.value)}
-                        />
-                      </Field>
-                      <Field label="Check-out Date" id="checkOut">
-                        <Input
-                          id="checkOut"
-                          type="date"
-                          value={form.checkOut}
-                          min={form.checkIn || new Date().toISOString().split("T")[0]}
-                          onChange={(e) => update("checkOut", e.target.value)}
-                        />
-                      </Field>
-                      <Field label="Arrival Time" id="arrivalTime">
-                        <Input id="arrivalTime" type="time" value={form.arrivalTime} onChange={(e) => update("arrivalTime", e.target.value)} />
-                      </Field>
-                      <Field label="Departure Time" id="departureTime">
-                        <Input id="departureTime" type="time" value={form.departureTime} onChange={(e) => update("departureTime", e.target.value)} />
-                      </Field>
-                    </div>
-
-                    <Field label="Accommodation Type" id="accommodationType">
-                      <Select value={form.accommodationType} onValueChange={(value) => update("accommodationType", value)}>
-                        <SelectTrigger id="accommodationType">
-                          <SelectValue placeholder="Choose accommodation" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {accommodationOptions.map((type) => (
-                            <SelectItem key={type} value={type}>
-                              {type}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </Field>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <NumberField label="Adults" id="adults" value={form.adults} min={1} max={20} onChange={(value) => update("adults", value)} />
-                      <NumberField label="Children" id="children" value={form.children} min={0} max={20} onChange={(value) => update("children", value)} />
-                      <NumberField label="Infants" id="infants" value={form.infants} min={0} max={10} onChange={(value) => update("infants", value)} />
-                    </div>
-
-                    <div className="flex justify-end">
-                      <Button
-                        className="bg-primary text-primary-foreground"
-                        disabled={!form.checkIn || !form.checkOut || !form.accommodationType}
-                        onClick={() => setStep(2)}
-                      >
-                        Continue <ArrowRight size={16} className="ml-2" />
-                      </Button>
-                    </div>
-                  </Section>
-                )}
-
-                {step === 2 && (
-                  <Section title="Guest Details" icon={User}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Field label="Full Name" id="guestName">
-                        <Input id="guestName" value={form.guestName} onChange={(e) => update("guestName", e.target.value)} placeholder="Primary guest full name" />
-                      </Field>
-                      <Field label="Email Address" id="guestEmail">
-                        <Input id="guestEmail" type="email" value={form.guestEmail} onChange={(e) => update("guestEmail", e.target.value)} placeholder="you@example.com" />
-                      </Field>
-                      <Field label="Phone Number" id="guestPhone">
-                        <Input id="guestPhone" type="tel" value={form.guestPhone} onChange={(e) => update("guestPhone", e.target.value)} placeholder="+256 7xx xxx xxx" />
-                      </Field>
-                      <Field label="Nationality" id="nationality">
-                        <Input id="nationality" value={form.nationality} onChange={(e) => update("nationality", e.target.value)} placeholder="Nationality" />
-                      </Field>
-                      <Field label="Gender" id="gender">
-                        <Select value={form.gender} onValueChange={(value) => update("gender", value)}>
-                          <SelectTrigger id="gender">
-                            <SelectValue placeholder="Select gender" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {["Female", "Male", "Non-binary", "Prefer not to say"].map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </Field>
-                      <Field label="Date of Birth" id="dateOfBirth">
-                        <Input id="dateOfBirth" type="date" value={form.dateOfBirth} onChange={(e) => update("dateOfBirth", e.target.value)} />
-                      </Field>
-                      <Field label="National ID or Passport" id="idNumber">
-                        <Input id="idNumber" value={form.idNumber} onChange={(e) => update("idNumber", e.target.value)} placeholder="ID or passport number" />
-                      </Field>
-                      <Field label="Emergency Contact" id="emergencyContact">
-                        <Input id="emergencyContact" value={form.emergencyContact} onChange={(e) => update("emergencyContact", e.target.value)} placeholder="Name and phone number" />
-                      </Field>
-                    </div>
-
-                    <Field label="Home Address" id="homeAddress">
-                      <Textarea id="homeAddress" value={form.homeAddress} onChange={(e) => update("homeAddress", e.target.value)} rows={2} className="resize-none" />
-                    </Field>
-
-                    <Field label="Special Needs" id="specialNeeds">
-                      <Textarea id="specialNeeds" value={form.specialNeeds} onChange={(e) => update("specialNeeds", e.target.value)} placeholder="Mobility, medical, child care, or accessibility needs" rows={2} className="resize-none" />
-                    </Field>
-
-                    <div className="flex gap-3">
-                      <Button variant="outline" onClick={() => setStep(1)} className="flex-1">
-                        Back
-                      </Button>
-                      <Button
-                        className="flex-1 bg-primary text-primary-foreground"
-                        disabled={!form.guestName || !form.guestEmail || !form.guestPhone}
-                        onClick={() => setStep(3)}
-                      >
-                        Continue <ArrowRight size={16} className="ml-2" />
-                      </Button>
-                    </div>
-                  </Section>
-                )}
-
-                {step === 3 && (
-                  <Section title="Packages, Preferences, and Transport" icon={Plane}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Field label="Purpose of Visit" id="purpose">
-                        <Select value={form.purpose} onValueChange={(value) => update("purpose", value)}>
-                          <SelectTrigger id="purpose">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {PURPOSES.map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </Field>
-                      <Field label="Meal Plan" id="mealPlan">
-                        <Select value={form.mealPlan} onValueChange={(value) => update("mealPlan", value)}>
-                          <SelectTrigger id="mealPlan">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {MEAL_PLANS.map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </Field>
-                    </div>
-
-                    <Checklist title="Farm Experience Packages" options={FARM_EXPERIENCES} selected={form.selectedExperiences} onToggle={(item) => toggleList("selectedExperiences", item)} />
-                    <Checklist title="Activities" options={ACTIVITIES} selected={form.selectedActivities} onToggle={(item) => toggleList("selectedActivities", item)} />
-                    <Checklist title="Booking Extras" options={EXTRAS} selected={form.selectedExtras} onToggle={(item) => toggleList("selectedExtras", item)} />
-                    <Checklist title="Room Preferences" options={ROOM_PREFERENCES} selected={form.selectedPreferences} onToggle={(item) => toggleList("selectedPreferences", item)} />
-
-                    <div className="rounded-lg border border-border p-4 space-y-4">
-                      <label className="flex items-center gap-2 text-sm font-medium">
-                        <Checkbox checked={form.transportRequired} onCheckedChange={(checked) => update("transportRequired", Boolean(checked))} />
-                        Airport pickup or farm transfer required
-                      </label>
-                      {form.transportRequired && (
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          <Field label="Vehicle Type" id="vehicleType">
-                            <Select value={form.vehicleType} onValueChange={(value) => update("vehicleType", value)}>
-                              <SelectTrigger id="vehicleType">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {["Sedan", "SUV", "Van", "Bus"].map((item) => (
-                                  <SelectItem key={item} value={item}>
-                                    {item}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </Field>
-                          <Field label="Arrival Flight" id="arrivalFlight">
-                            <Input id="arrivalFlight" value={form.arrivalFlight} onChange={(e) => update("arrivalFlight", e.target.value)} />
-                          </Field>
-                          <Field label="Departure Flight" id="departureFlight">
-                            <Input id="departureFlight" value={form.departureFlight} onChange={(e) => update("departureFlight", e.target.value)} />
-                          </Field>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Field label="Dietary Requirements" id="dietaryRequirements">
-                        <Textarea id="dietaryRequirements" value={form.dietaryRequirements} onChange={(e) => update("dietaryRequirements", e.target.value)} rows={2} className="resize-none" />
-                      </Field>
-                      <Field label="Allergy Information" id="allergyInformation">
-                        <Textarea id="allergyInformation" value={form.allergyInformation} onChange={(e) => update("allergyInformation", e.target.value)} rows={2} className="resize-none" />
-                      </Field>
-                    </div>
-
-                    <div className="flex gap-3">
-                      <Button variant="outline" onClick={() => setStep(2)} className="flex-1">
-                        Back
-                      </Button>
-                      <Button className="flex-1 bg-primary text-primary-foreground" onClick={() => setStep(4)}>
-                        Review Booking <ArrowRight size={16} className="ml-2" />
-                      </Button>
-                    </div>
-                  </Section>
-                )}
-
-                {step === 4 && (
-                  <Section title="Payment, Documents, and Review" icon={CreditCard}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Field label="Payment Method" id="paymentMethod">
-                        <Select value={form.paymentMethod} onValueChange={(value) => update("paymentMethod", value)}>
-                          <SelectTrigger id="paymentMethod">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {["Cash", "Credit Card", "Mobile Money", "Bank Transfer", "Online Payment"].map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </Field>
-                      <Field label="Payment Status" id="paymentStatus">
-                        <Select value={form.paymentStatus} onValueChange={(value) => update("paymentStatus", value)}>
-                          <SelectTrigger id="paymentStatus">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {["Pending", "Deposit Paid", "Fully Paid", "Refunded"].map((item) => (
-                              <SelectItem key={item} value={item}>
-                                {item}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </Field>
-                    </div>
-
-                    <Checklist title="Digital Documents" options={DOCUMENTS} selected={form.uploadedDocuments} onToggle={(item) => toggleList("uploadedDocuments", item)} />
-
-                    <Field label="Special Requests" id="specialRequests">
-                      <Textarea id="specialRequests" value={form.specialRequests} onChange={(e) => update("specialRequests", e.target.value)} placeholder="Birthday decoration, anniversary package, accessibility requirements, or other notes" className="resize-none" rows={3} />
-                    </Field>
-
-                    <ReviewBlock
-                      farmName={farm.name}
-                      form={form}
-                      nights={nights}
-                      totalGuests={totalGuests}
-                      subtotal={subtotal}
-                      experienceTotal={experienceTotal}
-                      extrasTotal={extrasTotal}
-                      taxes={taxes}
-                      total={total}
-                    />
-
-                    <div className="flex gap-3">
-                      <Button variant="outline" onClick={() => setStep(3)} className="flex-1">
-                        Back
-                      </Button>
-                      <Button
-                        className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold shadow-gold"
-                        onClick={handleConfirm}
-                      >
-                        Confirm Reservation
-                      </Button>
-                    </div>
-                  </Section>
-                )}
-              </div>
-
-              <BookingSidebar farm={farm} nights={nights} total={total} totalGuests={totalGuests} />
-            </div>
-          )}
-        </div>
-      </div>
-
-      <section className="py-12 bg-muted">
-        <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <InfoPanel title="Check-in Checklist" icon={CheckCircle} items={CHECK_IN} />
-          <InfoPanel title="Check-out Checklist" icon={FileText} items={CHECK_OUT} />
-          <InfoPanel title="Host Dashboard KPIs" icon={ClipboardList} items={HOST_KPIS} />
+      <section className="relative overflow-hidden bg-primary py-16">
+        <img src={restaurant.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" />
+        <div className="absolute inset-0 bg-primary/80" />
+        <div className="container relative mx-auto px-4">
+          <Badge className="mb-4 bg-secondary text-secondary-foreground">Restaurant and cuisine booking</Badge>
+          <h1 className="max-w-3xl text-4xl font-extrabold text-primary-foreground md:text-5xl">
+            Taste Authentic Africa. Book Memorable Dining Experiences.
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-primary-foreground/78">
+            Reserve farm-to-table restaurants, traditional cuisine, private dining, culinary events, and chef-led food experiences.
+          </p>
         </div>
       </section>
 
-      <section className="py-12 bg-background">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InfoPanel title="Guest Automated Notifications" icon={User} items={GUEST_NOTIFICATIONS} />
-          <InfoPanel title="Host Automated Notifications" icon={Hotel} items={HOST_NOTIFICATIONS} />
+      <section className="bg-background py-12">
+        <div className="container mx-auto grid grid-cols-1 gap-10 px-4 lg:grid-cols-[1fr_360px]">
+          <main className="space-y-8">
+            {step < 4 && (
+              <div className="flex flex-wrap gap-2">
+                {["Find Restaurant", "Reserve Table", "Guest & Payment"].map((label, index) => (
+                  <div key={label} className={`rounded-full px-4 py-2 text-sm font-semibold ${step > index ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                    {index + 1}. {label}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {step === 1 && (
+              <section className="space-y-5">
+                <div>
+                  <h2 className="text-2xl font-extrabold text-foreground">Choose a Restaurant</h2>
+                  <p className="mt-1 text-sm text-muted-foreground">Listings show only the details guests need before booking.</p>
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  {RESTAURANTS.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => setSelectedRestaurant(item.id)}
+                      className={`overflow-hidden rounded-lg border text-left transition ${selectedRestaurant === item.id ? "border-primary bg-primary/5" : "border-border bg-card"}`}
+                    >
+                      <img src={item.image} alt={item.name} className="h-36 w-full object-cover" loading="lazy" decoding="async" />
+                      <div className="p-4">
+                        <div className="font-bold text-foreground">{item.name}</div>
+                        <div className="mt-1 text-sm text-muted-foreground">{item.cuisine}</div>
+                        <div className="mt-3 flex items-center justify-between text-sm">
+                          <span className="inline-flex items-center gap-1 text-muted-foreground"><MapPin size={14} />{item.location}</span>
+                          <span className="font-semibold text-primary">{item.rating}</span>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <Button className="bg-primary text-primary-foreground" onClick={() => setStep(2)}>Continue to Reservation</Button>
+              </section>
+            )}
+
+            {step === 2 && (
+              <FormBlock title="Reservation Details" icon={CalendarCheck}>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <Field label="Reservation Date" id="date">
+                    <Input id="date" type="date" min={new Date().toISOString().split("T")[0]} value={form.date} onChange={(event) => update("date", event.target.value)} />
+                  </Field>
+                  <Field label="Preferred Time" id="time">
+                    <Input id="time" type="time" value={form.time} onChange={(event) => update("time", event.target.value)} />
+                  </Field>
+                  <Field label="Number of Guests" id="guests">
+                    <Input id="guests" type="number" min={1} max={80} value={form.guests} onChange={(event) => update("guests", Number(event.target.value) || 1)} />
+                  </Field>
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <Field label="Seating Preference" id="seating">
+                    <Select value={form.seating} onValueChange={(value) => update("seating", value)}>
+                      <SelectTrigger id="seating"><SelectValue /></SelectTrigger>
+                      <SelectContent>{SEATING.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </Field>
+                  <Field label="Occasion" id="occasion">
+                    <Select value={form.occasion} onValueChange={(value) => update("occasion", value)}>
+                      <SelectTrigger id="occasion"><SelectValue /></SelectTrigger>
+                      <SelectContent>{OCCASIONS.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </Field>
+                </div>
+                <CompactChecklist title="Farm-to-table experiences" items={EXPERIENCES} selected={form.experiences} onToggle={(item) => toggle("experiences", item)} />
+                <CompactChecklist title="Culinary events" items={EVENTS} selected={form.events} onToggle={(item) => toggle("events", item)} />
+                <StepButtons back={() => setStep(1)} next={() => setStep(3)} disabled={!form.date || !form.time} />
+              </FormBlock>
+            )}
+
+            {step === 3 && (
+              <FormBlock title="Guest and Payment" icon={CreditCard}>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <Field label="Full Name" id="name"><Input id="name" value={form.name} onChange={(event) => update("name", event.target.value)} /></Field>
+                  <Field label="Email" id="email"><Input id="email" type="email" value={form.email} onChange={(event) => update("email", event.target.value)} /></Field>
+                  <Field label="Mobile Number" id="phone"><Input id="phone" value={form.phone} onChange={(event) => update("phone", event.target.value)} /></Field>
+                  <Field label="Country" id="country"><Input id="country" value={form.country} onChange={(event) => update("country", event.target.value)} /></Field>
+                  <Field label="Payment Option" id="payment">
+                    <Select value={form.payment} onValueChange={(value) => update("payment", value)}>
+                      <SelectTrigger id="payment"><SelectValue /></SelectTrigger>
+                      <SelectContent>{PAYMENT_OPTIONS.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </Field>
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <Field label="Dietary Preferences" id="dietary"><Textarea id="dietary" rows={2} className="resize-none" value={form.dietary} onChange={(event) => update("dietary", event.target.value)} /></Field>
+                  <Field label="Allergies" id="allergies"><Textarea id="allergies" rows={2} className="resize-none" value={form.allergies} onChange={(event) => update("allergies", event.target.value)} /></Field>
+                  <Field label="Accessibility Requirements" id="accessibility"><Textarea id="accessibility" rows={2} className="resize-none" value={form.accessibility} onChange={(event) => update("accessibility", event.target.value)} /></Field>
+                  <Field label="Special Requests" id="requests"><Textarea id="requests" rows={2} className="resize-none" value={form.requests} onChange={(event) => update("requests", event.target.value)} /></Field>
+                </div>
+                <div className="rounded-lg bg-muted p-4 text-sm">
+                  <div className="flex justify-between"><span className="text-muted-foreground">Deposit due</span><span className="font-bold text-primary">UGX {deposit.toLocaleString()}</span></div>
+                  <div className="mt-1 text-xs text-muted-foreground">Includes email/SMS confirmation, QR check-in, calendar reminder, directions, and cancellation policy.</div>
+                </div>
+                <div className="flex gap-3">
+                  <Button variant="outline" onClick={() => setStep(2)} className="flex-1"><ChevronLeft size={16} className="mr-1" />Back</Button>
+                  <Button disabled={!form.name || !form.email || !form.phone} onClick={confirm} className="flex-1 bg-secondary text-secondary-foreground">Confirm Booking</Button>
+                </div>
+              </FormBlock>
+            )}
+
+            {step === 4 && (
+              <section className="rounded-lg border border-border bg-card p-8 text-center">
+                <CheckCircle className="mx-auto mb-4 text-accent" size={58} />
+                <h2 className="text-3xl font-extrabold text-foreground">Reservation Confirmed</h2>
+                <p className="mx-auto mt-2 max-w-xl text-muted-foreground">
+                  Your table at {restaurant.name} is confirmed. Use your booking reference and QR code at check-in.
+                </p>
+                <div className="mx-auto mt-6 max-w-md rounded-lg bg-muted p-5 text-left text-sm">
+                  {[
+                    ["Reference", bookingRef],
+                    ["Date", form.date],
+                    ["Time", form.time],
+                    ["Guests", String(form.guests)],
+                    ["Seating", form.seating],
+                    ["Payment", form.payment],
+                  ].map(([label, value]) => (
+                    <div key={label} className="flex justify-between border-b border-border py-2 last:border-0">
+                      <span className="text-muted-foreground">{label}</span>
+                      <span className="font-semibold text-foreground">{value}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link to="/marketplace"><Button className="mt-6 bg-primary text-primary-foreground">Browse Local Food Products</Button></Link>
+              </section>
+            )}
+          </main>
+
+          <aside className="space-y-4">
+            <RestaurantSummary restaurant={restaurant} />
+            <SmallPanel icon={Utensils} title="Customer Dashboard" items={DASHBOARD_FEATURES} />
+            <SmallPanel icon={Clock} title="Restaurant Partner Tools" items={PARTNER_TOOLS} />
+            <SmallPanel icon={QrCode} title="Automated Guest Updates" items={["Booking confirmation", "Payment confirmation", "24-hour reminder", "2-hour reminder", "Review request"]} />
+          </aside>
         </div>
       </section>
     </PageLayout>
   );
 }
 
-function Section({ title, icon: Icon, children }: { title: string; icon: typeof CalendarCheck; children: React.ReactNode }) {
+function RestaurantSummary({ restaurant }: { restaurant: (typeof RESTAURANTS)[number] }) {
   return (
-    <div className="bg-card rounded-lg border border-border p-6 space-y-5 animate-fade-in">
-      <div className="flex items-center gap-2">
-        <Icon size={20} className="text-primary" />
-        <h2 className="text-xl font-bold text-foreground">{title}</h2>
+    <div className="overflow-hidden rounded-lg border border-border bg-card">
+      <img src={restaurant.image} alt={restaurant.name} className="h-44 w-full object-cover" loading="lazy" decoding="async" />
+      <div className="p-5">
+        <h2 className="text-xl font-extrabold text-foreground">{restaurant.name}</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{restaurant.cuisine}</p>
+        <div className="mt-3 flex flex-wrap gap-2">{restaurant.badges.map((badge) => <Badge key={badge} variant="outline">{badge}</Badge>)}</div>
+        <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+          <span className="text-muted-foreground">Hours</span><span className="font-semibold text-foreground">{restaurant.hours}</span>
+          <span className="text-muted-foreground">Price</span><span className="font-semibold text-foreground">{restaurant.price}</span>
+          <span className="text-muted-foreground">Rating</span><span className="font-semibold text-foreground">{restaurant.rating}</span>
+        </div>
       </div>
-      {children}
     </div>
+  );
+}
+
+function FormBlock({ title, icon: Icon, children }: { title: string; icon: typeof CalendarCheck; children: React.ReactNode }) {
+  return (
+    <section className="rounded-lg border border-border bg-card p-6">
+      <div className="mb-5 flex items-center gap-2">
+        <Icon size={22} className="text-primary" />
+        <h2 className="text-2xl font-extrabold text-foreground">{title}</h2>
+      </div>
+      <div className="space-y-5">{children}</div>
+    </section>
   );
 }
 
@@ -565,30 +327,15 @@ function Field({ label, id, children }: { label: string; id: string; children: R
   );
 }
 
-function NumberField({ label, id, value, min, max, onChange }: { label: string; id: string; value: number; min: number; max: number; onChange: (value: number) => void }) {
-  return (
-    <Field label={label} id={id}>
-      <Input
-        id={id}
-        type="number"
-        value={value}
-        min={min}
-        max={max}
-        onChange={(e) => onChange(parseInt(e.target.value, 10) || min)}
-      />
-    </Field>
-  );
-}
-
-function Checklist({ title, options, selected, onToggle }: { title: string; options: string[]; selected: string[]; onToggle: (item: string) => void }) {
+function CompactChecklist({ title, items, selected, onToggle }: { title: string; items: string[]; selected: string[]; onToggle: (item: string) => void }) {
   return (
     <div>
-      <h3 className="font-semibold text-foreground mb-3">{title}</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-        {options.map((option) => (
-          <label key={option} className="flex items-center gap-2 rounded-lg border border-border p-2 text-sm">
-            <Checkbox checked={selected.includes(option)} onCheckedChange={() => onToggle(option)} />
-            {option}
+      <h3 className="mb-3 font-semibold text-foreground">{title}</h3>
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+        {items.map((item) => (
+          <label key={item} className="flex items-center gap-2 rounded-md border border-border p-3 text-sm">
+            <Checkbox checked={selected.includes(item)} onCheckedChange={() => onToggle(item)} />
+            {item}
           </label>
         ))}
       </div>
@@ -596,190 +343,24 @@ function Checklist({ title, options, selected, onToggle }: { title: string; opti
   );
 }
 
-function ReviewBlock({
-  farmName,
-  form,
-  nights,
-  totalGuests,
-  subtotal,
-  experienceTotal,
-  extrasTotal,
-  taxes,
-  total,
-}: {
-  farmName: string;
-  form: Record<string, any>;
-  nights: number;
-  totalGuests: number;
-  subtotal: number;
-  experienceTotal: number;
-  extrasTotal: number;
-  taxes: number;
-  total: number;
-}) {
-  const rows = [
-    ["Farm", farmName],
-    ["Stay", `${form.checkIn} to ${form.checkOut}`],
-    ["Nights", nights.toString()],
-    ["Guests", totalGuests.toString()],
-    ["Accommodation", form.accommodationType],
-    ["Purpose", form.purpose],
-    ["Meal Plan", form.mealPlan],
-    ["Transport", form.transportRequired ? `${form.vehicleType} requested` : "Not required"],
-  ];
-
+function StepButtons({ back, next, disabled }: { back: () => void; next: () => void; disabled: boolean }) {
   return (
-    <div className="space-y-4">
-      <div className="bg-muted rounded-lg p-4 space-y-2 text-sm">
-        <h3 className="font-semibold text-foreground mb-3">Reservation Summary</h3>
-        {rows.map(([label, value]) => (
-          <div key={label} className="flex justify-between gap-4">
-            <span className="text-muted-foreground">{label}</span>
-            <span className="font-medium text-foreground text-right">{value}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-2 text-sm">
-        <PriceRow label="Accommodation" value={subtotal} />
-        <PriceRow label="Experiences and activities" value={experienceTotal} />
-        <PriceRow label="Extras" value={extrasTotal} />
-        <PriceRow label="Taxes" value={taxes} />
-        <div className="flex justify-between font-extrabold text-lg border-t border-primary/20 pt-2">
-          <span className="text-foreground">Total Balance</span>
-          <span className="text-primary">${total.toLocaleString()}</span>
-        </div>
-      </div>
+    <div className="flex gap-3">
+      <Button variant="outline" onClick={back} className="flex-1"><ChevronLeft size={16} className="mr-1" />Back</Button>
+      <Button disabled={disabled} onClick={next} className="flex-1 bg-primary text-primary-foreground">Continue</Button>
     </div>
   );
 }
 
-function PriceRow({ label, value }: { label: string; value: number }) {
+function SmallPanel({ icon: Icon, title, items }: { icon: typeof Utensils; title: string; items: string[] }) {
   return (
-    <div className="flex justify-between">
-      <span className="text-muted-foreground">{label}</span>
-      <span className="font-medium text-foreground">${value.toLocaleString()}</span>
-    </div>
-  );
-}
-
-function BookingSidebar({ farm, nights, total, totalGuests }: { farm: (typeof SAMPLE_FARMS)[number]; nights: number; total: number; totalGuests: number }) {
-  return (
-    <div>
-      <div className="bg-card border border-border rounded-lg overflow-hidden sticky top-24">
-        <img
-          src={farm.image}
-          alt={farm.name}
-          loading="lazy"
-          decoding="async"
-          className="w-full h-40 object-cover"
-        />
-        <div className="p-4">
-          <h3 className="font-bold text-foreground mb-1">{farm.name}</h3>
-          <p className="text-muted-foreground text-xs mb-3">{farm.location}</p>
-          <div className="text-sm space-y-2 border-t border-border pt-3">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Per night</span>
-              <span>${farm.pricePerNight}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Guests</span>
-              <span>{totalGuests}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Nights</span>
-              <span>{nights}</span>
-            </div>
-            <div className="flex justify-between font-bold border-t border-border pt-2 mt-2">
-              <span>Estimated Total</span>
-              <span className="text-primary">${total.toLocaleString()}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function InfoPanel({ title, icon: Icon, items }: { title: string; icon: typeof CalendarCheck; items: string[] }) {
-  return (
-    <div className="bg-card rounded-lg border border-border p-5">
-      <div className="flex items-center gap-2 mb-4">
-        <Icon size={20} className="text-primary" />
-        <h2 className="font-bold text-foreground">{title}</h2>
+    <div className="rounded-lg border border-border bg-card p-5">
+      <div className="mb-3 flex items-center gap-2">
+        <Icon size={18} className="text-primary" />
+        <h3 className="font-bold text-foreground">{title}</h3>
       </div>
       <div className="flex flex-wrap gap-2">
-        {items.map((item) => (
-          <Badge key={item} variant="outline" className="text-xs">
-            {item}
-          </Badge>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Confirmation({
-  farmName,
-  bookingRef,
-  form,
-  total,
-  nights,
-  totalGuests,
-}: {
-  farmName: string;
-  bookingRef: string;
-  form: Record<string, any>;
-  total: number;
-  nights: number;
-  totalGuests: number;
-}) {
-  return (
-    <div className="max-w-2xl mx-auto text-center py-16 animate-fade-in">
-      <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent-light mb-6">
-        <CheckCircle size={40} className="text-accent" />
-      </div>
-      <h2 className="text-3xl font-extrabold text-foreground mb-2">Reservation Confirmed</h2>
-      <p className="text-muted-foreground mb-6">
-        Your stay at <strong>{farmName}</strong> has been saved with guest, package, transport, document, and payment details.
-      </p>
-
-      <div className="bg-card border border-border rounded-lg p-6 text-left mb-8">
-        <div className="text-center mb-4">
-          <span className="text-xs text-muted-foreground uppercase tracking-wider">Booking Reference</span>
-          <div className="text-2xl font-extrabold text-primary">{bookingRef}</div>
-        </div>
-        <div className="space-y-2 text-sm">
-          {[
-            ["Guest", form.guestName],
-            ["Stay", `${form.checkIn} to ${form.checkOut}`],
-            ["Nights", nights.toString()],
-            ["Guests", totalGuests.toString()],
-            ["Accommodation", form.accommodationType],
-            ["Meal Plan", form.mealPlan],
-            ["Payment Status", form.paymentStatus],
-          ].map(([label, value]) => (
-            <div key={label} className="flex justify-between gap-4">
-              <span className="text-muted-foreground">{label}</span>
-              <span className="font-medium text-foreground text-right">{value}</span>
-            </div>
-          ))}
-          <div className="flex justify-between border-t border-border pt-2 mt-2">
-            <span className="font-bold text-foreground">Balance</span>
-            <span className="font-bold text-primary">${total.toLocaleString()}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <Link to="/explore">
-          <Button variant="outline" className="border-primary text-primary">
-            Explore More Farms
-          </Button>
-        </Link>
-        <Link to="/">
-          <Button className="bg-primary text-primary-foreground">Back to Home</Button>
-        </Link>
+        {items.map((item) => <Badge key={item} variant="outline">{item}</Badge>)}
       </div>
     </div>
   );

@@ -1,210 +1,80 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { ArrowRight, BadgeCheck, Check, CheckCircle, ChevronLeft, FileCheck, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  Check,
-  CheckCircle,
-  ArrowRight,
-  Star,
-  Zap,
-  Crown,
-  ChevronLeft,
-  ChevronDown,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { useToast } from "@/hooks/use-toast";
 
-const TRAINING_IMAGES = [
-  "/locale/Training/IMG-20170903-WA0024.jpg",
-  "/locale/Training/IMG-20170903-WA0028.jpg",
-  "/locale/Training/IMG-20170903-WA0019.jpg",
-  "/locale/Training/IMG-20160923-WA0091.jpg",
-  "/locale/Training/IMG-20160923-WA0075.jpg",
-  "/locale/Training/IMG-20160923-WA0074.jpg",
-  "/locale/Training/Pita_ Youth in Agric Symp.jpg",
-  "/locale/Training/IMG-20170904-WA0148.jpg",
-  "/locale/Training/IMG-20170904-WA0029.jpg",
-  "/locale/Training/IMG-20170904-WA0001.jpg",
-  "/locale/Training/IMG-20170904-WA0002.jpg",
-  "/locale/Training/IMG-20170825-WA0003.jpg",
-  "/locale/Training/IMG-20170825-WA0006.jpg",
-  "/locale/Training/IMG-20170901-WA0003.jpg",
-  "/locale/Training/IMG-20170902-WA0010.jpg",
-  "/locale/Training/IMG-20210809-WA0005.jpg",
+const HOST_CATEGORIES = [
+  "Farm Stay",
+  "Restaurant",
+  "Coffee Experience",
+  "Dairy Farm",
+  "Fish Farm",
+  "Organic Farm",
+  "Cultural Tourism",
+  "Event Venue",
 ];
 
-const EVENT_HOSTING_IMAGES = [
-  "/locale/Event hosting/IMG-20230920-WA0053.jpg",
-  "/locale/Event hosting/217b4ae1bdcf810d5f1f7db9417078cf.jpg",
-  "/locale/Event hosting/988719b9517cf889aa8d5972d96d1c6a.jpg",
-  "/locale/Event hosting/b5d20dbd357f09eaa1a5e0e885cfc8bd.jpg",
-  "/locale/Event hosting/c988f46cb84fcfab585150575783f2f7.jpg",
-  "/locale/Event hosting/Wedding_ long table wedding_ long table centerpieces_ long table wedding reception(JPG).jpg",
+const SERVICE_OPTIONS = [
+  "Accommodation",
+  "Meals",
+  "Farm Tours",
+  "Fishing",
+  "Camping",
+  "Cooking Classes",
+  "Traditional Food Experience",
+  "Conference Facilities",
+  "Weddings & Events",
+  "School Tours",
 ];
 
-const FARM_TYPES = ["Dairy", "Poultry", "Aquaculture", "Crop Farming", "Mixed Farm", "Cultural Tourism", "Eco Farm", "Winery / Orchard"];
-const REGIONS = ["Kenya", "Tanzania", "Uganda", "South Africa", "Ethiopia", "Ghana", "Morocco", "Rwanda"];
-const ACTIVITIES_LIST = [
-  "Farm Tours", "Farm Stays", "Cooking Classes", "Workshops", "Pick-Your-Own",
-  "Farmers Market", "Farm-to-Table Dining", "Wildlife Watching", "Cultural Experiences",
-  "Horse Riding", "Fishing", "Camping", "Eco Trails",
-];
-const ACCOMMODATION_LIST = [
-  "Farmhouse B&B", "Private Cottage", "Glamping Tent", "Farm Cabin",
-  "Eco Tent", "Outback Cabin", "Self-Contained Unit", "Shared Dormitory",
-  "Cultural Camp", "No Accommodation",
+const COMPLIANCE_ITEMS = [
+  "Identity verification",
+  "Business certificate",
+  "Tax certificate",
+  "Trading license",
+  "Insurance certificate",
+  "Food handling certificate",
 ];
 
-const HOST_TYPES = [
-  "Crop farmers",
-  "Livestock farmers",
-  "Poultry farms",
-  "Dairy farms",
-  "Fish farms and aquaculture centers",
-  "Beekeeping farms",
-  "Coffee, tea and cocoa plantations",
-  "Fruit orchards",
-  "Farm stay operators",
-  "Eco-lodges and guest houses",
-  "Community tourism groups",
-  "Agricultural cooperatives",
-  "Youth farmer groups",
-  "Women's farming associations",
-];
-
-const HOST_OFFERINGS = [
-  {
-    title: "Farm Stay Accommodation",
-    items: ["Farm houses", "Eco-lodges", "Country cottages", "Cabins", "Tree houses", "Tiny homes", "Glamping", "Camping sites", "Luxury farm villas"],
-  },
-  {
-    title: "Farm Experiences",
-    items: ["Guided farm tours", "Animal feeding", "Crop harvesting", "Fruit picking", "Fishing experiences", "Milking demonstrations", "Tractor rides", "Coffee tours", "Farm-to-table dining"],
-  },
-  {
-    title: "Farm Products",
-    items: ["Fresh fruits", "Vegetables", "Organic produce", "Eggs", "Milk", "Honey", "Fish", "Coffee", "Herbs and spices", "Seedlings", "Handmade crafts"],
-  },
-];
-
-const HOST_BENEFITS = [
-  "Reach local and international visitors",
-  "Receive online bookings 24/7",
-  "Promote your farm globally",
-  "Increase farm income",
-  "Sell products directly to customers",
-  "Advertise special events",
-  "Manage availability calendars",
-  "Receive secure online payments",
-  "Build reviews and ratings",
-  "Access booking reports and business insights",
-];
-
-const HOST_REQUIREMENTS = [
-  "Personal or business information",
-  "National identification or passport",
-  "Farm or business registration where applicable",
-  "Farm location and contact details",
-  "High-quality photos",
-  "Property and experience descriptions",
-  "Pricing and availability calendar",
-  "Emergency contact",
-  "Bank or mobile money payment details",
-];
-
-const HOST_STANDARDS = [
-  "Maintain clean accommodation",
-  "Provide safe visitor areas",
-  "Follow food hygiene practices",
-  "Ensure guest safety around animals and equipment",
-  "Respect environmental sustainability",
-  "Offer honest descriptions of services",
-  "Respond promptly to booking requests",
-];
-
-const HOST_PROCESS = [
-  "Create your host account",
-  "Verify your identity",
-  "Add your farm or property",
-  "Upload photos and videos",
-  "List accommodation and experiences",
-  "Set prices and availability",
-  "Receive booking requests",
-  "Welcome guests",
-  "Get paid securely",
-  "Build your reputation through reviews",
-];
-
-const HOST_DASHBOARD = [
-  "Booking management",
-  "Calendar",
-  "Guest messaging",
-  "Earnings dashboard",
-  "Reservation reports",
-  "Product marketplace",
-  "Tour management",
-  "Event management",
-  "Promotions",
-  "Customer reviews",
-  "Analytics",
-  "Notifications",
+const SUSTAINABILITY_ITEMS = [
+  "Environmental practices",
+  "Community employment",
+  "Local products sold",
+  "Cultural experiences",
+  "Conservation activities",
+  "Responsible tourism commitment",
 ];
 
 const PLANS = [
   {
-    id: "free",
-    name: "Free",
-    price: 0,
-    icon: Star,
-    color: "border-muted-foreground",
-    highlight: false,
-    features: [
-      "Basic farm listing",
-      "1 photo upload",
-      "Location & contact info",
-      "Farm description",
-      "Community visibility",
-    ],
-    limitations: ["No booking system", "No marketplace access", "No priority listing"],
+    name: "Starter Host",
+    fee: "UGX 150,000",
+    bestFor: "Small farms and homestays",
+    benefits: "Business profile, listing, booking calendar, guest messaging",
   },
   {
-    id: "standard",
-    name: "Standard",
-    price: 9.99,
-    icon: Zap,
-    color: "border-primary",
-    highlight: false,
-    features: [
-      "Up to 10 photos",
-      "Guest booking system",
-      "Marketplace access",
-      "Activity listings",
-      "Email enquiries",
-      "Monthly analytics report",
-    ],
-    limitations: ["No priority placement"],
+    name: "Standard Host",
+    fee: "UGX 350,000",
+    bestFor: "Farm stays, lodges, accommodation providers",
+    benefits: "Online payments, weather alerts, reviews, promotions, analytics",
   },
   {
-    id: "premium",
-    name: "Premium",
-    price: 24.99,
-    icon: Crown,
-    color: "border-secondary",
-    highlight: true,
-    features: [
-      "Unlimited photos",
-      "Priority listing placement",
-      "Full booking system",
-      "Marketplace with promotions",
-      "Featured on homepage",
-      "Advanced analytics",
-      "Dedicated support",
-      "Social media kit",
-    ],
-    limitations: [],
+    name: "Premium Host",
+    fee: "UGX 750,000",
+    bestFor: "Commercial farms, resorts, tourism centres",
+    benefits: "Priority ranking, featured listings, support, campaigns, reports",
+  },
+  {
+    name: "Enterprise Partner",
+    fee: "UGX 1,500,000",
+    bestFor: "Large estates, institutions, cooperatives",
+    benefits: "Multi-property tools, API integration, staff accounts, account manager",
   },
 ];
 
@@ -213,706 +83,338 @@ type Step = 1 | 2 | 3 | 4 | 5;
 export default function GetListedPage() {
   const [step, setStep] = useState<Step>(1);
   const [form, setForm] = useState({
-    farmName: "",
-    farmType: "",
-    region: "",
-    location: "",
-    description: "",
-    activities: [] as string[],
-    accommodationTypes: [] as string[],
-    membershipTier: "free" as "free" | "standard" | "premium",
-    contactName: "",
-    contactEmail: "",
-    contactPhone: "",
+    businessName: "",
+    tradingName: "",
+    registrationNumber: "",
+    tin: "",
+    businessType: "Individual",
+    yearEstablished: "",
+    story: "",
+    ownerName: "",
+    phone: "",
+    whatsapp: "",
+    email: "",
+    country: "",
+    district: "",
+    town: "",
+    address: "",
+    mapLocation: "",
+    categories: [] as string[],
+    services: [] as string[],
+    rooms: "",
+    maxGuests: "",
+    currency: "UGX",
+    cancellationPolicy: "",
+    emergencyContact: "",
+    bankName: "",
+    accountName: "",
+    accountNumber: "",
+    mobileMoney: "",
+    plan: "Starter Host",
+    declaration: false,
   });
-  const { toast } = useToast();
 
-  const [expandedOfferings, setExpandedOfferings] = useState<string[]>([]);
-  const [expandedFeatures, setExpandedFeatures] = useState<string[]>([]);
-  const [expandedPanels, setExpandedPanels] = useState<string[]>([]);
-  const [expandedProcess, setExpandedProcess] = useState<boolean>(false);
+  const selectedPlan = useMemo(() => PLANS.find((plan) => plan.name === form.plan) || PLANS[0], [form.plan]);
 
-  const update = (field: string, value: string | string[]) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const update = (field: keyof typeof form, value: string | boolean | string[]) => {
+    setForm((current) => ({ ...current, [field]: value }));
+  };
 
-  const toggleArray = (field: "activities" | "accommodationTypes", item: string) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: prev[field].includes(item)
-        ? prev[field].filter((i) => i !== item)
-        : [...prev[field], item],
+  const toggle = (field: "categories" | "services", value: string) => {
+    setForm((current) => ({
+      ...current,
+      [field]: current[field].includes(value)
+        ? current[field].filter((item) => item !== value)
+        : [...current[field], value],
     }));
   };
 
-  const toggleSection = (
-    section: string,
-    current: string[],
-    setter: (value: string[]) => void
-  ) => {
-    setter(current.includes(section) ? current.filter((s) => s !== section) : [...current, section]);
-  };
-
-  const toggleProcess = () => setExpandedProcess((prev) => !prev);
-
-  const handleSubmit = () => {
-    const listing = {
-      ...form,
-      id: `listing-${Date.now()}`,
-      status: "pending_review",
-      createdAt: new Date().toISOString(),
-    };
-    const saved = JSON.parse(localStorage.getItem("agri2rist_listings") || "[]");
-    localStorage.setItem("agri2rist_listings", JSON.stringify([...saved, listing]));
+  const submit = () => {
+    const saved = JSON.parse(localStorage.getItem("agri2rist_host_applications") || "[]");
+    localStorage.setItem(
+      "agri2rist_host_applications",
+      JSON.stringify([...saved, { ...form, status: "pending_verification", createdAt: new Date().toISOString() }])
+    );
     setStep(5);
   };
 
-  const steps = [
-    { id: 1, label: "Business Info" },
-    { id: 2, label: "Offerings" },
-    { id: 3, label: "Choose Plan" },
-    { id: 4, label: "Contact" },
-  ];
-
   return (
     <PageLayout>
-      {/* Hero */}
-      <section className="gradient-hero py-16 px-4">
-        <div className="container mx-auto text-center">
-          <h1 className="text-3xl md:text-5xl font-extrabold text-primary-foreground mb-4">
-            Become a <span className="text-gradient-gold">Host</span>
-          </h1>
-          <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto mb-2">
-            Share your farm, welcome the world, and grow your income with authentic agritourism experiences.
-          </p>
-          <p className="text-primary-foreground/60 text-base max-w-xl mx-auto">
-            Turn your farm, fish farm, orchard, lodge, campsite, or rural property into a destination.
-          </p>
+      <section className="bg-primary py-16">
+        <div className="container mx-auto grid grid-cols-1 gap-8 px-4 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+          <div>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-sm font-bold text-secondary-foreground">
+              <BadgeCheck size={16} />
+              Verified host onboarding
+            </div>
+            <h1 className="max-w-3xl text-4xl font-extrabold text-primary-foreground md:text-5xl">
+              Become a Host
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg text-primary-foreground/78">
+              Share your farm, restaurant, lodge, campsite, or rural experience with travelers while Agri2rist Hub handles discovery, bookings, trust, and payments.
+            </p>
+          </div>
+          <div className="rounded-lg border border-primary-foreground/20 bg-primary-foreground/10 p-5 text-primary-foreground">
+            <p className="text-sm uppercase tracking-wide text-primary-foreground/70">One-time verification</p>
+            <p className="mt-1 text-3xl font-extrabold">UGX 100,000</p>
+            <p className="mt-2 text-sm text-primary-foreground/75">
+              Covers identity checks, business verification, farm inspection where applicable, digital certificate, and Agri2rist Host Badge.
+            </p>
+          </div>
         </div>
       </section>
 
-      {step === 1 && (
-        <section className="bg-background py-12">
-          <div className="container mx-auto px-4">
-            <div className="mx-auto mb-10 max-w-4xl text-center">
-              <h2 className="mb-3 text-3xl font-extrabold text-foreground">
-                Share Your Farm. Welcome the World. Grow Your Income.
-              </h2>
-              <p className="text-muted-foreground">
-                Agri2rist Hub connects farmers, rural communities, accommodation providers, and tourism entrepreneurs with visitors seeking authentic agricultural and cultural experiences.
-              </p>
+      <section className="border-b border-border bg-background py-6">
+        <div className="container mx-auto flex flex-wrap gap-2 px-4">
+          {["Business", "Location", "Offerings", "Payment"].map((label, index) => (
+            <div key={label} className={`rounded-full px-4 py-2 text-sm font-semibold ${step > index ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+              {index + 1}. {label}
             </div>
-
-            <div className="mb-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
-              {HOST_OFFERINGS.map((group) => (
-                <div key={group.title} className="rounded-lg border border-border bg-card shadow-brand overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={() => toggleSection(group.title, expandedOfferings, setExpandedOfferings)}
-                    className="w-full flex items-center justify-between p-5 text-left"
-                  >
-                    <h3 className="font-extrabold text-foreground">{group.title}</h3>
-                    <ChevronDown
-                      size={20}
-                      className={`text-muted-foreground transition-transform ${
-                        expandedOfferings.includes(group.title) ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-                  {expandedOfferings.includes(group.title) && (
-                    <div className="px-5 pb-5">
-                      <div className="flex flex-wrap gap-2">
-                        {group.items.map((item) => (
-                          <span key={item} className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground/75">
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-4">
-              <FeatureGrid
-                title="Who Can Become a Host?"
-                items={HOST_TYPES}
-                expanded={expandedFeatures}
-                onToggle={(title) => toggleSection(title, expandedFeatures, setExpandedFeatures)}
-              />
-              <FeatureGrid
-                title="Benefits of Becoming a Host"
-                items={HOST_BENEFITS}
-                expanded={expandedFeatures}
-                onToggle={(title) => toggleSection(title, expandedFeatures, setExpandedFeatures)}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <FeaturePanel
-                title="Registration Requirements"
-                items={HOST_REQUIREMENTS}
-                expanded={expandedPanels}
-                onToggle={(title) => toggleSection(title, expandedPanels, setExpandedPanels)}
-              />
-              <FeaturePanel
-                title="Safety and Quality Standards"
-                items={HOST_STANDARDS}
-                expanded={expandedPanels}
-                onToggle={(title) => toggleSection(title, expandedPanels, setExpandedPanels)}
-              />
-              <FeaturePanel
-                title="Host Dashboard Features"
-                items={HOST_DASHBOARD}
-                expanded={expandedPanels}
-                onToggle={(title) => toggleSection(title, expandedPanels, setExpandedPanels)}
-              />
-            </div>
-
-            <div className="mt-10 rounded-lg border border-border bg-card shadow-brand overflow-hidden">
-              <button
-                type="button"
-                onClick={toggleProcess}
-                className="w-full flex items-center justify-between p-6 text-left"
-              >
-                <h3 className="text-xl font-extrabold text-foreground">Simple Hosting Process</h3>
-                <ChevronDown
-                  size={22}
-                  className={`text-muted-foreground transition-transform ${
-                    expandedProcess ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {expandedProcess && (
-                <div className="px-6 pb-6">
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-                    {HOST_PROCESS.map((item, index) => (
-                      <div key={item} className="rounded-md bg-muted p-3">
-                        <div className="mb-1 text-xs font-bold uppercase text-primary">Step {index + 1}</div>
-                        <div className="text-sm font-medium text-foreground">{item}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="mt-10">
-              <button
-                type="button"
-                onClick={() => toggleSection("Training Gallery", expandedFeatures, setExpandedFeatures)}
-                className="w-full flex items-center justify-between mb-4 text-left"
-              >
-                <h3 className="text-xl font-extrabold text-foreground">Training Gallery</h3>
-                <ChevronDown
-                  size={20}
-                  className={`text-muted-foreground transition-transform ${
-                    expandedFeatures.includes("Training Gallery") ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {expandedFeatures.includes("Training Gallery") && (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                  {TRAINING_IMAGES.map((src, i) => (
-                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-border bg-card">
-                      <img src={src} alt={`Training ${i + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <div className="mt-10">
-              <button
-                type="button"
-                onClick={() => toggleSection("Events Hosting Gallery", expandedFeatures, setExpandedFeatures)}
-                className="w-full flex items-center justify-between mb-4 text-left"
-              >
-                <h3 className="text-xl font-extrabold text-foreground">Events Hosting Gallery</h3>
-                <ChevronDown
-                  size={20}
-                  className={`text-muted-foreground transition-transform ${
-                    expandedFeatures.includes("Events Hosting Gallery") ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {expandedFeatures.includes("Events Hosting Gallery") && (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                  {EVENT_HOSTING_IMAGES.map((src, i) => (
-                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-border bg-card">
-                      <img src={src} alt={`Event hosting ${i + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Plans Overview */}
-      {step === 1 && (
-        <section className="py-10 bg-background border-b border-border">
-          <div className="container mx-auto px-4">
-            <h2 className="text-center text-xl font-bold text-foreground mb-6">Choose your membership</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-3xl mx-auto">
-              {PLANS.map((plan) => (
-                <div
-                  key={plan.id}
-                  className={`rounded-xl border-2 p-5 relative ${plan.highlight ? "border-secondary bg-secondary/5" : `${plan.color} bg-card`}`}
-                >
-                  {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <span className="bg-secondary text-secondary-foreground text-xs font-bold px-3 py-1 rounded-full">
-                        Most Popular
-                      </span>
-                    </div>
-                  )}
-                  <plan.icon size={24} className={plan.highlight ? "text-secondary mb-2" : "text-primary mb-2"} />
-                  <h3 className="font-extrabold text-foreground text-lg">{plan.name}</h3>
-                  <div className="text-2xl font-extrabold text-primary my-1">
-                    {plan.price === 0 ? "Free" : `$${plan.price}`}
-                    {plan.price > 0 && <span className="text-sm font-normal text-muted-foreground">/mo</span>}
-                  </div>
-                  <ul className="space-y-1 mt-3">
-                    {plan.features.map((f) => (
-                      <li key={f} className="flex items-center gap-1.5 text-xs text-foreground/75">
-                        <Check size={12} className="text-accent flex-shrink-0" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Step Indicators */}
-      {step < 5 && (
-        <div className="bg-muted border-b border-border py-4">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-center gap-2 md:gap-4">
-              {steps.map((s, i) => (
-                <div key={s.id} className="flex items-center gap-2">
-                  <div
-                    className={`flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold border-2 transition-colors ${
-                      step >= s.id
-                        ? "bg-primary border-primary text-primary-foreground"
-                        : "border-muted-foreground text-muted-foreground"
-                    }`}
-                  >
-                    {step > s.id ? <Check size={12} /> : s.id}
-                  </div>
-                  <span className={`hidden md:block text-sm ${step >= s.id ? "text-primary font-medium" : "text-muted-foreground"}`}>
-                    {s.label}
-                  </span>
-                  {i < steps.length - 1 && (
-                    <div className="w-6 md:w-12 h-0.5 bg-border" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
-      )}
+      </section>
 
-      {/* Form */}
-      <div className="py-12 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto">
-            {step === 5 ? (
-              // Confirmation
-              <div className="text-center py-16 animate-fade-in">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent-light mb-6">
-                  <CheckCircle size={40} className="text-accent" />
+      <section className="bg-background py-12">
+        <div className="container mx-auto grid grid-cols-1 gap-10 px-4 lg:grid-cols-[1fr_360px]">
+          <div className="rounded-lg border border-border bg-card p-6">
+            {step === 1 && (
+              <FormSection title="Business Profile" note="Core details used for verification and public host profile.">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <Field label="Business / Farm / Host Name" id="businessName">
+                    <Input id="businessName" value={form.businessName} onChange={(event) => update("businessName", event.target.value)} />
+                  </Field>
+                  <Field label="Trading Name" id="tradingName">
+                    <Input id="tradingName" value={form.tradingName} onChange={(event) => update("tradingName", event.target.value)} />
+                  </Field>
+                  <Field label="Registration Number" id="registrationNumber">
+                    <Input id="registrationNumber" value={form.registrationNumber} onChange={(event) => update("registrationNumber", event.target.value)} />
+                  </Field>
+                  <Field label="Tax Identification Number" id="tin">
+                    <Input id="tin" value={form.tin} onChange={(event) => update("tin", event.target.value)} />
+                  </Field>
+                  <Field label="Business Type" id="businessType">
+                    <Select value={form.businessType} onValueChange={(value) => update("businessType", value)}>
+                      <SelectTrigger id="businessType"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {["Individual", "Sole Proprietorship", "Partnership", "Company", "Cooperative", "Community Organization"].map((item) => (
+                          <SelectItem key={item} value={item}>{item}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                  <Field label="Year Established" id="yearEstablished">
+                    <Input id="yearEstablished" value={form.yearEstablished} onChange={(event) => update("yearEstablished", event.target.value)} />
+                  </Field>
                 </div>
-                <h2 className="text-3xl font-extrabold text-foreground mb-3">
-                  Application Submitted!
-                </h2>
-                <p className="text-muted-foreground text-lg mb-2">
-                  Welcome to Agri2rist Hub, <strong>{form.contactName}</strong>!
-                </p>
-                <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                  Your farm listing for <strong>{form.farmName}</strong> has been submitted for review.
-                  Our team will contact you at <strong>{form.contactEmail}</strong> within 2 business days.
-                </p>
-                <div className="bg-card border border-border rounded-2xl p-6 text-left mb-8 max-w-md mx-auto">
-                  <h3 className="font-bold text-foreground mb-3">Summary</h3>
-                  {[
-                    ["Farm", form.farmName],
-                    ["Type", form.farmType],
-                    ["Region", form.region],
-                    ["Plan", PLANS.find(p => p.id === form.membershipTier)?.name || "Free"],
-                    ["Activities", form.activities.join(", ") || "Not specified"],
-                  ].map(([label, value]) => (
-                    <div key={label} className="flex justify-between text-sm py-1.5 border-b border-border last:border-0">
-                      <span className="text-muted-foreground">{label}</span>
-                      <span className="font-medium text-foreground text-right max-w-[60%]">{value}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Link to="/explore">
-                    <Button variant="outline" className="border-primary text-primary">
-                      Browse Other Farms
-                    </Button>
-                  </Link>
-                  <Link to="/">
-                    <Button className="bg-primary text-primary-foreground">Back to Home</Button>
-                  </Link>
-                </div>
-              </div>
-            ) : step === 1 ? (
-              <div className="bg-card rounded-2xl border border-border p-6 space-y-5 animate-fade-in">
-                <h2 className="text-xl font-bold text-foreground">Business Information</h2>
+                <Field label="Mission / Story" id="story">
+                  <Textarea id="story" rows={4} className="resize-none" value={form.story} onChange={(event) => update("story", event.target.value)} />
+                </Field>
+                <Next disabled={!form.businessName || !form.story} onClick={() => setStep(2)} />
+              </FormSection>
+            )}
 
-                <div>
-                  <Label htmlFor="farmName">Farm / Business Name *</Label>
-                  <Input
-                    id="farmName"
-                    value={form.farmName}
-                    onChange={(e) => update("farmName", e.target.value)}
-                    placeholder="e.g. Green Valley Dairy Farm"
-                    className="mt-1"
-                  />
+            {step === 2 && (
+              <FormSection title="Contact and Location" note="Used for guest communication, maps, directions, and emergency readiness.">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <Field label="Owner's Full Name" id="ownerName">
+                    <Input id="ownerName" value={form.ownerName} onChange={(event) => update("ownerName", event.target.value)} />
+                  </Field>
+                  <Field label="Email Address" id="email">
+                    <Input id="email" type="email" value={form.email} onChange={(event) => update("email", event.target.value)} />
+                  </Field>
+                  <Field label="Mobile Phone" id="phone">
+                    <Input id="phone" value={form.phone} onChange={(event) => update("phone", event.target.value)} />
+                  </Field>
+                  <Field label="WhatsApp Number" id="whatsapp">
+                    <Input id="whatsapp" value={form.whatsapp} onChange={(event) => update("whatsapp", event.target.value)} />
+                  </Field>
+                  <Field label="Country" id="country">
+                    <Input id="country" value={form.country} onChange={(event) => update("country", event.target.value)} />
+                  </Field>
+                  <Field label="District / State" id="district">
+                    <Input id="district" value={form.district} onChange={(event) => update("district", event.target.value)} />
+                  </Field>
+                  <Field label="City / Town" id="town">
+                    <Input id="town" value={form.town} onChange={(event) => update("town", event.target.value)} />
+                  </Field>
+                  <Field label="Google Maps Location" id="mapLocation">
+                    <Input id="mapLocation" value={form.mapLocation} onChange={(event) => update("mapLocation", event.target.value)} />
+                  </Field>
                 </div>
+                <Field label="Physical Address and Directions" id="address">
+                  <Textarea id="address" rows={3} className="resize-none" value={form.address} onChange={(event) => update("address", event.target.value)} />
+                </Field>
+                <NavButtons back={() => setStep(1)} next={() => setStep(3)} disabled={!form.email || !form.phone || !form.country} />
+              </FormSection>
+            )}
 
-                <div>
-                  <Label>Farm Type *</Label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2">
-                    {FARM_TYPES.map((type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() => update("farmType", type)}
-                        className={`p-2.5 rounded-xl border text-sm text-left transition-colors ${
-                          form.farmType === type
-                            ? "border-primary bg-primary/5 text-primary font-medium"
-                            : "border-border text-foreground hover:border-primary/50"
-                        }`}
-                      >
-                        {type}
-                      </button>
-                    ))}
-                  </div>
+            {step === 3 && (
+              <FormSection title="Offerings and Safety" note="Choose only what guests can actually book or buy today.">
+                <ChoiceGroup title="Host Category" items={HOST_CATEGORIES} selected={form.categories} onToggle={(item) => toggle("categories", item)} />
+                <ChoiceGroup title="Products and Services" items={SERVICE_OPTIONS} selected={form.services} onToggle={(item) => toggle("services", item)} />
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <Field label="Number of Rooms" id="rooms">
+                    <Input id="rooms" value={form.rooms} onChange={(event) => update("rooms", event.target.value)} />
+                  </Field>
+                  <Field label="Maximum Guests" id="maxGuests">
+                    <Input id="maxGuests" value={form.maxGuests} onChange={(event) => update("maxGuests", event.target.value)} />
+                  </Field>
+                  <Field label="Emergency Contact" id="emergencyContact">
+                    <Input id="emergencyContact" value={form.emergencyContact} onChange={(event) => update("emergencyContact", event.target.value)} />
+                  </Field>
                 </div>
+                <NavButtons back={() => setStep(2)} next={() => setStep(4)} disabled={form.categories.length === 0 || form.services.length === 0} />
+              </FormSection>
+            )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <Label>Region *</Label>
-                    <div className="space-y-1 mt-2">
-                      {REGIONS.map((region) => (
-                        <button
-                          key={region}
-                          type="button"
-                          onClick={() => update("region", region)}
-                          className={`w-full p-2 rounded-lg border text-sm text-left transition-colors ${
-                            form.region === region
-                              ? "border-primary bg-primary/5 text-primary font-medium"
-                              : "border-border text-foreground hover:border-primary/50"
-                          }`}
-                        >
-                          {region}
-                        </button>
+            {step === 4 && (
+              <FormSection title="Membership and Payments" note="Annual host plan plus payout details for booking and marketplace revenue.">
+                <div className="overflow-hidden rounded-lg border border-border">
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-muted text-foreground">
+                      <tr>
+                        <th className="p-3">Plan</th>
+                        <th className="p-3">Annual fee</th>
+                        <th className="hidden p-3 md:table-cell">Best for</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {PLANS.map((plan) => (
+                        <tr key={plan.name} className="border-t border-border">
+                          <td className="p-3">
+                            <label className="flex cursor-pointer items-center gap-2 font-semibold">
+                              <input type="radio" checked={form.plan === plan.name} onChange={() => update("plan", plan.name)} />
+                              {plan.name}
+                            </label>
+                          </td>
+                          <td className="p-3 text-primary">{plan.fee}</td>
+                          <td className="hidden p-3 text-muted-foreground md:table-cell">{plan.bestFor}</td>
+                        </tr>
                       ))}
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="location">Town / Address</Label>
-                    <Input
-                      id="location"
-                      value={form.location}
-                      onChange={(e) => update("location", e.target.value)}
-                      placeholder="e.g. Bundaberg, QLD 4670"
-                      className="mt-1"
-                    />
-                  </div>
+                    </tbody>
+                  </table>
                 </div>
-
-                <div>
-                  <Label htmlFor="description">Farm Description *</Label>
-                  <Textarea
-                    id="description"
-                    value={form.description}
-                    onChange={(e) => update("description", e.target.value)}
-                    placeholder="Tell visitors about your farm, what makes it special, and what experiences you offer..."
-                    className="mt-1 resize-none"
-                    rows={4}
-                  />
+                <p className="rounded-lg bg-muted p-4 text-sm text-muted-foreground">
+                  {selectedPlan.benefits}
+                </p>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <Field label="Bank Name" id="bankName">
+                    <Input id="bankName" value={form.bankName} onChange={(event) => update("bankName", event.target.value)} />
+                  </Field>
+                  <Field label="Account Name" id="accountName">
+                    <Input id="accountName" value={form.accountName} onChange={(event) => update("accountName", event.target.value)} />
+                  </Field>
+                  <Field label="Account Number" id="accountNumber">
+                    <Input id="accountNumber" value={form.accountNumber} onChange={(event) => update("accountNumber", event.target.value)} />
+                  </Field>
+                  <Field label="Mobile Money Number" id="mobileMoney">
+                    <Input id="mobileMoney" value={form.mobileMoney} onChange={(event) => update("mobileMoney", event.target.value)} />
+                  </Field>
                 </div>
-
-                <Button
-                  className="w-full bg-primary text-primary-foreground"
-                  disabled={!form.farmName || !form.farmType || !form.region || !form.description}
-                  onClick={() => setStep(2)}
-                >
-                  Next: Activities & Accommodation <ArrowRight size={16} className="ml-2" />
-                </Button>
-              </div>
-            ) : step === 2 ? (
-              <div className="bg-card rounded-2xl border border-border p-6 space-y-5 animate-fade-in">
-                <h2 className="text-xl font-bold text-foreground">Activities & Offerings</h2>
-
-                <div>
-                  <Label>Activities Offered (select all that apply)</Label>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {ACTIVITIES_LIST.map((activity) => (
-                      <button
-                        key={activity}
-                        type="button"
-                        onClick={() => toggleArray("activities", activity)}
-                        className={`px-3 py-1.5 rounded-full text-sm border font-medium transition-colors ${
-                          form.activities.includes(activity)
-                            ? "bg-accent text-accent-foreground border-accent"
-                            : "bg-card text-foreground border-border hover:border-accent"
-                        }`}
-                      >
-                        {form.activities.includes(activity) && (
-                          <Check size={12} className="inline mr-1" />
-                        )}
-                        {activity}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <Label>Accommodation Types (select all that apply)</Label>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {ACCOMMODATION_LIST.map((type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() => toggleArray("accommodationTypes", type)}
-                        className={`px-3 py-1.5 rounded-full text-sm border font-medium transition-colors ${
-                          form.accommodationTypes.includes(type)
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-card text-foreground border-border hover:border-primary"
-                        }`}
-                      >
-                        {form.accommodationTypes.includes(type) && (
-                          <Check size={12} className="inline mr-1" />
-                        )}
-                        {type}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
+                <label className="flex items-start gap-3 rounded-lg border border-border p-4 text-sm">
+                  <Checkbox checked={form.declaration} onCheckedChange={(checked) => update("declaration", Boolean(checked))} />
+                  <span>I certify that the information provided is accurate and agree to Agri2rist Hub Host Standards, safety requirements, privacy policy, and verification checks.</span>
+                </label>
                 <div className="flex gap-3">
-                  <Button variant="outline" onClick={() => setStep(1)} className="flex-1">
-                    <ChevronLeft size={16} className="mr-1" />
-                    Back
-                  </Button>
-                  <Button
-                    className="flex-1 bg-primary text-primary-foreground"
-                    disabled={form.activities.length === 0}
-                    onClick={() => setStep(3)}
-                  >
-                    Next: Choose Plan <ArrowRight size={16} className="ml-2" />
-                  </Button>
+                  <Button variant="outline" onClick={() => setStep(3)} className="flex-1"><ChevronLeft size={16} className="mr-1" />Back</Button>
+                  <Button onClick={submit} disabled={!form.declaration} className="flex-1 bg-secondary text-secondary-foreground">Submit Application</Button>
                 </div>
+              </FormSection>
+            )}
+
+            {step === 5 && (
+              <div className="py-12 text-center">
+                <CheckCircle className="mx-auto mb-4 text-accent" size={56} />
+                <h2 className="text-3xl font-extrabold text-foreground">Application Submitted</h2>
+                <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+                  {form.businessName} is now pending verification. The Agri2rist team can review your documents, inspection status, and host badge approval.
+                </p>
+                <Link to="/marketplace">
+                  <Button className="mt-6 bg-primary text-primary-foreground">View Marketplace</Button>
+                </Link>
               </div>
-            ) : step === 3 ? (
-              <div className="space-y-5 animate-fade-in">
-                <h2 className="text-xl font-bold text-foreground">Choose Your Membership Plan</h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  {PLANS.map((plan) => (
-                    <button
-                      key={plan.id}
-                      type="button"
-                      onClick={() => update("membershipTier", plan.id)}
-                      className={`rounded-2xl border-2 p-6 text-left transition-all relative ${
-                        form.membershipTier === plan.id
-                          ? plan.highlight
-                            ? "border-secondary bg-secondary/10 shadow-gold"
-                            : "border-primary bg-primary/5 shadow-brand"
-                          : "border-border bg-card hover:border-primary/50"
-                      }`}
-                    >
-                      {plan.highlight && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                          <span className="bg-secondary text-secondary-foreground text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
-                            Most Popular
-                          </span>
-                        </div>
-                      )}
-                      {form.membershipTier === plan.id && (
-                        <div className="absolute top-3 right-3">
-                          <CheckCircle size={20} className="text-primary" />
-                        </div>
-                      )}
-                      <plan.icon size={28} className={plan.highlight ? "text-secondary mb-2" : "text-primary mb-2"} />
-                      <h3 className="font-extrabold text-foreground text-xl">{plan.name}</h3>
-                      <div className="text-2xl font-extrabold text-primary my-1">
-                        {plan.price === 0 ? "Free" : `$${plan.price}`}
-                        {plan.price > 0 && <span className="text-sm font-normal text-muted-foreground">/mo</span>}
-                      </div>
-                      <ul className="space-y-1.5 mt-3">
-                        {plan.features.map((f) => (
-                          <li key={f} className="flex items-start gap-2 text-sm text-foreground/75">
-                            <Check size={14} className="text-accent mt-0.5 flex-shrink-0" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex gap-3">
-                  <Button variant="outline" onClick={() => setStep(2)} className="flex-1">
-                    <ChevronLeft size={16} className="mr-1" />
-                    Back
-                  </Button>
-                  <Button
-                    className="flex-1 bg-primary text-primary-foreground"
-                    onClick={() => setStep(4)}
-                  >
-                    Next: Contact Details <ArrowRight size={16} className="ml-2" />
-                  </Button>
-                </div>
-              </div>
-            ) : step === 4 ? (
-              <div className="bg-card rounded-2xl border border-border p-6 space-y-5 animate-fade-in">
-                <h2 className="text-xl font-bold text-foreground">Contact Details</h2>
-
-                <div>
-                  <Label htmlFor="contactName">Full Name *</Label>
-                  <Input
-                    id="contactName"
-                    value={form.contactName}
-                    onChange={(e) => update("contactName", e.target.value)}
-                    placeholder="Your full name"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="contactEmail">Email Address *</Label>
-                  <Input
-                    id="contactEmail"
-                    type="email"
-                    value={form.contactEmail}
-                    onChange={(e) => update("contactEmail", e.target.value)}
-                    placeholder="you@yourfarm.com"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="contactPhone">Phone Number</Label>
-                  <Input
-                    id="contactPhone"
-                    type="tel"
-                    value={form.contactPhone}
-                    onChange={(e) => update("contactPhone", e.target.value)}
-                    placeholder="+61 4xx xxx xxx"
-                    className="mt-1"
-                  />
-                </div>
-
-                {/* Summary */}
-                <div className="bg-muted rounded-xl p-4 text-sm space-y-2">
-                  <h3 className="font-semibold text-foreground">Submission Summary</h3>
-                  {[
-                    ["Farm", form.farmName],
-                    ["Type", form.farmType],
-                    ["Region", form.region],
-                    ["Plan", PLANS.find(p => p.id === form.membershipTier)?.name || ""],
-                    ["Activities", form.activities.length + " selected"],
-                  ].map(([label, value]) => (
-                    <div key={label} className="flex justify-between">
-                      <span className="text-muted-foreground">{label}</span>
-                      <span className="font-medium text-foreground">{value}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-3">
-                  <Button variant="outline" onClick={() => setStep(3)} className="flex-1">
-                    <ChevronLeft size={16} className="mr-1" />
-                    Back
-                  </Button>
-                  <Button
-                    className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold shadow-gold"
-                    disabled={!form.contactName || !form.contactEmail}
-                    onClick={handleSubmit}
-                  >
-                    Submit Application
-                  </Button>
-                </div>
-              </div>
-            ) : null}
+            )}
           </div>
+
+          <aside className="space-y-4">
+            <SidePanel icon={FileCheck} title="Verification Documents" items={COMPLIANCE_ITEMS} />
+            <SidePanel icon={ShieldCheck} title="Sustainability Review" items={SUSTAINABILITY_ITEMS} />
+          </aside>
         </div>
-      </div>
+      </section>
     </PageLayout>
   );
 }
 
-function FeatureGrid({ title, items, expanded, onToggle }: { title: string; items: string[]; expanded: string[]; onToggle: (title: string) => void }) {
+function FormSection({ title, note, children }: { title: string; note: string; children: React.ReactNode }) {
   return (
-    <div className="mb-6 rounded-lg border border-border bg-card shadow-brand overflow-hidden">
-      <button
-        type="button"
-        onClick={() => onToggle(title)}
-        className="w-full flex items-center justify-between p-5 text-left"
-      >
-        <h3 className="text-xl font-extrabold text-foreground">{title}</h3>
-        <ChevronDown
-          size={20}
-          className={`text-muted-foreground transition-transform ${
-            expanded.includes(title) ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-      {expanded.includes(title) && (
-        <div className="px-5 pb-5">
-          <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
-            {items.map((item) => (
-              <div key={item} className="rounded-md border border-border bg-muted p-3 text-sm text-foreground/80">
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+    <div className="space-y-5">
+      <div>
+        <h2 className="text-2xl font-extrabold text-foreground">{title}</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{note}</p>
+      </div>
+      {children}
     </div>
   );
 }
 
-function FeaturePanel({ title, items, expanded, onToggle }: { title: string; items: string[]; expanded: string[]; onToggle: (title: string) => void }) {
+function Field({ label, id, children }: { label: string; id: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-border bg-card shadow-brand overflow-hidden">
-      <button
-        type="button"
-        onClick={() => onToggle(title)}
-        className="w-full flex items-center justify-between p-5 text-left"
-      >
-        <h3 className="text-xl font-extrabold text-foreground">{title}</h3>
-        <ChevronDown
-          size={20}
-          className={`text-muted-foreground transition-transform ${
-            expanded.includes(title) ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-      {expanded.includes(title) && (
-        <div className="px-5 pb-5">
-          <div className="space-y-2">
-            {items.map((item) => (
-              <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <Check size={14} className="mt-0.5 flex-shrink-0 text-accent" />
-                <span>{item}</span>
-              </div>
-            ))}
+    <div>
+      <Label htmlFor={id}>{label}</Label>
+      <div className="mt-1">{children}</div>
+    </div>
+  );
+}
+
+function ChoiceGroup({ title, items, selected, onToggle }: { title: string; items: string[]; selected: string[]; onToggle: (item: string) => void }) {
+  return (
+    <div>
+      <h3 className="mb-3 font-semibold text-foreground">{title}</h3>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {items.map((item) => (
+          <label key={item} className="flex items-center gap-2 rounded-md border border-border p-3 text-sm">
+            <Checkbox checked={selected.includes(item)} onCheckedChange={() => onToggle(item)} />
+            {item}
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Next({ disabled, onClick }: { disabled: boolean; onClick: () => void }) {
+  return (
+    <Button disabled={disabled} onClick={onClick} className="w-full bg-primary text-primary-foreground">
+      Continue <ArrowRight size={16} className="ml-2" />
+    </Button>
+  );
+}
+
+function NavButtons({ back, next, disabled }: { back: () => void; next: () => void; disabled: boolean }) {
+  return (
+    <div className="flex gap-3">
+      <Button variant="outline" onClick={back} className="flex-1"><ChevronLeft size={16} className="mr-1" />Back</Button>
+      <Button disabled={disabled} onClick={next} className="flex-1 bg-primary text-primary-foreground">Continue <ArrowRight size={16} className="ml-2" /></Button>
+    </div>
+  );
+}
+
+function SidePanel({ icon: Icon, title, items }: { icon: typeof FileCheck; title: string; items: string[] }) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-5">
+      <div className="mb-4 flex items-center gap-2">
+        <Icon size={20} className="text-primary" />
+        <h3 className="font-bold text-foreground">{title}</h3>
+      </div>
+      <div className="space-y-2">
+        {items.map((item) => (
+          <div key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
+            <Check size={14} className="mt-0.5 text-accent" />
+            <span>{item}</span>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 }
