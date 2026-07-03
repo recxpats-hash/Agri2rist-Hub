@@ -35,7 +35,6 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { FARM_IMAGES, SAMPLE_PRODUCTS } from "@/data/sampleData";
-import { CategoryGalleryModal } from "@/components/CategoryGalleryModal";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -82,7 +81,7 @@ const MODULE_LISTINGS = [
     description: "Guided pond tour, water quality briefing, net fishing demonstration, and fresh fish tasting.",
     price: 45,
     unit: "per guest",
-    image: FARM_IMAGES.fishFarmPonds,
+    image: FARM_IMAGES.fishFarm5,
     available: true,
     minimumOrder: "2 guests",
     availability: "Weekends",
@@ -174,18 +173,6 @@ const MARKETPLACE_CATEGORY_CARDS = [
   "Farm Equipment",
   "Training Services",
 ];
-
-const CATEGORY_FOLDER_MAP: Record<string, string> = {
-  "Farm Stay Accommodation": "/locale/farm stay",
-  "Fish & Aquaculture": "/locale/Farm fish",
-  "Farm Equipment": "/locale/Equipments",
-  "Training Services": "/locale/Training",
-  "Farm Produce": "/locale/Farm fruits",
-  "Organic Vegetables": "/locale/Farm fruits",
-  "Fruits": "/locale/Farm fruits",
-};
-
-const CATEGORY_GALLERY_CATEGORIES = Object.keys(CATEGORY_FOLDER_MAP);
 
 const CATEGORY_LISTINGS = [
   ["farm-produce", "Farm Produce", "Seasonal Farm Produce Box", "Community Harvest Cooperative", "A mixed box of fresh farm produce for families, restaurants, and local retailers.", 28, "box", FARM_IMAGES.farmFruits],
@@ -451,7 +438,6 @@ export default function MarketplacePage() {
   const [recxpatsPayment, setRecxpatsPayment] = useState("MTN Mobile Money");
   const [currency, setCurrency] = useState("USD");
   const [searchType, setSearchType] = useState("Farm Products");
-  const [galleryCategory, setGalleryCategory] = useState<string | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -684,16 +670,11 @@ export default function MarketplacePage() {
                 <button
                   key={item}
                   onClick={() => {
-                    const folder = CATEGORY_FOLDER_MAP[item];
-                    if (folder) {
-                      setGalleryCategory(item);
-                    } else {
-                      setSelectedCategory(item);
-                      setSearch("");
-                    }
+                    setSelectedCategory(item);
+                    setSearch("");
                   }}
                   className={`rounded-lg border p-4 text-left transition-colors ${
-                    selectedCategory === item && !CATEGORY_FOLDER_MAP[item]
+                    selectedCategory === item
                       ? "border-primary bg-primary text-primary-foreground shadow-brand"
                       : "border-border bg-card text-foreground hover:border-primary hover:text-primary"
                   }`}
@@ -1211,13 +1192,7 @@ export default function MarketplacePage() {
         </div>
       ) : null}
 
-      {galleryCategory && CATEGORY_FOLDER_MAP[galleryCategory] && (
-        <CategoryGalleryModal
-          categoryName={galleryCategory}
-          folderPath={CATEGORY_FOLDER_MAP[galleryCategory]}
-          onClose={() => setGalleryCategory(null)}
-        />
-      )}
+      
     </PageLayout>
   );
 }

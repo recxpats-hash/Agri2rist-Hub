@@ -16,6 +16,34 @@ import { Textarea } from "@/components/ui/textarea";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useToast } from "@/hooks/use-toast";
 
+const TRAINING_IMAGES = [
+  "/locale/Training/IMG-20170903-WA0024.jpg",
+  "/locale/Training/IMG-20170903-WA0028.jpg",
+  "/locale/Training/IMG-20170903-WA0019.jpg",
+  "/locale/Training/IMG-20160923-WA0091.jpg",
+  "/locale/Training/IMG-20160923-WA0075.jpg",
+  "/locale/Training/IMG-20160923-WA0074.jpg",
+  "/locale/Training/Pita_ Youth in Agric Symp.jpg",
+  "/locale/Training/IMG-20170904-WA0148.jpg",
+  "/locale/Training/IMG-20170904-WA0029.jpg",
+  "/locale/Training/IMG-20170904-WA0001.jpg",
+  "/locale/Training/IMG-20170904-WA0002.jpg",
+  "/locale/Training/IMG-20170825-WA0003.jpg",
+  "/locale/Training/IMG-20170825-WA0006.jpg",
+  "/locale/Training/IMG-20170901-WA0003.jpg",
+  "/locale/Training/IMG-20170902-WA0010.jpg",
+  "/locale/Training/IMG-20210809-WA0005.jpg",
+];
+
+const EVENT_HOSTING_IMAGES = [
+  "/locale/Event hosting/IMG-20230920-WA0053.jpg",
+  "/locale/Event hosting/217b4ae1bdcf810d5f1f7db9417078cf.jpg",
+  "/locale/Event hosting/988719b9517cf889aa8d5972d96d1c6a.jpg",
+  "/locale/Event hosting/b5d20dbd357f09eaa1a5e0e885cfc8bd.jpg",
+  "/locale/Event hosting/c988f46cb84fcfab585150575783f2f7.jpg",
+  "/locale/Event hosting/Wedding_ long table wedding_ long table centerpieces_ long table wedding reception(JPG).jpg",
+];
+
 const FARM_TYPES = ["Dairy", "Poultry", "Aquaculture", "Crop Farming", "Mixed Farm", "Cultural Tourism", "Eco Farm", "Winery / Orchard"];
 const REGIONS = ["Kenya", "Tanzania", "Uganda", "South Africa", "Ethiopia", "Ghana", "Morocco", "Rwanda"];
 const ACTIVITIES_LIST = [
@@ -289,6 +317,28 @@ export default function GetListedPage() {
                   <div key={item} className="rounded-md bg-muted p-3">
                     <div className="mb-1 text-xs font-bold uppercase text-primary">Step {index + 1}</div>
                     <div className="text-sm font-medium text-foreground">{item}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-10">
+              <h3 className="text-xl font-extrabold text-foreground mb-4 text-center">Training Gallery</h3>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                {TRAINING_IMAGES.map((src, i) => (
+                  <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-border bg-card">
+                    <img src={src} alt={`Training ${i + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-10">
+              <h3 className="text-xl font-extrabold text-foreground mb-4 text-center">Events Hosting Gallery</h3>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                {EVENT_HOSTING_IMAGES.map((src, i) => (
+                  <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-border bg-card">
+                    <img src={src} alt={`Event hosting ${i + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                   </div>
                 ))}
               </div>
