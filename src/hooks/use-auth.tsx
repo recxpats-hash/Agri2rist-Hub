@@ -1,66 +1,202 @@
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+/**
+ * Agri2rist Hub – Auth Hook (upgraded)
+ * Adds: role support, password hashing (SHA-256 via SubtleCrypto),
+ * session expiry, and sanitized inputs.
+ *
+ * Existing sign-up / login API is backward-compatible.
+ */
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import type { UserRole } from "@/types/marketplace";
+import { sanitizeEmail, sanitizeText } from "@/lib/validation";
 
-type AuthUser = {
+// ─── TYPES ────────────────────────────────────────────────────────────────────
+
+export type AuthUser = {
+  id: string;
   name: string;
   email: string;
+  role: UserRole;
+  membershipTier: string;
+  joinedAt: string;
 };
 
 type StoredUser = AuthUser & {
-  password: string;
+  passwordHash: string;
+  /** Legacy: plain password kept for backward compat during transition */
+  password?: string;
 };
 
 type AuthContextValue = {
   user: AuthUser | null;
-  login: (email: string, password: string) => boolean;
-  signup: (name: string, email: string, password: string) => boolean;
+  isAdmin: boolean;
+  isFarmer: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  signup: (name: string, email: string, password: string, role?: UserRole) => Promise<boolean>;
   logout: () => void;
+  updateProfile: (updates: Partial<Pick<AuthUser, "name" | "role" | "membershipTier">>) => void;
 };
 
-const AuthContext = createContext<AuthContextValue | null>(null);
-const USERS_KEY = "agri2rist_users";
+// ─── STORAGE KEYS ─────────────────────────────────────────────────────────────
+
+const USERS_KEY   = "agri2rist_users";
 const SESSION_KEY = "agri2rist_session";
+const SESSION_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+// ─── CRYPTO HELPERS ───────────────────────────────────────────────────────────
+
+async function hashPassword(password: string): Promise<string> {
+  if (typeof window === "undefined" || !window.crypto?.subtle) {
+    // Fallback: simple obfuscation (dev / old browsers)
+    return btoa(password + "a2r_salt_2025");
+  }
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password + "a2r_salt_2025");
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function generateId(): string {
+  return `u_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+// ─── CONTEXT ─────────────────────────────────────────────────────────────────
+
+const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
 
+  // Restore session on mount, check TTL
   useEffect(() => {
-    const saved = localStorage.getItem(SESSION_KEY);
-    if (saved) {
-      setUser(JSON.parse(saved));
+    try {
+      const raw = localStorage.getItem(SESSION_KEY);
+      if (!raw) return;
+      const parsed: { data: AuthUser; expiresAt: number } = JSON.parse(raw);
+      if (Date.now() > parsed.expiresAt) {
+        localStorage.removeItem(SESSION_KEY);
+        return;
+      }
+      setUser(parsed.data);
+    } catch {
+      localStorage.removeItem(SESSION_KEY);
     }
   }, []);
+
+  const saveSession = (u: AuthUser) => {
+    localStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({ data: u, expiresAt: Date.now() + SESSION_TTL })
+    );
+    setUser(u);
+  };
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
-      login(email, password) {
-        const users: StoredUser[] = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+      isAdmin: user?.role === "admin",
+      isFarmer: user?.role === "farmer",
+
+      async login(email, password) {
+        const clean = sanitizeEmail(email);
+        if (!clean) return false;
+        const users: StoredUser[] = JSON.parse(
+          localStorage.getItem(USERS_KEY) || "[]"
+        );
         const found = users.find(
-          (candidate) =>
-            candidate.email.toLowerCase() === email.toLowerCase() && candidate.password === password
+          (u) => u.email.toLowerCase() === clean
         );
         if (!found) return false;
 
-        const session = { name: found.name, email: found.email };
-        localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-        setUser(session);
+        // Support legacy plain-password entries
+        const incomingHash = await hashPassword(password);
+        const legacyMatch = found.password === password;
+        const hashMatch = found.passwordHash === incomingHash;
+        if (!hashMatch && !legacyMatch) return false;
+
+        // Upgrade legacy entry in place
+        if (legacyMatch && !hashMatch) {
+          found.passwordHash = incomingHash;
+          delete found.password;
+          localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
+
+        const session: AuthUser = {
+          id: found.id,
+          name: found.name,
+          email: found.email,
+          role: found.role ?? "buyer",
+          membershipTier: found.membershipTier ?? "free",
+          joinedAt: found.joinedAt ?? new Date().toISOString(),
+        };
+        saveSession(session);
         return true;
       },
-      signup(name, email, password) {
-        const users: StoredUser[] = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
-        const exists = users.some((candidate) => candidate.email.toLowerCase() === email.toLowerCase());
+
+      async signup(name, email, password, role = "buyer") {
+        const cleanName  = sanitizeText(name);
+        const cleanEmail = sanitizeEmail(email);
+        if (!cleanName || !cleanEmail || !password) return false;
+
+        const users: StoredUser[] = JSON.parse(
+          localStorage.getItem(USERS_KEY) || "[]"
+        );
+        const exists = users.some(
+          (u) => u.email.toLowerCase() === cleanEmail
+        );
         if (exists) return false;
 
-        const nextUser = { name, email, password };
-        localStorage.setItem(USERS_KEY, JSON.stringify([...users, nextUser]));
-        const session = { name, email };
-        localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-        setUser(session);
+        const passwordHash = await hashPassword(password);
+        const newUser: StoredUser = {
+          id: generateId(),
+          name: cleanName,
+          email: cleanEmail,
+          passwordHash,
+          role,
+          membershipTier: "free",
+          joinedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(
+          USERS_KEY,
+          JSON.stringify([...users, newUser])
+        );
+        const session: AuthUser = {
+          id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          role: newUser.role,
+          membershipTier: newUser.membershipTier,
+          joinedAt: newUser.joinedAt,
+        };
+        saveSession(session);
         return true;
       },
+
       logout() {
         localStorage.removeItem(SESSION_KEY);
         setUser(null);
+      },
+
+      updateProfile(updates) {
+        if (!user) return;
+        const updated: AuthUser = { ...user, ...updates };
+        saveSession(updated);
+        // Also update the stored users array
+        const users: StoredUser[] = JSON.parse(
+          localStorage.getItem(USERS_KEY) || "[]"
+        );
+        const idx = users.findIndex((u) => u.id === user.id);
+        if (idx >= 0) {
+          users[idx] = { ...users[idx], ...updates };
+          localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
       },
     }),
     [user]
@@ -70,9 +206,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  return ctx;
 }

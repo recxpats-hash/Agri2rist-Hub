@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Clock, LogOut, Mail, Menu, MessageCircle, Phone, Search, UserRound, X } from "lucide-react";
+import { Clock, LayoutDashboard, LogOut, Mail, Menu, MessageCircle, Phone, Search, ShoppingCart, UserRound, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { FARM_IMAGES } from "@/data/sampleData";
 import { OFFICIAL_CONTACT, getSupportEmailHref } from "@/lib/contact-info";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { useCart } from "@/hooks/use-cart";
+import { CartSidebar } from "@/components/marketplace/CartSidebar";
+import { SearchBar } from "@/components/marketplace/SearchBar";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -18,10 +21,13 @@ const navLinks = [
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
+  const { count: cartCount } = useCart();
 
   return (
+    <>
     <nav className="sticky top-0 z-50 bg-primary shadow-hero">
       <div className="border-b border-primary-light bg-primary-light/95 text-primary-foreground">
         <div className="container mx-auto flex flex-wrap items-center justify-center gap-x-4 gap-y-2 px-4 py-2 text-xs md:justify-between">
@@ -45,12 +51,12 @@ export function Navbar() {
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2">
             <LanguageSwitcher className="h-8 min-w-[118px] border-primary-foreground/25 bg-primary text-xs text-primary-foreground" />
-            <Link to="/explore">
-              <Button size="sm" variant="outline" className="h-8 border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground">
-                <Search size={13} className="mr-1" />
-                Search
-              </Button>
-            </Link>
+            <div className="hidden md:block w-56">
+              <SearchBar
+                compact
+                inputClassName="h-8 text-xs border-primary-foreground/25 bg-primary text-primary-foreground placeholder:text-primary-foreground/50 focus:ring-secondary"
+              />
+            </div>
             {user ? (
               <Link to="/account" className="rounded-md bg-primary px-2.5 py-1.5 text-xs font-semibold hover:text-secondary">
                 {user.name}
@@ -130,6 +136,19 @@ export function Navbar() {
                 Book Your Experience
               </Button>
             </Link>
+            {/* Cart button */}
+            <button
+              onClick={() => setCartOpen(true)}
+              className="relative rounded-md bg-primary-light px-3 py-2 text-primary-foreground hover:text-secondary transition-colors"
+              aria-label={`Shopping cart (${cartCount} items)`}
+            >
+              <ShoppingCart size={18} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-secondary text-secondary-foreground text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </button>
             {user && (
               <div className="flex items-center gap-2 rounded-md bg-primary-light px-3 py-2">
                 <UserRound size={16} className="text-secondary" />
@@ -139,6 +158,15 @@ export function Navbar() {
                 >
                   {user.name}
                 </Link>
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    className="flex items-center gap-1 text-xs text-secondary hover:text-secondary/80"
+                    title="Admin Dashboard"
+                  >
+                    <LayoutDashboard size={13} />
+                  </Link>
+                )}
                 <button
                   onClick={logout}
                   className="text-primary-foreground/70 hover:text-secondary"
@@ -221,5 +249,7 @@ export function Navbar() {
         </div>
       )}
     </nav>
+    <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} />
+  </>
   );
 }

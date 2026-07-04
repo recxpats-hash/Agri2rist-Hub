@@ -1,12 +1,14 @@
 import { FormEvent, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-import { LockKeyhole, Mail, User } from "lucide-react";
+import { AlertCircle, LockKeyhole, Mail, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
+import { checkRateLimit, resetRateLimit, remainingAttempts } from "@/lib/security";
+import { validateSignupForm, sanitizeEmail } from "@/lib/validation";
 
 type AuthMode = "login" | "signup";
 
@@ -19,6 +21,8 @@ export default function AuthPage({ mode }: { mode: AuthMode }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [blocked, setBlocked] = useState(false);
 
   const from = (location.state as { from?: string } | null)?.from || "/";
 
@@ -26,21 +30,50 @@ export default function AuthPage({ mode }: { mode: AuthMode }) {
     return <Navigate to={from} replace />;
   }
 
-  const submit = (event: FormEvent) => {
+  const submit = async (event: FormEvent) => {
     event.preventDefault();
-    const ok = isSignup ? signup(name.trim(), email.trim(), password) : login(email.trim(), password);
+    setFieldErrors({});
 
-    if (!ok) {
+    const cleanEmail = sanitizeEmail(email);
+    const rateLimitKey = `auth:${cleanEmail}`;
+
+    // Rate-limit: 5 attempts per minute
+    if (!checkRateLimit(rateLimitKey, 5, 60_000)) {
+      setBlocked(true);
       toast({
-        title: isSignup ? "Account already exists" : "Login failed",
-        description: isSignup
-          ? "Use login if you already created an Agri2rist account."
-          : "Check your email and password, or create a new account.",
+        title: "Too many attempts",
+        description: "Please wait 60 seconds before trying again.",
         variant: "destructive",
       });
       return;
     }
 
+    // Validate signup fields
+    if (isSignup) {
+      const errs = validateSignupForm({ name, email: cleanEmail, password });
+      if (Object.keys(errs).length > 0) {
+        setFieldErrors(errs);
+        return;
+      }
+    }
+
+    const ok = isSignup
+      ? await signup(name.trim(), cleanEmail, password)
+      : await login(cleanEmail, password);
+
+    if (!ok) {
+      const rem = remainingAttempts(rateLimitKey, 5, 60_000);
+      toast({
+        title: isSignup ? "Account already exists" : "Login failed",
+        description: isSignup
+          ? "An account with this email already exists. Try logging in."
+          : `Check your email and password. ${rem} attempt${rem !== 1 ? "s" : ""} remaining.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    resetRateLimit(rateLimitKey);
     toast({
       title: isSignup ? "Account created" : "Welcome back",
       description: "You now have access to bookings, contact, shopping, and saved requests.",
@@ -115,9 +148,29 @@ export default function AuthPage({ mode }: { mode: AuthMode }) {
               </div>
             </div>
 
-            <Button type="submit" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold">
+            <Button
+              type="submit"
+              disabled={blocked}
+              className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold"
+            >
               {isSignup ? "Create Account" : "Login"}
             </Button>
+
+            {blocked && (
+              <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 text-destructive rounded-lg px-3 py-2 text-xs">
+                <AlertCircle size={14} /> Too many attempts. Please wait 60 seconds.
+              </div>
+            )}
+
+            {Object.values(fieldErrors).length > 0 && (
+              <ul className="text-xs text-destructive space-y-1">
+                {Object.values(fieldErrors).map((e, i) => (
+                  <li key={i} className="flex items-center gap-1">
+                    <AlertCircle size={11} /> {e}
+                  </li>
+                ))}
+              </ul>
+            )}
 
             <p className="text-sm text-center text-muted-foreground">
               {isSignup ? "Already have an account?" : "New to Agri2rist Hub?"}{" "}

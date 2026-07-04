@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Home,
@@ -10,11 +9,18 @@ import {
   MapPin,
   Leaf,
   ChevronRight,
+  TrendingUp,
+  Sparkles,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { FarmCard } from "@/components/farms/FarmCard";
+import { ProductCard } from "@/components/marketplace/ProductCard";
 import { SAMPLE_FARMS, FARM_IMAGES } from "@/data/sampleData";
+import { TOP_CATEGORIES } from "@/data/categories";
+import { getFeaturedProducts, getTrendingProducts } from "@/data/products";
 import { openNewsletterPopup } from "@/lib/contact-info";
 
 const features = [
@@ -231,6 +237,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── MARKETPLACE TEASERS ── */}
+      <MarketplaceTeaserSection />
+
       {/* ── PHOTO GALLERY ── */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
@@ -311,5 +320,111 @@ export default function HomePage() {
         </div>
       </section>
     </PageLayout>
+  );
+}
+
+// ─── Marketplace Teaser Section ───────────────────────────────────────────────
+
+function MarketplaceTeaserSection() {
+  const featured = getFeaturedProducts(8);
+  const trending = getTrendingProducts(4);
+
+  return (
+    <>
+      {/* Category Grid */}
+      <section className="py-20 bg-muted">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+            <div>
+              <Badge className="mb-3 bg-secondary text-secondary-foreground">Marketplace</Badge>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2">
+                Shop Farm Products <span className="text-primary">Direct</span>
+              </h2>
+              <p className="text-muted-foreground">
+                {TOP_CATEGORIES.length} categories · 163+ products · verified farmers
+              </p>
+            </div>
+            <Link to="/marketplace">
+              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                Browse All <ArrowRight size={16} className="ml-2" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {TOP_CATEGORIES.slice(0, 12).map((cat) => (
+              <Link
+                key={cat.id}
+                to={`/marketplace?category=${cat.id}`}
+                className="group bg-card border border-border rounded-xl overflow-hidden card-hover"
+              >
+                <div className="aspect-square overflow-hidden">
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+                <div className="p-2 text-center">
+                  <p className="text-xs font-semibold text-foreground line-clamp-2 leading-tight">{cat.name}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      {featured.length > 0 && (
+        <section className="py-20 bg-background">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-2 flex items-center gap-3">
+                  <Sparkles size={28} className="text-secondary" />
+                  Featured Products
+                </h2>
+                <p className="text-muted-foreground">Hand-picked, verified and in-season</p>
+              </div>
+              <Link to="/marketplace?featured=true">
+                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                  View All Featured <ArrowRight size={16} className="ml-2" />
+                </Button>
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              {featured.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Trending Strip */}
+      {trending.length > 0 && (
+        <section className="py-14 bg-primary">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+              <h2 className="text-2xl md:text-3xl font-extrabold text-primary-foreground flex items-center gap-2">
+                <TrendingUp size={24} className="text-secondary" />
+                Trending Now
+              </h2>
+              <Link to="/marketplace?trending=true">
+                <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold">
+                  See More <ArrowRight size={16} className="ml-1" />
+                </Button>
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+              {trending.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+    </>
   );
 }
