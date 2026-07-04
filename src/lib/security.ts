@@ -145,6 +145,7 @@ export function injectCspMetaTag(): void {
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
     "connect-src 'self' https:",
+    "frame-src 'self' https://www.google.com https://maps.google.com https://maps.googleapis.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
