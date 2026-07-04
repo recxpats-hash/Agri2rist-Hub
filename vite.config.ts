@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => {
     },
     plugins: plugins.filter(Boolean) as PluginOption[],
     resolve: {
+      dedupe: ["react", "react-dom", "react/jsx-runtime"],
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
@@ -29,15 +30,19 @@ export default defineConfig(({ mode }) => {
         output: {
           // Split the bundle into logical chunks for faster subsequent loads
           manualChunks(id) {
-            // React runtime
-            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+            // React runtime + DOM (must be one chunk, loaded first)
+            if (
+              id.includes("node_modules/react/") ||
+              id.includes("node_modules/react-dom/") ||
+              id.includes("node_modules/scheduler/")
+            ) {
               return "vendor-react";
             }
             // React Router
             if (id.includes("node_modules/react-router")) {
               return "vendor-router";
             }
-            // Radix UI (shadcn primitives)
+            // Radix UI (shadcn primitives) — depends on React, keep separate
             if (id.includes("node_modules/@radix-ui")) {
               return "vendor-radix";
             }
