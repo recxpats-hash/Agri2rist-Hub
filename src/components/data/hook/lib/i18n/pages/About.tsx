@@ -194,7 +194,7 @@ export default function AboutPage() {
         <div className="container mx-auto flex flex-col gap-5 px-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-3xl font-extrabold text-primary-foreground">Travel with Purpose. Grow Local.</h2>
-            <p className="mt-2 max-w-2xl text-primary-foreground/78">
+            <p className="mt-2 max-w-2xl text-white font-medium">
               Join Agri2rist Hub to support farmers, protect the environment, celebrate cultural heritage, and strengthen rural communities.
             </p>
           </div>

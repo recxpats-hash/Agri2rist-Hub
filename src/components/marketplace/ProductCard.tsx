@@ -65,7 +65,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
       aria-label={`View ${product.name}`}
     >
       {/* Image */}
-      <div className="relative h-48 overflow-hidden flex-shrink-0">
+      <div className="relative h-48 overflow-hidden flex-shrink-0 bg-muted">
         <img
           src={product.images[0]}
           alt={product.name}
@@ -73,28 +73,27 @@ export function ProductCard({ product, className }: ProductCardProps) {
           decoding="async"
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 gradient-overlay opacity-30" />
 
         {/* Top badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1">
+        <div className="absolute top-2 left-2 flex flex-col gap-1 max-w-[60%]">
           {product.isFeatured && (
-            <Badge className="bg-secondary text-secondary-foreground text-[10px] px-1.5 py-0.5 font-semibold">
+            <Badge className="bg-secondary/95 text-secondary-foreground text-[10px] px-1.5 py-0.5 font-semibold shadow-sm backdrop-blur-sm">
               Featured
             </Badge>
           )}
           {product.isTrending && (
-            <Badge className="bg-accent text-accent-foreground text-[10px] px-1.5 py-0.5">
+            <Badge className="bg-accent/95 text-accent-foreground text-[10px] px-1.5 py-0.5 shadow-sm backdrop-blur-sm">
               Trending
             </Badge>
           )}
           {product.organicStatus === "certified_organic" && (
-            <Badge className="bg-green-100 text-green-800 border-green-200 text-[10px] px-1.5 py-0.5 flex items-center gap-0.5">
+            <Badge className="bg-green-600/90 text-white border-green-600 text-[10px] px-1.5 py-0.5 flex items-center gap-0.5 shadow-sm backdrop-blur-sm">
               <Leaf size={8} />
               Organic
             </Badge>
           )}
           {isOutOfStock && (
-            <Badge variant="destructive" className="text-[10px] px-1.5 py-0.5">
+            <Badge variant="destructive" className="text-[10px] px-1.5 py-0.5 shadow-sm backdrop-blur-sm">
               Out of Stock
             </Badge>
           )}
@@ -104,10 +103,10 @@ export function ProductCard({ product, className }: ProductCardProps) {
         <button
           onClick={handleToggleWishlist}
           className={cn(
-            "absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all",
+            "absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-md",
             wished
-              ? "bg-destructive text-destructive-foreground shadow-md"
-              : "bg-background/80 text-muted-foreground hover:bg-background hover:text-destructive"
+              ? "bg-destructive text-destructive-foreground"
+              : "bg-white/90 text-muted-foreground hover:bg-white hover:text-destructive backdrop-blur-sm"
           )}
           aria-label={wished ? "Remove from wishlist" : "Add to wishlist"}
         >
@@ -115,56 +114,59 @@ export function ProductCard({ product, className }: ProductCardProps) {
         </button>
 
         {/* Grade badge bottom-left */}
-        <div className="absolute bottom-3 left-3">
-          <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full border", GRADE_COLORS[product.grade])}>
+        <div className="absolute bottom-2 left-2">
+          <span className={cn(
+            "text-[10px] font-semibold px-2 py-0.5 rounded-full border shadow-sm backdrop-blur-sm",
+            GRADE_COLORS[product.grade]
+          )}>
             {GRADE_LABELS[product.grade]}
           </span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col flex-1">
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <h3 className="font-bold text-foreground text-sm leading-tight line-clamp-2 flex-1">
+      <div className="p-4 flex flex-col flex-1 gap-1">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="font-bold text-foreground text-sm leading-snug line-clamp-2 flex-1 min-w-0" title={product.name}>
             {product.name}
           </h3>
         </div>
 
         {/* Scientific name */}
         {product.scientificName && (
-          <p className="text-xs text-muted-foreground italic mb-1 line-clamp-1">{product.scientificName}</p>
+          <p className="text-xs text-muted-foreground italic mb-1 line-clamp-1 min-w-0">{product.scientificName}</p>
         )}
 
         {/* Farm + location */}
-        <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
+        <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2 min-w-0">
           <MapPin size={11} className="text-accent flex-shrink-0" />
-          <span className="line-clamp-1">{product.farmName} · {product.region}</span>
+          <span className="truncate">{product.farmName} · {product.region}</span>
         </div>
 
         {/* Certifications */}
         {product.certifications.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-2">
+          <div className="flex flex-wrap gap-1 mb-2 overflow-hidden">
             {product.certifications.slice(0, 2).map((cert) => (
-              <span key={cert} className="flex items-center gap-0.5 text-[10px] text-accent bg-accent-light px-1.5 py-0.5 rounded-full">
+              <span key={cert} className="flex items-center gap-0.5 text-[10px] text-accent bg-accent-light px-1.5 py-0.5 rounded-full flex-shrink-0">
                 <BadgeCheck size={8} />
-                {cert}
+                <span className="truncate max-w-[80px]">{cert}</span>
               </span>
             ))}
           </div>
         )}
 
         {/* Description */}
-        <p className="text-xs text-muted-foreground line-clamp-2 mb-3 flex-1">
+        <p className="text-xs text-muted-foreground line-clamp-2 mb-3 flex-1 min-w-0">
           {product.shortDescription}
         </p>
 
         {/* Footer */}
-        <div className="flex items-end justify-between mt-auto">
-          <div>
-            <div className="text-primary font-extrabold text-base leading-tight">
+        <div className="flex items-end justify-between mt-auto gap-2">
+          <div className="min-w-0">
+            <div className="text-primary font-extrabold text-base leading-tight truncate">
               UGX {product.retailPrice.toLocaleString()}
             </div>
-            <div className="text-xs text-muted-foreground">per {product.unitOfSale}</div>
+            <div className="text-xs text-muted-foreground truncate">per {product.unitOfSale}</div>
             {product.minimumOrderQty > 1 && (
               <div className="text-xs text-muted-foreground">MOQ: {product.minimumOrderQty}</div>
             )}

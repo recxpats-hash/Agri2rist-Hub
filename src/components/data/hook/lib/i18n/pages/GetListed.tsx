@@ -233,7 +233,7 @@ export default function GetListedPage() {
             <h1 className="max-w-3xl text-4xl font-extrabold text-primary-foreground md:text-5xl">
               Become a Host
             </h1>
-            <p className="mt-4 max-w-2xl text-lg text-primary-foreground/78">
+            <p className="mt-4 max-w-2xl text-lg text-white font-medium">
               Share your farm, restaurant, lodge, campsite, or rural experience with travelers while Agri2rist Hub handles discovery, bookings, trust, and payments.
             </p>
           </div>

@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-import { AlertCircle, LockKeyhole, Mail, User } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, LockKeyhole, Mail, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +23,7 @@ export default function AuthPage({ mode }: { mode: AuthMode }) {
   const [password, setPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [blocked, setBlocked] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const from = (location.state as { from?: string } | null)?.from || "/";
 
@@ -52,7 +53,7 @@ export default function AuthPage({ mode }: { mode: AuthMode }) {
     if (isSignup) {
       const errs = validateSignupForm({ name, email: cleanEmail, password });
       if (Object.keys(errs).length > 0) {
-        setFieldErrors(errs);
+        setFieldErrors({ ...errs });
         return;
       }
     }
@@ -88,7 +89,7 @@ export default function AuthPage({ mode }: { mode: AuthMode }) {
           <h1 className="text-3xl md:text-5xl font-extrabold text-primary-foreground mb-3">
             {isSignup ? "Create Your Agri2rist Account" : "Login to Agri2rist Hub"}
           </h1>
-          <p className="text-primary-foreground/75 text-lg">
+          <p className="text-white text-lg font-medium">
             Access real farm bookings, direct farm contacts, marketplace shopping, quotes, and saved reservations.
           </p>
         </div>
@@ -137,14 +138,22 @@ export default function AuthPage({ mode }: { mode: AuthMode }) {
                 <LockKeyhole size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   required
                   minLength={6}
                   placeholder="At least 6 characters"
-                  className="pl-9"
+                  className="pl-9 pr-10"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
             </div>
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Clock, LayoutDashboard, LogOut, Mail, Menu, MessageCircle, Phone, Search, ShoppingCart, UserRound, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -11,13 +12,14 @@ import { useCart } from "@/hooks/use-cart";
 import { CartSidebar } from "@/components/marketplace/CartSidebar";
 import { SearchBar } from "@/components/marketplace/SearchBar";
 
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Explore", href: "/explore" },
-  { label: "Marketplace", href: "/marketplace" },
-  { label: "Community", href: "/community" },
-  { label: "About", href: "/about" },
-];
+const navLinkKeys = ["home", "explore", "marketplace", "community", "about"] as const;
+const navHrefMap: Record<string, string> = {
+  home: "/",
+  explore: "/explore",
+  marketplace: "/marketplace",
+  community: "/community",
+  about: "/about",
+};
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -25,6 +27,7 @@ export function Navbar() {
   const location = useLocation();
   const { user, logout, isAdmin } = useAuth();
   const { count: cartCount } = useCart();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -50,7 +53,6 @@ export function Navbar() {
             </span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <LanguageSwitcher className="h-8 min-w-[118px] border-primary-foreground/25 bg-primary text-xs text-primary-foreground" />
             <div className="hidden md:block w-56">
               <SearchBar
                 compact
@@ -64,11 +66,12 @@ export function Navbar() {
             ) : (
               <div className="flex items-center gap-1">
                 <Link to="/login" className="rounded-md px-2.5 py-1.5 font-semibold hover:bg-primary hover:text-secondary">
-                  Login
+                  {t("nav.login")}
                 </Link>
                 <Link to="/signup" className="rounded-md bg-secondary px-2.5 py-1.5 font-semibold text-secondary-foreground hover:bg-secondary/90">
-                  Register
+                  {t("nav.register")}
                 </Link>
+                <LanguageSwitcher compact />
               </div>
             )}
           </div>
@@ -101,18 +104,18 @@ export function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {navLinkKeys.map((key) => (
               <Link
-                key={link.href}
-                to={link.href}
+                key={key}
+                to={navHrefMap[key]}
                 className={cn(
                   "px-4 py-2 rounded-md text-sm font-medium transition-colors",
-                  location.pathname === link.href
+                  location.pathname === navHrefMap[key]
                     ? "bg-primary-light text-secondary"
                     : "text-primary-foreground hover:bg-primary-light hover:text-secondary"
                 )}
               >
-                {link.label}
+                {t(`nav.${key}`)}
               </Link>
             ))}
           </div>
@@ -125,7 +128,7 @@ export function Navbar() {
                 size="sm"
                 className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground font-semibold"
               >
-                Become a Host
+                {t("nav.becomeHost")}
               </Button>
             </Link>
             <Link to="/explore">
@@ -133,7 +136,7 @@ export function Navbar() {
                 size="sm"
                 className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold shadow-gold"
               >
-                Book Your Experience
+                {t("home.hero.cta.book")}
               </Button>
             </Link>
             {/* Cart button */}
@@ -158,22 +161,23 @@ export function Navbar() {
                 >
                   {user.name}
                 </Link>
-                {isAdmin && (
+                {isAdmin ? (
                   <Link
                     to="/admin"
-                    className="flex items-center gap-1 text-xs text-secondary hover:text-secondary/80"
-                    title="Admin Dashboard"
+                    className="text-[10px] font-semibold text-primary-foreground hover:text-secondary bg-primary/40 px-2 py-0.5 rounded transition-colors flex items-center gap-1"
+                    title="Management Panel"
                   >
-                    <LayoutDashboard size={13} />
+                    <LayoutDashboard size={10} /> Management
                   </Link>
+                ) : (
+                  <button
+                    onClick={logout}
+                    className="text-primary-foreground/70 hover:text-secondary"
+                    aria-label="Logout"
+                  >
+                    <LogOut size={15} />
+                  </button>
                 )}
-                <button
-                  onClick={logout}
-                  className="text-primary-foreground/70 hover:text-secondary"
-                  aria-label="Logout"
-                >
-                  <LogOut size={15} />
-                </button>
               </div>
             )}
           </div>
@@ -193,30 +197,33 @@ export function Navbar() {
       {mobileOpen && (
         <div className="md:hidden bg-primary-light border-t border-primary-glow animate-slide-up">
           <div className="container mx-auto px-4 py-4 flex flex-col gap-2">
-            {navLinks.map((link) => (
+            {navLinkKeys.map((key) => (
               <Link
-                key={link.href}
-                to={link.href}
+                key={key}
+                to={navHrefMap[key]}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
                   "px-4 py-3 rounded-md text-sm font-medium transition-colors",
-                  location.pathname === link.href
+                  location.pathname === navHrefMap[key]
                     ? "bg-primary text-secondary"
                     : "text-primary-foreground hover:bg-primary hover:text-secondary"
                 )}
               >
-                {link.label}
+                {t(`nav.${key}`)}
               </Link>
             ))}
             <div className="flex flex-col gap-2 pt-3 border-t border-primary-glow">
+              <div className="flex items-center gap-2 px-4">
+                <LanguageSwitcher compact />
+              </div>
               <Link to="/get-listed" onClick={() => setMobileOpen(false)}>
                 <Button variant="outline" className="w-full border-secondary text-secondary">
-                  Become a Host
+                  {t("nav.becomeHost")}
                 </Button>
               </Link>
               <Link to="/explore" onClick={() => setMobileOpen(false)}>
                 <Button className="w-full bg-secondary text-secondary-foreground">
-                  Book Your Experience
+                  {t("home.hero.cta.book")}
                 </Button>
               </Link>
               {user && (
@@ -229,17 +236,30 @@ export function Navbar() {
                     >
                       {user.name}
                     </Link>
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    {isAdmin && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex-1"
+                      >
+                        <Button size="sm" variant="outline" className="w-full border-secondary text-secondary text-xs">
+                          <LayoutDashboard size={12} className="mr-1" /> Management
+                        </Button>
+                      </Link>
+                    )}
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="text-primary-foreground"
+                      className={cn("text-primary-foreground", isAdmin ? "flex-1" : "w-full")}
                       onClick={() => {
                         logout();
                         setMobileOpen(false);
                       }}
                     >
                       <LogOut size={14} className="mr-2" />
-                      Logout
+                      Sign Out
                     </Button>
                   </div>
                 </div>

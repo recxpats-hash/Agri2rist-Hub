@@ -55,7 +55,7 @@ export function CartSidebar({ open, onClose }: CartSidebarProps) {
                     <p className="font-semibold text-sm text-foreground line-clamp-2 leading-tight mb-1">
                       {item.product.name}
                     </p>
-                    <p className="text-xs text-muted-foreground mb-2">{item.product.farmName}</p>
+                    <p className="text-xs text-muted-foreground mb-2 truncate" title={item.product.farmName}>{item.product.farmName}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center border border-border rounded-md">
                         <button

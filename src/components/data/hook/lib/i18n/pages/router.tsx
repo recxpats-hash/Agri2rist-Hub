@@ -18,6 +18,8 @@ const MarketplacePage   = lazy(() => import("./Marketplace"));
 const ProductDetailPage = lazy(() => import("./ProductDetail"));
 const FarmerStorePage   = lazy(() => import("./FarmerStore"));
 const MarketplaceSearchPage = lazy(() => import("./MarketplaceSearch"));
+const CatalogExplorerPage = lazy(() => import("./CatalogExplorer"));
+const ProductEditorPage = lazy(() => import("./ProductEditor"));
 const CheckoutPage      = lazy(() => import("./Checkout"));
 const WishlistPage      = lazy(() => import("./Wishlist"));
 const CommunityPage     = lazy(() => import("./Community"));
@@ -51,6 +53,8 @@ export const routers = [
   { path: "/farm/:id",                 name: "farmDetail",    element: <S><FarmDetailPage /></S> },
   { path: "/marketplace",              name: "marketplace",   element: <S><MarketplacePage /></S> },
   { path: "/marketplace/search",       name: "search",        element: <S><MarketplaceSearchPage /></S> },
+  { path: "/marketplace/catalog",      name: "catalog",       element: <S><CatalogExplorerPage /></S> },
+  { path: "/marketplace/catalog/editor/:productId?", name: "productEditor", element: <S><ProductEditorPage /></S> },
   { path: "/marketplace/product/:id",  name: "productDetail", element: <S><ProductDetailPage /></S> },
   { path: "/marketplace/farmer/:id",   name: "farmerStore",   element: <S><FarmerStorePage /></S> },
   { path: "/marketplace/checkout",     name: "checkout",      element: <S><CheckoutPage /></S> },

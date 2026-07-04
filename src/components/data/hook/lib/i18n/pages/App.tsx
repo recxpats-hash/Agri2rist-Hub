@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routers } from "./router";
 import { AuthProvider } from "@/hooks/use-auth";
+import { CatalogProvider } from "@/lib/catalog-store";
 
 const queryClient = new QueryClient();
 
@@ -14,9 +15,11 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
-          <Toaster />
-          <Sonner />
-          <RouterProvider router={router} />
+          <CatalogProvider>
+            <Toaster />
+            <Sonner />
+            <RouterProvider router={router} />
+          </CatalogProvider>
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>

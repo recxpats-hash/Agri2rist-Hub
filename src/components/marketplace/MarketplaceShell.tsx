@@ -4,22 +4,20 @@
 import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
-  Search, SlidersHorizontal, ShoppingCart, X, ChevronDown, ChevronUp,
-  Filter, Leaf, Star, TrendingUp, Sparkles, ArrowRight
+  Search, SlidersHorizontal, ShoppingCart, X, ChevronDown, ChevronRight,
+  Leaf, TrendingUp, Sparkles, ArrowRight, LayoutList,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProductCard } from "@/components/marketplace/ProductCard";
 import { CartSidebar } from "@/components/marketplace/CartSidebar";
 import { searchCatalog, getAutocompleteSuggestions } from "@/lib/search-engine";
-import { TOP_CATEGORIES, getSubcategories } from "@/data/categories";
+import { TOP_CATEGORIES, getSubcategories, SUBCATEGORY_PRODUCTS } from "@/data/categories";
 import { useCart } from "@/hooks/use-cart";
 import type { ProductSearchFilters } from "@/types/marketplace";
 
@@ -38,6 +36,7 @@ const CERTIFICATIONS = ["Organic", "Fair Trade", "GlobalGAP", "HACCP", "Rainfore
 export function MarketplaceShell() {
   const [cartOpen, setCartOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -47,8 +46,30 @@ export function MarketplaceShell() {
     page: 1,
     pageSize: 24,
   });
+  const [pendingFilters, setPendingFilters] = useState<ProductSearchFilters>({
+    sortBy: "relevance",
+    page: 1,
+    pageSize: 24,
+  });
   const searchRef = useRef<HTMLDivElement>(null);
   const { count: cartCount } = useCart();
+
+  // Slide animation state
+  const prevPageRef = useRef(filters.page ?? 1);
+  const [slideDir, setSlideDir] = useState<"left" | "right" | null>(null);
+  const [animKey, setAnimKey] = useState(0);
+
+  useEffect(() => {
+    const prev = prevPageRef.current;
+    const curr = filters.page ?? 1;
+    if (prev !== curr) {
+      setSlideDir(curr > prev ? "left" : "right");
+      setAnimKey((k) => k + 1);
+      prevPageRef.current = curr;
+      const t = setTimeout(() => setSlideDir(null), 400);
+      return () => clearTimeout(t);
+    }
+  }, [filters.page]);
 
   // Debounce query
   useEffect(() => {
@@ -82,18 +103,41 @@ export function MarketplaceShell() {
   const result = useMemo(() => searchCatalog(activeFilters), [activeFilters]);
 
   const updateFilter = useCallback(<K extends keyof ProductSearchFilters>(key: K, value: ProductSearchFilters[K]) => {
-    setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
+    setFilters((prev) => ({ ...prev, [key]: value, ...(key !== "page" ? { page: 1 } : {}) }));
   }, []);
+
+  const updatePendingFilter = useCallback(<K extends keyof ProductSearchFilters>(key: K, value: ProductSearchFilters[K]) => {
+    setPendingFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
+  }, []);
+
+  const applyFilters = useCallback(() => {
+    setFilters({ ...pendingFilters, page: 1 });
+    setFiltersOpen(false);
+  }, [pendingFilters]);
 
   const clearFilters = useCallback(() => {
     setQuery("");
-    setFilters({ sortBy: "relevance", page: 1, pageSize: 24 });
+    const reset: ProductSearchFilters = { sortBy: "relevance", page: 1, pageSize: 24 };
+    setFilters(reset);
+    setPendingFilters(reset);
   }, []);
 
-  const hasActiveFilters = query || filters.categoryId || filters.subcategoryId || filters.organicStatus?.length || filters.certifications?.length || filters.priceMin || filters.priceMax;
+  const clearPendingFilters = useCallback(() => {
+    const reset: ProductSearchFilters = { sortBy: "relevance", page: 1, pageSize: 24 };
+    setPendingFilters(reset);
+  }, []);
 
-  const selectedCategory = TOP_CATEGORIES.find((c) => c.id === filters.categoryId);
-  const subcategories = filters.categoryId ? getSubcategories(filters.categoryId) : [];
+  // Sync pending filters when panel opens
+  useEffect(() => {
+    if (filtersOpen) setPendingFilters(filters);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filtersOpen]);
+
+  const hasActiveFilters = query || filters.categoryId || filters.subcategoryId || filters.organicStatus?.length || filters.certifications?.length || filters.priceMin || filters.priceMax;
+  const hasPendingChanges = JSON.stringify(pendingFilters) !== JSON.stringify(filters);
+
+  const selectedCategory = TOP_CATEGORIES.find((c) => c.id === pendingFilters.categoryId);
+  const subcategories = pendingFilters.categoryId ? getSubcategories(pendingFilters.categoryId) : [];
 
   return (
     <PageLayout>
@@ -106,7 +150,7 @@ export function MarketplaceShell() {
               <h1 className="text-4xl md:text-5xl font-extrabold text-primary-foreground max-w-3xl leading-tight">
                 Farm-to-Table, Direct from Producer
               </h1>
-              <p className="mt-3 text-primary-foreground/78 text-lg max-w-2xl">
+              <p className="mt-3 text-white text-lg max-w-2xl font-medium">
                 {result.total.toLocaleString()} verified products across {TOP_CATEGORIES.length} categories — fresh produce, livestock, honey, spices, export goods and more.
               </p>
             </div>
@@ -145,35 +189,46 @@ export function MarketplaceShell() {
       {/* Search + Sort bar */}
       <section className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border py-3">
         <div className="container mx-auto px-4 flex items-center gap-3 flex-wrap">
-          <div className="flex-1 relative min-w-[200px]" ref={searchRef}>
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
-              placeholder="Search products, SKU, scientific name, farm..."
-              className="pl-9 pr-8"
-            />
-            {query && (
-              <button onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                <X size={14} />
-              </button>
-            )}
-            {/* Autocomplete Dropdown */}
-            {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden">
-                {suggestions.map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => { setQuery(s); setShowSuggestions(false); }}
-                    className="w-full text-left px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors flex items-center gap-2"
-                  >
-                    <Search size={12} className="text-muted-foreground" />
-                    {s}
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="flex-1 relative min-w-[200px] flex" ref={searchRef}>
+            <div className="relative flex-1">
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { setDebouncedQuery(query); setShowSuggestions(false); } }}
+                onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+                placeholder="Search products, SKU, scientific name, farm..."
+                className="pl-9 pr-8 rounded-r-none"
+              />
+              {query && (
+                <button onClick={() => { setQuery(""); setDebouncedQuery(""); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X size={14} />
+                </button>
+              )}
+              {/* Autocomplete Dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-50 overflow-hidden">
+                  {suggestions.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => { setQuery(s); setDebouncedQuery(s); setShowSuggestions(false); }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors flex items-center gap-2"
+                    >
+                      <Search size={12} className="text-muted-foreground" />
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <Button
+              onClick={() => { setDebouncedQuery(query); setShowSuggestions(false); }}
+              className="rounded-l-none h-[40px] bg-primary text-primary-foreground hover:bg-primary/90"
+              aria-label="Search"
+            >
+              <Search size={16} className="mr-1" />
+              <span className="hidden sm:inline">Search</span>
+            </Button>
           </div>
 
           <Select value={filters.sortBy ?? "relevance"} onValueChange={(v) => updateFilter("sortBy", v as ProductSearchFilters["sortBy"])}>
@@ -220,16 +275,16 @@ export function MarketplaceShell() {
                     <div className="space-y-1">
                       <label className="flex items-center gap-2 text-sm cursor-pointer">
                         <Checkbox
-                          checked={!filters.subcategoryId}
-                          onCheckedChange={() => updateFilter("subcategoryId", undefined)}
+                          checked={!pendingFilters.subcategoryId}
+                          onCheckedChange={() => updatePendingFilter("subcategoryId", undefined)}
                         />
                         <span>All {selectedCategory?.name}</span>
                       </label>
                       {subcategories.map((sub) => (
                         <label key={sub.id} className="flex items-center gap-2 text-sm cursor-pointer">
                           <Checkbox
-                            checked={filters.subcategoryId === sub.id}
-                            onCheckedChange={() => updateFilter("subcategoryId", filters.subcategoryId === sub.id ? undefined : sub.id)}
+                            checked={pendingFilters.subcategoryId === sub.id}
+                            onCheckedChange={() => updatePendingFilter("subcategoryId", pendingFilters.subcategoryId === sub.id ? undefined : sub.id)}
                           />
                           <span className="text-muted-foreground">{sub.name}</span>
                         </label>
@@ -244,10 +299,10 @@ export function MarketplaceShell() {
                   {(["certified_organic", "conventional", "transitional"] as const).map((status) => (
                     <label key={status} className="flex items-center gap-2 text-sm cursor-pointer mb-1">
                       <Checkbox
-                        checked={filters.organicStatus?.includes(status) ?? false}
+                        checked={pendingFilters.organicStatus?.includes(status) ?? false}
                         onCheckedChange={(checked) => {
-                          const current = filters.organicStatus ?? [];
-                          updateFilter("organicStatus", checked ? [...current, status] : current.filter((s) => s !== status));
+                          const current = pendingFilters.organicStatus ?? [];
+                          updatePendingFilter("organicStatus", checked ? [...current, status] : current.filter((s) => s !== status));
                         }}
                       />
                       <span className="text-muted-foreground capitalize flex items-center gap-1">
@@ -264,10 +319,10 @@ export function MarketplaceShell() {
                   {CERTIFICATIONS.map((cert) => (
                     <label key={cert} className="flex items-center gap-2 text-sm cursor-pointer mb-1">
                       <Checkbox
-                        checked={filters.certifications?.includes(cert) ?? false}
+                        checked={pendingFilters.certifications?.includes(cert) ?? false}
                         onCheckedChange={(checked) => {
-                          const current = filters.certifications ?? [];
-                          updateFilter("certifications", checked ? [...current, cert] : current.filter((c) => c !== cert));
+                          const current = pendingFilters.certifications ?? [];
+                          updatePendingFilter("certifications", checked ? [...current, cert] : current.filter((c) => c !== cert));
                         }}
                       />
                       <span className="text-muted-foreground">{cert}</span>
@@ -281,33 +336,47 @@ export function MarketplaceShell() {
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm cursor-pointer">
                       <Checkbox
-                        checked={filters.isFeatured === true}
-                        onCheckedChange={(c) => updateFilter("isFeatured", c ? true : undefined)}
+                        checked={pendingFilters.isFeatured === true}
+                        onCheckedChange={(c) => updatePendingFilter("isFeatured", c ? true : undefined)}
                       />
                       <span className="text-muted-foreground flex items-center gap-1"><Sparkles size={11} /> Featured only</span>
                     </label>
                     <label className="flex items-center gap-2 text-sm cursor-pointer">
                       <Checkbox
-                        checked={filters.isTrending === true}
-                        onCheckedChange={(c) => updateFilter("isTrending", c ? true : undefined)}
+                        checked={pendingFilters.isTrending === true}
+                        onCheckedChange={(c) => updatePendingFilter("isTrending", c ? true : undefined)}
                       />
                       <span className="text-muted-foreground flex items-center gap-1"><TrendingUp size={11} /> Trending only</span>
                     </label>
                     <label className="flex items-center gap-2 text-sm cursor-pointer">
                       <Checkbox
-                        checked={filters.organicStatus?.includes("certified_organic") ?? false}
-                        onCheckedChange={(c) => updateFilter("organicStatus", c ? ["certified_organic"] : undefined)}
+                        checked={pendingFilters.organicStatus?.includes("certified_organic") ?? false}
+                        onCheckedChange={(c) => updatePendingFilter("organicStatus", c ? ["certified_organic"] : undefined)}
                       />
                       <span className="text-muted-foreground flex items-center gap-1"><Leaf size={11} className="text-accent" /> Organic only</span>
                     </label>
                   </div>
-
-                  {hasActiveFilters && (
-                    <Button variant="ghost" size="sm" onClick={clearFilters} className="mt-3 text-xs text-muted-foreground">
-                      <X size={12} className="mr-1" /> Clear all filters
-                    </Button>
-                  )}
                 </div>
+              </div>
+
+              {/* Apply / Clear buttons */}
+              <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-border">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearPendingFilters}
+                  className="text-muted-foreground"
+                >
+                  <X size={14} className="mr-1" /> Reset
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={applyFilters}
+                  disabled={!hasPendingChanges}
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  Apply Filters
+                </Button>
               </div>
             </div>
           </div>
@@ -357,9 +426,19 @@ export function MarketplaceShell() {
             </div>
           )}
 
-          {/* Product Grid */}
+          {/* Product Grid with slide animation */}
           {result.products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <div
+              key={animKey}
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+              style={
+                slideDir
+                  ? {
+                      animation: `slideIn${slideDir === "left" ? "Left" : "Right"} 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
+                    }
+                  : undefined
+              }
+            >
               {result.products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -374,22 +453,52 @@ export function MarketplaceShell() {
           )}
 
           {/* Pagination */}
-          {result.total > (filters.pageSize ?? 24) && (
-            <div className="flex justify-center mt-10 gap-2">
+          {result.total > 0 && (
+            <div className="flex justify-center items-center mt-10 gap-2">
               <Button
                 variant="outline"
                 disabled={(filters.page ?? 1) <= 1}
-                onClick={() => updateFilter("page", (filters.page ?? 1) - 1)}
+                onClick={() => { updateFilter("page", (filters.page ?? 1) - 1); }}
               >
                 Previous
               </Button>
-              <span className="flex items-center px-4 text-sm text-muted-foreground">
-                Page {filters.page ?? 1} of {Math.ceil(result.total / (filters.pageSize ?? 24))}
-              </span>
+              {(() => {
+                const currentPage = filters.page ?? 1;
+                const totalPages = Math.ceil(result.total / (filters.pageSize ?? 24));
+                const pages: number[] = [];
+                const start = Math.max(1, currentPage - 2);
+                const end = Math.min(totalPages, currentPage + 2);
+                for (let i = start; i <= end; i++) pages.push(i);
+                return (
+                  <>
+                    {start > 1 && (
+                      <>
+                        <button onClick={() => { updateFilter("page", 1); }} className="w-9 h-9 rounded-md text-sm font-medium hover:bg-muted transition-colors">1</button>
+                        {start > 2 && <span className="px-1 text-muted-foreground">...</span>}
+                      </>
+                    )}
+                    {pages.map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => { updateFilter("page", p); }}
+                        className={`w-9 h-9 rounded-md text-sm font-medium transition-colors ${p === currentPage ? "bg-primary text-primary-foreground" : "hover:bg-muted text-foreground"}`}
+                      >
+                        {p}
+                      </button>
+                    ))}
+                    {end < totalPages && (
+                      <>
+                        {end < totalPages - 1 && <span className="px-1 text-muted-foreground">...</span>}
+                        <button onClick={() => { updateFilter("page", totalPages); }} className="w-9 h-9 rounded-md text-sm font-medium hover:bg-muted transition-colors">{totalPages}</button>
+                      </>
+                    )}
+                  </>
+                );
+              })()}
               <Button
                 variant="outline"
                 disabled={(filters.page ?? 1) >= Math.ceil(result.total / (filters.pageSize ?? 24))}
-                onClick={() => updateFilter("page", (filters.page ?? 1) + 1)}
+                onClick={() => { updateFilter("page", (filters.page ?? 1) + 1); }}
               >
                 Next
               </Button>

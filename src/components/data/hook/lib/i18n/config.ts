@@ -23,7 +23,7 @@ void i18n
   .init({
     fallbackLng,
     supportedLngs,
-    backend: { loadPath: `${baseUrl}locales/{{lng}}.json` },
+    backend: { loadPath: `${baseUrl}locale/{{lng}}.json` },
     detection: {
       order: ["cookie", "navigator", "htmlTag"],
       lookupCookie: "i18next",

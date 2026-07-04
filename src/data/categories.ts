@@ -73,7 +73,215 @@ export const SUBCATEGORIES: MarketplaceCategory[] = [
   { id: "sub-16-01", slug: "coffee-tea-cocoa", name: "Coffee, Tea & Cocoa", description: "Green and roasted coffee beans, tea leaves and cocoa beans", icon: "Coffee", image: "/locale/Marketplace/cocoa-tree.jpg", parentId: "cat-16", sortOrder: 1, isActive: true },
   { id: "sub-16-02", slug: "export-fruits", name: "Export Fruits", description: "Hass avocado, pineapple, mango and passion fruit for export", icon: "Apple", image: "/locale/Marketplace/fruits-pineapple.webp", parentId: "cat-16", sortOrder: 2, isActive: true },
   { id: "sub-16-03", slug: "export-spices", name: "Export Spices & Nuts", description: "Vanilla, macadamia, sesame, chia, cashew and spices for export", icon: "Leaf", image: "/locale/Marketplace/herbs-spices.jpeg", parentId: "cat-16", sortOrder: 3, isActive: true },
+  // Beekeeping subcategories
+  { id: "sub-06-01", slug: "honey-varietals", name: "Honey Varietals", description: "Wildflower, forest, acacia, manuka and raw unfiltered honey", icon: "Hexagon", image: "/locale/Marketplace/honey.jpg", parentId: "cat-06", sortOrder: 1, isActive: true },
+  { id: "sub-06-02", slug: "beeswax-products", name: "Beeswax Products", description: "Raw beeswax, candles, wraps, balms and cosmetics", icon: "Hexagon", image: "/locale/Marketplace/honey.jpg", parentId: "cat-06", sortOrder: 2, isActive: true },
+  { id: "sub-06-03", slug: "royal-jelly", name: "Royal Jelly", description: "Fresh and freeze-dried royal jelly for health and nutrition", icon: "Hexagon", image: "/locale/Marketplace/honey.jpg", parentId: "cat-06", sortOrder: 3, isActive: true },
+  { id: "sub-06-04", slug: "bee-pollen", name: "Bee Pollen", description: "Raw and dried bee pollen granules and capsules", icon: "Hexagon", image: "/locale/Marketplace/honey.jpg", parentId: "cat-06", sortOrder: 4, isActive: true },
+  { id: "sub-06-05", slug: "propolis", name: "Propolis", description: "Raw propolis, tinctures, sprays and throat lozenges", icon: "Hexagon", image: "/locale/Marketplace/honey.jpg", parentId: "cat-06", sortOrder: 5, isActive: true },
+  { id: "sub-06-06", slug: "beekeeping-equipment", name: "Beekeeping Equipment", description: "Hives, frames, smokers, veils, extractors and protective gear", icon: "Settings2", image: "/locale/Marketplace/honey.jpg", parentId: "cat-06", sortOrder: 6, isActive: true },
+  // Flowers & Ornamentals subcategories
+  { id: "sub-07-01", slug: "cut-flowers", name: "Cut Flowers", description: "Roses, lilies, carnations, chrysanthemums and seasonal blooms", icon: "Flower2", image: "/locale/Marketplace/flowers.jpg", parentId: "cat-07", sortOrder: 1, isActive: true },
+  { id: "sub-07-02", slug: "potted-plants", name: "Potted Plants", description: "Indoor and outdoor potted ornamental plants", icon: "Flower2", image: "/locale/Marketplace/flowers.jpg", parentId: "cat-07", sortOrder: 2, isActive: true },
+  { id: "sub-07-03", slug: "flower-seedlings", name: "Flower Seedlings", description: "Bedding, border and container flower seedlings", icon: "Sprout", image: "/locale/Marketplace/flowers.jpg", parentId: "cat-07", sortOrder: 3, isActive: true },
+  { id: "sub-07-04", slug: "lawn-grass", name: "Lawn Grass", description: "Bermuda, Kikuyu, carpet grass and artificial turf", icon: "Leaf", image: "/locale/Marketplace/flowers.jpg", parentId: "cat-07", sortOrder: 4, isActive: true },
+  { id: "sub-07-05", slug: "dried-flowers", name: "Dried Flowers", description: "Dried bouquets, preserved roses and decorative stems", icon: "Flower2", image: "/locale/Marketplace/flowers.jpg", parentId: "cat-07", sortOrder: 5, isActive: true },
+  { id: "sub-07-06", slug: "floral-arrangements", name: "Floral Arrangements", description: "Wedding, event and gift floral arrangements", icon: "Flower2", image: "/locale/Marketplace/flowers.jpg", parentId: "cat-07", sortOrder: 6, isActive: true },
+  // Forestry subcategories
+  { id: "sub-08-01", slug: "timber-lumber", name: "Timber & Lumber", description: "Hardwood, softwood, planks, beams and treated timber", icon: "TreePine", image: "/locale/Marketplace/tree-seedlings.jpeg", parentId: "cat-08", sortOrder: 1, isActive: true },
+  { id: "sub-08-02", slug: "bamboo-products", name: "Bamboo Products", description: "Bamboo poles, stakes, fencing, furniture and crafts", icon: "TreePine", image: "/locale/Marketplace/tree-seedlings.jpeg", parentId: "cat-08", sortOrder: 2, isActive: true },
+  { id: "sub-08-03", slug: "firewood-charcoal", name: "Firewood & Charcoal", description: "Firewood logs, briquettes, charcoal and biomass fuel", icon: "Flame", image: "/locale/Marketplace/tree-seedlings.jpeg", parentId: "cat-08", sortOrder: 3, isActive: true },
+  { id: "sub-08-04", slug: "wood-products", name: "Wood Products", description: "Furniture, doors, window frames, pallets and wood carvings", icon: "TreePine", image: "/locale/Marketplace/tree-seedlings.jpeg", parentId: "cat-08", sortOrder: 4, isActive: true },
+  { id: "sub-08-05", slug: "pole-timber", name: "Pole Timber", description: "Utility poles, fence posts, transmission poles and stakes", icon: "TreePine", image: "/locale/Marketplace/tree-seedlings.jpeg", parentId: "cat-08", sortOrder: 5, isActive: true },
+  { id: "sub-08-06", slug: "agroforestry", name: "Agroforestry Products", description: "Shade tree products, mulch, leaf litter and intercrop materials", icon: "Leaf", image: "/locale/Marketplace/tree-seedlings.jpeg", parentId: "cat-08", sortOrder: 6, isActive: true },
+  // Seeds & Seedlings additional subcategories
+  { id: "sub-09-04", slug: "flower-seeds-cat9", name: "Flower Seeds", description: "Ornamental and cut-flower seeds for gardens and commercial use", icon: "Flower2", image: "/locale/Marketplace/seeds.jpg", parentId: "cat-09", sortOrder: 4, isActive: true },
+  { id: "sub-09-05", slug: "forestry-seedlings", name: "Forestry Seedlings", description: "Eucalyptus, pine, mahogany and indigenous tree seedlings", icon: "TreePine", image: "/locale/Marketplace/tree-seedlings.jpeg", parentId: "cat-09", sortOrder: 5, isActive: true },
+  // Farm Machinery subcategories
+  { id: "sub-11-01", slug: "tractors", name: "Tractors", description: "New and used tractors, power units and implement carriers", icon: "Settings2", image: "/locale/Marketplace/farm-equipment.jpg", parentId: "cat-11", sortOrder: 1, isActive: true },
+  { id: "sub-11-02", slug: "tillers-cultivators", name: "Tillers & Cultivators", description: "Power tillers, hand cultivators and rotary hoes", icon: "Settings2", image: "/locale/Marketplace/farm-equipment.jpg", parentId: "cat-11", sortOrder: 2, isActive: true },
+  { id: "sub-11-03", slug: "harvesters", name: "Harvesters", description: "Combine harvesters, reapers, pickers and threshers", icon: "Settings2", image: "/locale/Marketplace/farm-equipment.jpg", parentId: "cat-11", sortOrder: 3, isActive: true },
+  { id: "sub-11-04", slug: "millers-processors", name: "Millers & Processors", description: "Grain mills, oil presses, coffee pulpers and dryers", icon: "Settings2", image: "/locale/Marketplace/farm-equipment.jpg", parentId: "cat-11", sortOrder: 4, isActive: true },
+  { id: "sub-11-05", slug: "sprayers", name: "Sprayers & Drones", description: "Knapsack sprayers, boom sprayers and agricultural drones", icon: "Settings2", image: "/locale/Marketplace/farm-equipment.jpg", parentId: "cat-11", sortOrder: 5, isActive: true },
+  { id: "sub-11-06", slug: "spare-parts", name: "Spare Parts & Accessories", description: "Blades, filters, belts, tyres and implement attachments", icon: "Settings2", image: "/locale/Marketplace/farm-equipment.jpg", parentId: "cat-11", sortOrder: 6, isActive: true },
+  // Organic Products subcategories
+  { id: "sub-12-01", slug: "organic-vegetables", name: "Organic Vegetables", description: "Certified organic fresh vegetables direct from farms", icon: "ShieldCheck", image: "/locale/Marketplace/organic-vegetables-onions.jpg", parentId: "cat-12", sortOrder: 1, isActive: true },
+  { id: "sub-12-02", slug: "organic-fruits", name: "Organic Fruits", description: "Certified organic tropical, citrus and temperate fruits", icon: "ShieldCheck", image: "/locale/Marketplace/organic-vegetables-onions.jpg", parentId: "cat-12", sortOrder: 2, isActive: true },
+  { id: "sub-12-03", slug: "organic-dairy", name: "Organic Dairy", description: "Organic milk, yogurt, cheese and butter", icon: "ShieldCheck", image: "/locale/Marketplace/organic-vegetables-onions.jpg", parentId: "cat-12", sortOrder: 3, isActive: true },
+  { id: "sub-12-04", slug: "organic-eggs", name: "Organic Eggs", description: "Free-range certified organic eggs", icon: "ShieldCheck", image: "/locale/Marketplace/organic-vegetables-onions.jpg", parentId: "cat-12", sortOrder: 4, isActive: true },
+  { id: "sub-12-05", slug: "organic-herbs", name: "Organic Herbs & Spices", description: "Certified organic culinary herbs and spice blends", icon: "ShieldCheck", image: "/locale/Marketplace/organic-vegetables-onions.jpg", parentId: "cat-12", sortOrder: 5, isActive: true },
+  { id: "sub-12-06", slug: "organic-honey", name: "Organic Honey", description: "Raw, unfiltered certified organic honey", icon: "ShieldCheck", image: "/locale/Marketplace/organic-vegetables-onions.jpg", parentId: "cat-12", sortOrder: 6, isActive: true },
+  // Medicinal & Aromatic Plants subcategories
+  { id: "sub-14-01", slug: "medicinal-herbs", name: "Medicinal Herbs", description: "Aloe vera, moringa, neem, chamomile and herbal teas", icon: "HeartPulse", image: "/locale/Marketplace/herbs-spices.jpeg", parentId: "cat-14", sortOrder: 1, isActive: true },
+  { id: "sub-14-02", slug: "aromatic-plants", name: "Aromatic Plants", description: "Lavender, jasmine, rosemary, lemongrass and scented geranium", icon: "HeartPulse", image: "/locale/Marketplace/herbs-spices.jpeg", parentId: "cat-14", sortOrder: 2, isActive: true },
+  { id: "sub-14-03", slug: "essential-oils", name: "Essential Oils", description: "Steam-distilled and cold-pressed therapeutic-grade essential oils", icon: "Droplets", image: "/locale/Marketplace/herbs-spices.jpeg", parentId: "cat-14", sortOrder: 3, isActive: true },
+  { id: "sub-14-04", slug: "herbal-remedies", name: "Herbal Remedies", description: "Tinctures, capsules, balms and traditional herbal preparations", icon: "HeartPulse", image: "/locale/Marketplace/herbs-spices.jpeg", parentId: "cat-14", sortOrder: 4, isActive: true },
+  { id: "sub-14-05", slug: "medicinal-roots", name: "Medicinal Roots & Bark", description: "Turmeric, ginger, ginseng root, neem bark and herbal powders", icon: "HeartPulse", image: "/locale/Marketplace/herbs-spices.jpeg", parentId: "cat-14", sortOrder: 5, isActive: true },
+  { id: "sub-14-06", slug: "plant-extracts", name: "Plant Extracts", description: "Concentrated plant extracts for pharmaceutical and cosmetic use", icon: "HeartPulse", image: "/locale/Marketplace/herbs-spices.jpeg", parentId: "cat-14", sortOrder: 6, isActive: true },
+  // Local Indigenous Products subcategories
+  { id: "sub-15-01", slug: "traditional-foods", name: "Traditional Foods", description: "Matoke, posho, millet bread, cassava bread and traditional dishes", icon: "Globe", image: "/locale/Marketplace/handicrafts.png", parentId: "cat-15", sortOrder: 1, isActive: true },
+  { id: "sub-15-02", slug: "indigenous-vegetables", name: "Indigenous Vegetables", description: "Dodo, nakati, bitter leaf, spider plant and jute mallow", icon: "Globe", image: "/locale/Marketplace/handicrafts.png", parentId: "cat-15", sortOrder: 2, isActive: true },
+  { id: "sub-15-03", slug: "smoked-fish", name: "Smoked & Dried Fish", description: "Traditional smoked tilapia, catfish, mukene and dried silverfish", icon: "Globe", image: "/locale/Marketplace/handicrafts.png", parentId: "cat-15", sortOrder: 3, isActive: true },
+  { id: "sub-15-04", slug: "shea-butter", name: "Shea Butter & Oils", description: "Raw shea butter, refined shea oil and body care products", icon: "Globe", image: "/locale/Marketplace/handicrafts.png", parentId: "cat-15", sortOrder: 4, isActive: true },
+  { id: "sub-15-05", slug: "handicrafts", name: "Handicrafts & Basketry", description: "Woven baskets, mats, pottery, beadwork and wood carvings", icon: "Globe", image: "/locale/Marketplace/handicrafts.png", parentId: "cat-15", sortOrder: 5, isActive: true },
+  { id: "sub-15-06", slug: "indigenous-fruits", name: "Indigenous Fruits", description: "Jackfruit, tamarind, soursop, bush plum and wild fig", icon: "Globe", image: "/locale/Marketplace/handicrafts.png", parentId: "cat-15", sortOrder: 6, isActive: true },
+  // Value-Added Products subcategories
+  { id: "sub-17-01", slug: "packaged-produce", name: "Packaged Produce", description: "Vacuum-sealed, pre-washed and portioned fresh produce", icon: "Package", image: "/locale/Marketplace/cocoa-value-added.jpg", parentId: "cat-17", sortOrder: 1, isActive: true },
+  { id: "sub-17-02", slug: "vacuum-packed-meat", name: "Vacuum-Packed Meat", description: "Vacuum-sealed beef, goat, chicken and fish portions", icon: "Package", image: "/locale/Marketplace/cocoa-value-added.jpg", parentId: "cat-17", sortOrder: 2, isActive: true },
+  { id: "sub-17-03", slug: "fruit-wines", name: "Fruit Wines & Beverages", description: "Pineapple wine, banana wine, passion fruit juice and craft drinks", icon: "Wine", image: "/locale/Marketplace/cocoa-value-added.jpg", parentId: "cat-17", sortOrder: 3, isActive: true },
+  { id: "sub-17-04", slug: "essential-oils-va", name: "Essential Oils (Value Added)", description: "Branded essential oils, aromatherapy blends and diffuser kits", icon: "Droplets", image: "/locale/Marketplace/cocoa-value-added.jpg", parentId: "cat-17", sortOrder: 4, isActive: true },
+  { id: "sub-17-05", slug: "biochar", name: "Biochar & Soil Amendments", description: "Biochar briquettes, activated carbon and soil conditioners", icon: "Flame", image: "/locale/Marketplace/cocoa-value-added.jpg", parentId: "cat-17", sortOrder: 5, isActive: true },
+  { id: "sub-17-06", slug: "craft-products", name: "Craft & Artisan Products", description: "Artisan soaps, beeswax wraps, natural dyes and eco products", icon: "Star", image: "/locale/Marketplace/cocoa-value-added.jpg", parentId: "cat-17", sortOrder: 6, isActive: true },
 ];
+
+// ─── SUBCATEGORY → PRODUCT NAMES MAP ────────────────────────────────────────
+// Canonical product names per subcategory, used by the CategoryNavPanel accordion.
+
+export const SUBCATEGORY_PRODUCTS: Record<string, string[]> = {
+  // Fresh Produce
+  "sub-01-01": [
+    "Maize","Rice","Wheat","Sorghum","Millet","Finger Millet","Pearl Millet",
+    "Barley","Oats","Rye","Triticale","Buckwheat","Quinoa","Fonio","Teff","Wild Rice",
+  ],
+  "sub-01-02": [
+    "Beans","Kidney Beans","Navy Beans","Black Beans","Pinto Beans","Lima Beans",
+    "Cowpeas","Soybeans","Chickpeas","Green Gram","Black Gram","Pigeon Peas",
+    "Lentils","Bambara Nuts","Groundnuts","Field Peas","Snow Peas","Sugar Snap Peas",
+  ],
+  "sub-01-03": [
+    "Cassava","Sweet Potato","Irish Potato","Yam","Cocoyam","Arrowroot",
+    "Beetroot","Ginger","Turmeric","Jerusalem Artichoke","Taro",
+  ],
+  "sub-01-04": [
+    "Spinach","Kale","Cabbage","Chinese Cabbage","Lettuce","Amaranth",
+    "Swiss Chard","Pumpkin Leaves","Cowpea Leaves","Mustard Greens",
+    "Collard Greens","Spider Plant","Jute Mallow","Purslane",
+  ],
+  "sub-01-05": [
+    "Tomato","Cherry Tomato","Eggplant","Green Pepper","Bell Pepper","Chili Pepper",
+    "Okra","Cucumber","Zucchini","Pumpkin","Squash","Bottle Gourd",
+    "Bitter Gourd","Ridge Gourd",
+  ],
+  "sub-01-06": ["Onion","Garlic","Shallots","Leeks","Spring Onion","Chives"],
+  "sub-01-07": [
+    "Carrot","Cauliflower","Broccoli","Celery","Green Beans","Radish",
+    "Turnip","Asparagus","Mushroom","Brussels Sprouts","Artichoke",
+  ],
+  // Fresh Fruits
+  "sub-02-01": [
+    "Banana","Mango","Pineapple","Papaya","Avocado","Passion Fruit","Jackfruit",
+    "Guava","Tamarind","Breadfruit","Soursop","Custard Apple","Star Fruit",
+    "Dragon Fruit","Breadnut",
+  ],
+  "sub-02-02": ["Orange","Lemon","Lime","Tangerine","Grapefruit","Mandarin","Clementine"],
+  "sub-02-03": ["Apple","Pear","Peach","Plum","Cherry","Apricot","Nectarine"],
+  "sub-02-04": ["Strawberry","Blueberry","Raspberry","Blackberry","Cranberry","Gooseberry"],
+  "sub-02-05": ["Watermelon","Rock Melon","Honeydew","Cantaloupe"],
+  // Herbs & Spices
+  "sub-03-01": [
+    "Basil","Mint","Rosemary","Thyme","Parsley","Coriander","Dill",
+    "Sage","Tarragon","Oregano","Chives","Lemongrass",
+  ],
+  "sub-03-02": [
+    "Black Pepper","White Pepper","Cinnamon","Cardamom","Cloves","Nutmeg",
+    "Vanilla","Saffron","Star Anise","Turmeric","Ginger","Fenugreek",
+    "Cumin","Fennel","Mustard Seed",
+  ],
+  // Livestock & Animal Products
+  "sub-04-01": ["Dairy Cattle","Beef Cattle","Goats","Sheep","Pigs","Rabbits","Camels","Donkeys"],
+  "sub-04-02": ["Chicken","Turkey","Duck","Goose","Guinea Fowl","Quail","Pigeon","Ostrich"],
+  "sub-04-03": [
+    "Beef","Goat Meat","Lamb","Pork","Rabbit Meat","Camel Meat",
+    "Chicken Meat","Turkey Meat","Duck Meat",
+  ],
+  "sub-04-04": ["Fresh Milk","Pasteurized Milk","Yogurt","Cheese","Butter","Ghee","Cream","Ice Cream"],
+  "sub-04-05": ["Chicken Eggs","Duck Eggs","Quail Eggs","Turkey Eggs","Goose Eggs"],
+  // Fish & Aquaculture
+  "sub-05-01": ["Tilapia","Catfish","Nile Perch","Carp","Trout","Salmon","Tuna","Sardines"],
+  "sub-05-02": ["Shrimp","Prawns","Lobster","Crayfish","Crab","Mussels","Oysters"],
+  "sub-05-03": ["Fish Fingerlings","Fish Feed","Pond Lime","Pond Fertilizer"],
+  // Seeds & Seedlings
+  "sub-09-01": ["Certified Seeds","Hybrid Seeds","Vegetable Seeds"],
+  "sub-09-02": [
+    "Fruit Seedlings","Coffee Seedlings","Tea Seedlings","Banana Suckers",
+    "Cassava Cuttings","Sweet Potato Vines","Sugarcane Cuttings","Tissue Culture Plants",
+  ],
+  // Farm Inputs
+  "sub-10-01": ["Organic Fertilizer","Compost","NPK","Urea","CAN","DAP","TSP"],
+  "sub-10-02": ["Herbicides","Fungicides","Insecticides","Bio-pesticides"],
+  "sub-10-03": ["Drip Kits","Sprinklers","Water Pumps","Pipes"],
+  "sub-10-04": ["Mineral Licks","Veterinary Drugs","Vaccines","Feed Supplements"],
+  // Processed Foods
+  "sub-13-01": ["Maize Flour","Wheat Flour","Rice Flour","Cassava Flour","Millet Flour","Sorghum Flour"],
+  "sub-13-02": ["Sunflower Oil","Sesame Oil","Groundnut Oil","Palm Oil","Avocado Oil","Coconut Oil"],
+  "sub-13-03": [
+    "Peanut Butter","Tomato Paste","Fruit Juice","Jam","Marmalade",
+    "Dried Fruits","Dried Vegetables","Roasted Coffee","Tea Packs","Cheese","Yogurt","Wine",
+  ],
+  // Export Products
+  "sub-16-01": ["Coffee","Tea","Cocoa","Vanilla","Cotton","Cashew","Sesame","Chia"],
+  "sub-16-02": ["Avocado (Hass)","Pineapple","Mango","Macadamia","Flowers"],
+  "sub-16-03": ["Honey","Spices"],
+  // Beekeeping Products
+  "sub-06-01": ["Wildflower Honey","Forest Honey","Acacia Honey","Manuka Honey","Raw Unfiltered Honey","Creamed Honey","Comb Honey"],
+  "sub-06-02": ["Raw Beeswax","Beeswax Candles","Beeswax Wraps","Beeswax Balms","Beeswax Cosmetics","Honeycomb"],
+  "sub-06-03": ["Fresh Royal Jelly","Freeze-Dried Royal Jelly","Royal Jelly Capsules","Royal Jelly with Honey"],
+  "sub-06-04": ["Raw Bee Pollen","Dried Bee Pollen","Bee Pollen Granules","Bee Pollen Capsules"],
+  "sub-06-05": ["Raw Propolis","Propolis Tincture","Propolis Spray","Propolis Lozenges","Propolis Throat Drops"],
+  "sub-06-06": ["Beehive Boxes","Beehive Frames","Bee Smoker","Bee Veil","Honey Extractor","Bee Brush","Queen Excluder","Bee Feeder"],
+  // Flowers & Ornamentals
+  "sub-07-01": ["Roses","Lilies","Carnations","Chrysanthemums","Sunflowers","Orchids","Gladioli","Tulips","Gerbera Daisies","Statice"],
+  "sub-07-02": ["Indoor Potted Plants","Outdoor Potted Plants","Succulents","Cacti","Ferns","Palms","Bonsai Trees"],
+  "sub-07-03": ["Bedding Seedlings","Border Seedlings","Container Seedlings","Hanging Basket Seedlings"],
+  "sub-07-04": ["Bermuda Grass","Kikuyu Grass","Carpet Grass","Artificial Turf","Rye Grass"],
+  "sub-07-05": ["Dried Bouquets","Preserved Roses","Dried Lavender","Dried Eucalyptus","Decorative Stems"],
+  "sub-07-06": ["Wedding Bouquets","Event Centerpieces","Gift Bouquets","Sympathy Arrangements","Corporate Flowers"],
+  // Forestry Products
+  "sub-08-01": ["Hardwood Planks","Softwood Planks","Treated Timber","Beams","Plywood","MDF Boards"],
+  "sub-08-02": ["Bamboo Poles","Bamboo Stakes","Bamboo Fencing","Bamboo Furniture","Bamboo Crafts"],
+  "sub-08-03": ["Firewood Logs","Charcoal Briquettes","Wood Charcoal","Biomass Pellets","Coconut Charcoal"],
+  "sub-08-04": ["Wooden Doors","Window Frames","Wooden Pallets","Wood Carvings","Wooden Furniture"],
+  "sub-08-05": ["Utility Poles","Fence Posts","Transmission Poles","Garden Stakes"],
+  "sub-08-06": ["Shade Tree Products","Organic Mulch","Leaf Litter","Intercrop Materials","Agroforestry Seedlings"],
+  // Seeds & Seedlings additional
+  "sub-09-04": ["Rose Seeds","Sunflower Seeds","Marigold Seeds","Zinnia Seeds","Petunia Seeds","Cosmos Seeds"],
+  "sub-09-05": ["Eucalyptus Seedlings","Pine Seedlings","Mahogany Seedlings","Mukwa Seedlings","Indigenous Tree Seedlings"],
+  // Farm Machinery
+  "sub-11-01": ["Compact Tractors","Utility Tractors","Row-Crop Tractors","Mini Tractors","Tractor Implements"],
+  "sub-11-02": ["Power Tillers","Hand Cultivators","Rotary Hoes","Walk-Behind Tractors"],
+  "sub-11-03": ["Combine Harvesters","Crop Reapers","Fruit Pickers","Grain Threshers","Maize Shellers"],
+  "sub-11-04": ["Grain Mills","Oil Presses","Coffee Pulpers","Grain Dryers","Hammer Mills"],
+  "sub-11-05": ["Knapsack Sprayers","Boom Sprayers","Mist Blowers","Agricultural Drones","Motorized Sprayers"],
+  "sub-11-06": ["Tractor Blades","Oil Filters","Drive Belts","Implement Tyres","Plough Shares"],
+  // Organic Products
+  "sub-12-01": ["Organic Tomatoes","Organic Spinach","Organic Kale","Organic Lettuce","Organic Peppers","Organic Onions","Organic Carrots"],
+  "sub-12-02": ["Organic Bananas","Organic Mangoes","Organic Apples","Organic Pineapples","Organic Avocados","Organic Oranges"],
+  "sub-12-03": ["Organic Fresh Milk","Organic Yogurt","Organic Cheese","Organic Butter","Organic Ghee"],
+  "sub-12-04": ["Organic Chicken Eggs","Organic Duck Eggs","Organic Quail Eggs"],
+  "sub-12-05": ["Organic Basil","Organic Mint","Organic Rosemary","Organic Thyme","Organic Parsley","Organic Coriander"],
+  "sub-12-06": ["Raw Organic Honey","Organic Creamed Honey","Organic Comb Honey","Organic Forest Honey"],
+  // Medicinal & Aromatic Plants
+  "sub-14-01": ["Aloe Vera","Moringa","Neem","Chamomile","Echinacea","Valerian Root","Lemon Balm","Holy Basil"],
+  "sub-14-02": ["Lavender","Jasmine","Rosemary","Lemongrass","Scented Geranium","Ylang Ylang","Patchouli"],
+  "sub-14-03": ["Lavender Oil","Tea Tree Oil","Eucalyptus Oil","Peppermint Oil","Lemongrass Oil","Rose Oil","Neem Oil","Coconut Oil (Therapeutic)"],
+  "sub-14-04": ["Herbal Tinctures","Herbal Capsules","Herbal Balms","Traditional Herbal Preparations","Herbal Teas"],
+  "sub-14-05": ["Turmeric Root","Ginger Root","Ginseng Root","Neem Bark","Moringa Bark","Herbal Powders"],
+  "sub-14-06": ["Concentrated Plant Extracts","Pharmaceutical Extracts","Cosmetic Extracts","Fluid Extracts","Dry Extracts"],
+  // Local Indigenous Products
+  "sub-15-01": ["Matoke","Posho","Millet Bread","Cassava Bread","Sweet Potato Bread","Traditional Porridge"],
+  "sub-15-02": ["Dodo (Amaranth)","Nakati","Bitter Leaf","Spider Plant","Jute Mallow","Cowpea Leaves","Pumpkin Leaves"],
+  "sub-15-03": ["Smoked Tilapia","Smoked Catfish","Mukene","Dried Silverfish","Smoked Nile Perch","Dried Dagaa"],
+  "sub-15-04": ["Raw Shea Butter","Refined Shea Oil","Shea Butter Body Balm","Shea Butter Soap","Unrefined Shea Butter"],
+  "sub-15-05": ["Woven Baskets","Floor Mats","Pottery","Beadwork","Wood Carvings","Bark Cloth"],
+  "sub-15-06": ["Jackfruit","Tamarind","Soursop","Bush Plum","Wild Fig","African Custard Apple","Monkey Fruit"],
+  // Value-Added Products
+  "sub-17-01": ["Vacuum-Sealed Vegetables","Pre-Washed Salad Mix","Portioned Fruit Packs","Dried Fruit Packs","Frozen Vegetables"],
+  "sub-17-02": ["Vacuum-Sealed Beef","Vacuum-Sealed Goat","Vacuum-Sealed Chicken","Vacuum-Sealed Fish","Marinated Meat Packs"],
+  "sub-17-03": ["Pineapple Wine","Banana Wine","Passion Fruit Juice","Craft Ginger Beer","Hibiscus Drink","Tamarind Juice"],
+  "sub-17-04": ["Branded Essential Oils","Aromatherapy Blends","Diffuser Kits","Roll-On Oils","Massage Oil Blends"],
+  "sub-17-05": ["Biochar Briquettes","Activated Carbon","Soil Conditioner","Biochar Pellets","Carbon-Rich Compost"],
+  "sub-17-06": ["Artisan Soaps","Beeswax Wraps","Natural Dyes","Eco Sponges","Handmade Candles","Organic Body Care"],
+};
 
 // ─── COMBINED ────────────────────────────────────────────────────────────────
 

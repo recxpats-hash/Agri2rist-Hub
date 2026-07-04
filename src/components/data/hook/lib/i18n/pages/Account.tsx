@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CalendarCheck, Mail, ShoppingCart, UserRound } from "lucide-react";
+import { CalendarCheck, LogOut, Mail, ShoppingCart, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -30,7 +30,7 @@ const accessItems = [
 ];
 
 export default function AccountPage() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const bookings = JSON.parse(localStorage.getItem("agri2rist_bookings") || "[]");
   const newsletter = JSON.parse(localStorage.getItem("agri2rist_newsletter_subscribers") || "[]");
   const subscribed = user ? newsletter.includes(user.email) : false;
@@ -43,7 +43,7 @@ export default function AccountPage() {
           <h1 className="text-3xl md:text-5xl font-extrabold text-primary-foreground mb-3">
             Welcome, {user?.name}
           </h1>
-          <p className="max-w-2xl text-primary-foreground/75 text-lg">
+          <p className="max-w-2xl text-white text-lg font-medium">
             Your account unlocks bookings, direct contact, marketplace shopping, quote requests, and saved reservation details.
           </p>
         </div>
@@ -80,6 +80,13 @@ export default function AccountPage() {
               <SummaryRow label="Newsletter" value={subscribed ? "Subscribed" : "Not subscribed"} />
               <SummaryRow label="Access" value="Bookings, contacts, shopping" />
             </div>
+            <Button
+              variant="destructive"
+              className="w-full mt-5"
+              onClick={logout}
+            >
+              <LogOut size={16} className="mr-2" /> Sign Out
+            </Button>
           </div>
         </div>
       </section>

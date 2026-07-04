@@ -136,7 +136,7 @@ export default function BookingPage() {
           <h1 className="max-w-3xl text-4xl font-extrabold text-primary-foreground md:text-5xl">
             Taste Authentic Africa. Book Memorable Dining Experiences.
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-primary-foreground/78">
+          <p className="mt-4 max-w-2xl text-lg text-white font-medium">
             Reserve farm-to-table restaurants, traditional cuisine, private dining, culinary events, and chef-led food experiences.
           </p>
         </div>

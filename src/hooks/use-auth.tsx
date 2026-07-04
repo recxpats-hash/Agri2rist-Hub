@@ -49,6 +49,12 @@ const USERS_KEY   = "agri2rist_users";
 const SESSION_KEY = "agri2rist_session";
 const SESSION_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
 
+// ─── HARDCODED ADMIN ACCOUNT ─────────────────────────────────────────────────
+
+const ADMIN_EMAIL = "agri2rist@gmail.com";
+const ADMIN_PASSWORD = "Admin@agri2rist";
+const ADMIN_NAME = "Agri2rist Admin";
+
 // ─── CRYPTO HELPERS ───────────────────────────────────────────────────────────
 
 async function hashPassword(password: string): Promise<string> {
@@ -73,6 +79,39 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
+
+  // Seed the hardcoded admin account — always ensure it exists
+  useEffect(() => {
+    (async () => {
+      const passwordHash = await hashPassword(ADMIN_PASSWORD);
+      const users: StoredUser[] = JSON.parse(
+        localStorage.getItem(USERS_KEY) || "[]"
+      );
+      // Remove any stale admin entries (old email or mismatched hash)
+      const filtered = users.filter(
+        (u) => u.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()
+      );
+      const existingAdmin = filtered.find(
+        (u) => u.id === "u_admin_agri2rist"
+      );
+      // Only add if not already present with correct hash
+      if (!existingAdmin || existingAdmin.passwordHash !== passwordHash) {
+        const adminUser: StoredUser = {
+          id: "u_admin_agri2rist",
+          name: ADMIN_NAME,
+          email: ADMIN_EMAIL,
+          passwordHash,
+          role: "admin",
+          membershipTier: "enterprise",
+          joinedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(
+          USERS_KEY,
+          JSON.stringify([...filtered.filter((u) => u.id !== "u_admin_agri2rist"), adminUser])
+        );
+      }
+    })();
+  }, []);
 
   // Restore session on mount, check TTL
   useEffect(() => {
@@ -140,10 +179,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return true;
       },
 
-      async signup(name, email, password, role = "buyer") {
+      async signup(name, email, password, _role = "buyer") {
         const cleanName  = sanitizeText(name);
         const cleanEmail = sanitizeEmail(email);
         if (!cleanName || !cleanEmail || !password) return false;
+
+        // Block signup with the admin email
+        if (cleanEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase()) return false;
 
         const users: StoredUser[] = JSON.parse(
           localStorage.getItem(USERS_KEY) || "[]"
@@ -159,7 +201,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           name: cleanName,
           email: cleanEmail,
           passwordHash,
-          role,
+          role: "buyer", // Regular users are always buyers
           membershipTier: "free",
           joinedAt: new Date().toISOString(),
         };

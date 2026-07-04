@@ -117,7 +117,7 @@ export default function ProductDetailPage() {
                 />
                 {product.organicStatus === "certified_organic" && (
                   <div className="absolute top-4 left-4">
-                    <Badge className="bg-green-100 text-green-800 border-green-200 flex items-center gap-1">
+                    <Badge className="bg-green-600/90 text-white border-green-600 flex items-center gap-1 shadow-sm backdrop-blur-sm">
                       <Leaf size={12} /> Certified Organic
                     </Badge>
                   </div>
@@ -150,7 +150,7 @@ export default function ProductDetailPage() {
                   {product.isTrending && <Badge className="bg-accent text-accent-foreground">Trending</Badge>}
                   <Badge variant="outline">{GRADE_LABELS[product.grade]}</Badge>
                 </div>
-                <h1 className="text-3xl font-extrabold text-foreground mb-1">{product.name}</h1>
+                <h1 className="text-3xl font-extrabold text-foreground mb-1 break-words" title={product.name}>{product.name}</h1>
                 {product.scientificName && (
                   <p className="text-base text-muted-foreground italic">{product.scientificName}</p>
                 )}
