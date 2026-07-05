@@ -200,7 +200,7 @@ export default function AboutPage() {
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link to="/explore"><Button className="bg-secondary text-secondary-foreground">Explore Farms <ArrowRight size={16} className="ml-2" /></Button></Link>
-            <Link to="/get-listed"><Button variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">Become a Host</Button></Link>
+            <Link to="/verified-host"><Button variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">Become a Host</Button></Link>
           </div>
         </div>
       </section>

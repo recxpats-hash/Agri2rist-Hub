@@ -302,3 +302,94 @@ export interface AdminNotification {
   isRead: boolean;
   createdAt: string;
 }
+
+// ─────────────────────────────────────────────
+// BOOKING TYPES
+// ─────────────────────────────────────────────
+
+export type BookingCategory =
+  | "agritourism"
+  | "farm_stay"
+  | "restaurant"
+  | "events_festivals"
+  | "transportation"
+  | "digital_products"
+  | "education"
+  | "agriculture_services";
+
+export const BOOKING_CATEGORY_LABELS: Record<BookingCategory, string> = {
+  agritourism: "Agritourism Experiences",
+  farm_stay: "Farm Stays & Accommodations",
+  restaurant: "Restaurants & Cuisine",
+  events_festivals: "Local Events & Festivals",
+  transportation: "Transportation & Transfers",
+  digital_products: "Digital Products",
+  education: "Education",
+  agriculture_services: "Agriculture Services",
+};
+
+export const BOOKING_CATEGORY_ICONS: Record<BookingCategory, string> = {
+  agritourism: "Camera",
+  farm_stay: "Home",
+  restaurant: "UtensilsCrossed",
+  events_festivals: "Tickets",
+  transportation: "Truck",
+  digital_products: "FileText",
+  education: "GraduationCap",
+  agriculture_services: "Wrench",
+};
+
+export interface BookingItem {
+  id: string;
+  bookingCategory: BookingCategory;
+  name: string;
+  description: string;
+  shortDescription: string;
+  price: number;
+  currency: string;
+  unit: string;
+  location?: string;
+  image: string;
+  rating?: number;
+  reviewCount?: number;
+  farmerId?: string;
+  farmName?: string;
+  availability: "available" | "limited" | "booked";
+  tags: string[];
+  details: Record<string, string>;
+}
+
+export interface Booking {
+  id: string;
+  bookingRef: string;
+  bookingCategory: BookingCategory;
+  itemId: string;
+  itemName: string;
+  buyerId?: string;
+  buyerName: string;
+  buyerEmail: string;
+  buyerPhone: string;
+  date: string;
+  time?: string;
+  guests?: number;
+  nights?: number;
+  tickets?: number;
+  duration?: string;
+  startDate?: string;
+  endDate?: string;
+  vehicleType?: string;
+  pickupLocation?: string;
+  dropoffLocation?: string;
+  licenseType?: string;
+  trainingTopic?: string;
+  serviceType?: string;
+  farmAddress?: string;
+  subtotal: number;
+  serviceFee: number;
+  total: number;
+  paymentMethod: string;
+  paymentStatus: "pending" | "paid" | "failed" | "refunded";
+  status: "pending" | "confirmed" | "processing" | "completed" | "cancelled";
+  notes?: string;
+  createdAt: string;
+}

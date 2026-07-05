@@ -24,6 +24,11 @@ const CheckoutPage      = lazy(() => import("./Checkout"));
 const WishlistPage      = lazy(() => import("./Wishlist"));
 const CommunityPage     = lazy(() => import("./Community"));
 const GetListedPage     = lazy(() => import("./GetListed"));
+const VerifiedHostShell = lazy(() => import("@/components/verified-host/VerifiedHostShell"));
+const VerifiedHostPage  = lazy(() => import("@/components/verified-host/VerifiedHostPage"));
+const CertificationLevelsPage = lazy(() => import("@/components/verified-host/CertificationLevelsPage"));
+const TrainingModulesPage = lazy(() => import("@/components/verified-host/TrainingModulesPage"));
+const StudentsPage      = lazy(() => import("@/components/verified-host/StudentsPage"));
 const AboutPage         = lazy(() => import("./About"));
 const AuthPage          = lazy(() => import("./Auth"));
 const AccountPage       = lazy(() => import("./Account"));
@@ -61,6 +66,17 @@ export const routers = [
   { path: "/marketplace/wishlist",     name: "wishlist",      element: <S><WishlistPage /></S> },
   { path: "/community",                name: "community",     element: <S><CommunityPage /></S> },
   { path: "/get-listed",               name: "getListed",     element: <S><GetListedPage /></S> },
+  {
+    path: "/verified-host",
+    name: "verifiedHost",
+    element: <S><VerifiedHostShell /></S>,
+    children: [
+      { index: true, element: <S><VerifiedHostPage /></S> },
+      { path: "certification-levels", element: <S><CertificationLevelsPage /></S> },
+      { path: "training-modules", element: <S><TrainingModulesPage /></S> },
+      { path: "students", element: <S><StudentsPage /></S> },
+    ],
+  },
   { path: "/about",                    name: "about",         element: <S><AboutPage /></S> },
   { path: "/login",                    name: "login",         element: <S><AuthPage mode="login" /></S> },
   { path: "/signup",                   name: "signup",        element: <S><AuthPage mode="signup" /></S> },

@@ -16,6 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProductCard } from "@/components/marketplace/ProductCard";
 import { CartSidebar } from "@/components/marketplace/CartSidebar";
+import BookingExplorer from "@/components/marketplace/BookingExplorer";
 import { searchCatalog, getAutocompleteSuggestions } from "@/lib/search-engine";
 import { TOP_CATEGORIES, getSubcategories, SUBCATEGORY_PRODUCTS } from "@/data/categories";
 import { useCart } from "@/hooks/use-cart";
@@ -37,6 +38,7 @@ export function MarketplaceShell() {
   const [cartOpen, setCartOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'products'|'bookings'>('products');
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -168,16 +170,24 @@ export function MarketplaceShell() {
         <div className="container mx-auto px-4">
           <div className="flex gap-2 min-w-max">
             <button
-              onClick={() => updateFilter("categoryId", undefined)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${!filters.categoryId ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border hover:border-primary hover:text-primary"}`}
+              onClick={() => { setViewMode('products'); updateFilter("categoryId", undefined); }}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${!filters.categoryId && viewMode==='products' ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border hover:border-primary hover:text-primary"}`}
             >
-              All
+              All Products
             </button>
+
+            <button
+              onClick={() => { setViewMode('bookings'); }}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${viewMode==='bookings' ? "bg-secondary text-secondary-foreground border-secondary" : "bg-card text-foreground border-border hover:border-secondary hover:text-secondary"}`}
+            >
+              Bookings
+            </button>
+
             {TOP_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => updateFilter("categoryId", filters.categoryId === cat.id ? undefined : cat.id)}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${filters.categoryId === cat.id ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border hover:border-primary hover:text-primary"}`}
+                onClick={() => { setViewMode('products'); updateFilter("categoryId", filters.categoryId === cat.id ? undefined : cat.id); }}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${filters.categoryId === cat.id && viewMode==='products' ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border hover:border-primary hover:text-primary"}`}
               >
                 {cat.name}
               </button>
@@ -426,30 +436,34 @@ export function MarketplaceShell() {
             </div>
           )}
 
-          {/* Product Grid with slide animation */}
-          {result.products.length > 0 ? (
-            <div
-              key={animKey}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
-              style={
-                slideDir
-                  ? {
-                      animation: `slideIn${slideDir === "left" ? "Left" : "Right"} 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
-                    }
-                  : undefined
-              }
-            >
-              {result.products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+          {/* Product Grid with slide animation or Bookings explorer */}
+          {viewMode === 'bookings' ? (
+            <BookingExplorer />
           ) : (
-            <div className="text-center py-20">
-              <Search size={48} className="mx-auto text-muted-foreground/30 mb-4" />
-              <p className="text-lg font-semibold text-foreground mb-2">No products found</p>
-              <p className="text-muted-foreground mb-6">Try adjusting your search or filters.</p>
-              <Button variant="outline" onClick={clearFilters}>Clear Filters</Button>
-            </div>
+            result.products.length > 0 ? (
+              <div
+                key={animKey}
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+                style={
+                  slideDir
+                    ? {
+                        animation: `slideIn${slideDir === "left" ? "Left" : "Right"} 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
+                      }
+                    : undefined
+                }
+              >
+                {result.products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <Search size={48} className="mx-auto text-muted-foreground/30 mb-4" />
+                <p className="text-lg font-semibold text-foreground mb-2">No products found</p>
+                <p className="text-muted-foreground mb-6">Try adjusting your search or filters.</p>
+                <Button variant="outline" onClick={clearFilters}>Clear Filters</Button>
+              </div>
+            )
           )}
 
           {/* Pagination */}
