@@ -236,7 +236,20 @@ export default function GetListedPage() {
             <p className="mt-4 max-w-2xl text-lg text-white font-medium">
               Share your farm, restaurant, lodge, campsite, or rural experience with travelers while Agri2rist Hub handles discovery, bookings, trust, and payments.
             </p>
+
+            {/* NEW: Prominent Verified Host Certification CTA */}
+            <div className="mt-6 rounded-lg border border-border bg-card p-4 shadow-md max-w-2xl">
+              <h3 className="text-lg font-bold text-foreground">AGRI2RIST HUB VERIFIED HOST CERTIFICATION PROGRAM</h3>
+              <p className="mt-2 text-sm text-muted-foreground">Enterprise-grade certification for hosts — identity checks, inspections, digital certificates, and a verified host badge to increase bookings and trust.</p>
+              <div className="mt-4 flex items-center gap-3">
+                <Link to="/verified-host">
+                  <Button className="bg-secondary text-secondary-foreground">Learn about Verified Host</Button>
+                </Link>
+                <Button variant="outline" onClick={() => setStep(4)}>Start Verification (UGX 100,000)</Button>
+              </div>
+            </div>
           </div>
+
           <button
             type="button"
             onClick={() => setStep(4)}
