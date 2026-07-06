@@ -5,6 +5,8 @@ import App from "./App.tsx";
 import "./index.css";
 import { injectCspMetaTag, auditEnvVars } from "@/lib/security";
 import { reportWebVitals } from "@/lib/performance";
+import { installTranslationShim } from "./translationShim";
+
 
 // ── Security bootstrap (runs before React mounts) ────────────────────────────
 injectCspMetaTag();
@@ -19,4 +21,8 @@ if (!container) {
 
 bootstrapGeneratedSiteAnalytics();
 
+// Prevent legacy i18n bundles from crashing when they expect a global `Translation` symbol.
+installTranslationShim();
+
 createRoot(container).render(<App />);
+
