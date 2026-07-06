@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { PageLayout } from "@/components/layout/PageLayout";
+
 import { Button } from "@/components/ui/button";
 
 export default function VerifiedHostPage() {
@@ -94,11 +94,10 @@ export default function VerifiedHostPage() {
   const searchResults = useMemoLikeGlobalSearch(globalSearch);
 
   return (
-    <PageLayout>
+    <div className="min-h-screen flex flex-col bg-background">
       <style>{`
         :root{--a2r-primary:${primary};--a2r-secondary:${secondary};--a2r-accent:${accent};--a2r-bg:#F8FAFC;--a2r-card:#ffffff;}
-        .a2r-app{background:var(--a2r-bg); min-height:calc(100vh - 120px);} /* header+footer inside PageLayout */
-        .a2r-topbar{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid rgba(0,0,0,.06);backdrop-filter:blur(10px);} 
+        .a2r-app{background:var(--a2r-bg); min-height:100vh;}
         .a2r-brand-pill{background:rgba(22,163,74,.10);border:1px solid rgba(22,163,74,.20);color:${secondary};}
         .a2r-sidebar{transition:width .2s ease; border-right:1px solid rgba(0,0,0,.06); background:#fff;}
         .a2r-navitem{cursor:pointer; border-radius:14px; padding:10px 12px; display:flex; align-items:center; gap:10px; border:1px solid transparent; color:#0f172a;}
@@ -119,167 +118,6 @@ export default function VerifiedHostPage() {
 
       {/* App wrapper */}
       <div className="a2r-app">
-        {/* Sticky top bar */}
-        <div className="a2r-topbar">
-          <div className="container-fluid px-3 px-md-4 py-2">
-            <div className="d-flex align-items-center justify-content-between gap-3">
-              <div className="d-flex align-items-center gap-3">
-                <button
-                  type="button"
-                  className="btn btn-outline-success d-lg-none"
-                  onClick={() => setSidebarOpen((v) => !v)}
-                  aria-label="Toggle sidebar"
-                >
-                  ☰
-                </button>
-                <div className="d-flex align-items-center gap-2">
-                  <div className="rounded-circle" style={{ width:34, height:34, background:`linear-gradient(135deg, ${primary} 0%, ${accent} 100%)` }} />
-                  <div>
-                    <div className="fw-extrabold">AGRI2RIST HUB</div>
-                    <div className="small a2r-muted">Verified Host Certification</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="d-flex align-items-center gap-2 flex-grow-1 justify-content-center">
-                <div className="d-none d-md-block" style={{ width: 520 }}>
-                  <div className="input-group">
-                    <span className="input-group-text bg-success-subtle border-0" style={{ color: secondary }}>
-                      ⌕
-                    </span>
-                    <input
-                      className="form-control rounded-3"
-                      value={globalSearch}
-                      onChange={(e) => setGlobalSearch(e.target.value)}
-                      placeholder="Global search: students, courses, modules, certificates, payments, trainers"
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-outline-success rounded-3"
-                      onClick={() => {
-                        // UI only
-                        const el = document.getElementById("a2r-global-search-toast");
-                        if (el) {
-                          el.textContent = globalSearch.trim() ? `Searching “${globalSearch.trim()}” (UI only)` : "Enter a query";
-                          el.setAttribute("data-show", "true");
-                          setTimeout(() => el.setAttribute("data-show", "false"), 2200);
-                        }
-                      }}
-                    >
-                      Search
-                    </button>
-                  </div>
-                  {globalSearch.trim().length >= 2 && (
-                    <div className="mt-2 p-2 a2r-card" style={{ position: "relative" }}>
-                      <div className="small fw-bold">Results (UI preview)</div>
-                      <div className="small a2r-muted">{searchResults.length ? `Found ${searchResults.length} items` : "No matches"}</div>
-                      <div className="mt-2 d-flex flex-wrap gap-2">
-                        {searchResults.slice(0, 6).map((r) => (
-                          <span key={r} className="badge bg-success-subtle text-success border border-success-subtle">{r}</span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="d-flex align-items-center gap-2">
-                <div className="d-flex gap-2">
-                  <div className="position-relative">
-                    <button
-                      type="button"
-                      className="btn btn-outline-success rounded-3"
-                      onClick={() => {
-                        setOpenNotif((v) => !v);
-                        setOpenMsg(false);
-                      }}
-                      aria-label="Notifications"
-                    >
-                      🔔
-                    </button>
-                    {openNotif && (
-                      <div className="position-absolute end-0 mt-2" style={{ width: 320 }}>
-                        <div className="a2r-card p-3">
-                          <div className="fw-extrabold">Notifications</div>
-                          <div className="small a2r-muted mb-2">UI-only dropdown</div>
-                          <div className="d-flex flex-column gap-2">
-                            {["Payment Received", "Student Registered", "Assessment Submitted", "Certificate Issued", "Upcoming Training"].map((t) => (
-                              <button key={t} className="btn btn-light text-start border rounded-3 py-2">
-                                <span className="me-2">•</span>
-                                {t}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="position-relative">
-                    <button
-                      type="button"
-                      className="btn btn-outline-success rounded-3"
-                      onClick={() => {
-                        setOpenMsg((v) => !v);
-                        setOpenNotif(false);
-                      }}
-                      aria-label="Messages"
-                    >
-                      💬
-                    </button>
-                    {openMsg && (
-                      <div className="position-absolute end-0 mt-2" style={{ width: 320 }}>
-                        <div className="a2r-card p-3">
-                          <div className="fw-extrabold">Messages</div>
-                          <div className="small a2r-muted mb-2">UI-only dropdown</div>
-                          <div className="d-flex flex-column gap-2">
-                            {["Trainer: Schedule confirmation", "Student: Certificate verification", "Admin: New assessment assigned"].map((t) => (
-                              <button key={t} className="btn btn-light text-start border rounded-3 py-2">
-                                <span className="me-2">•</span>
-                                {t}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  className="btn btn-success rounded-3 fw-bold"
-                  onClick={() => {
-                    setTheme((t) => (t === "light" ? "dark" : "light"));
-                    const el = document.documentElement;
-                    if (theme === "light") el.setAttribute("data-bs-theme", "dark");
-                    else el.setAttribute("data-bs-theme", "light");
-                  }}
-                >
-                  {theme === "light" ? "Theme" : "Dark"}
-                </button>
-
-                <div className="dropdown">
-                  <button
-                    className="btn btn-outline-success rounded-3 dropdown-toggle"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    Profile
-                  </button>
-                  <ul className="dropdown-menu dropdown-menu-end">
-                    <li><a className="dropdown-item" href="#">Profile</a></li>
-                    <li><a className="dropdown-item" href="#">Account</a></li>
-                    <li><a className="dropdown-item" href="#">Notifications</a></li>
-                    <li><a className="dropdown-item" href="#">Security</a></li>
-                    <li><a className="dropdown-item" href="#">Logout</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Global search toast */}
         <div id="a2r-global-search-toast" data-show="false" style={{ position: "fixed", left: "50%", transform: "translateX(-50%)", bottom: 18, zIndex: 80, background: "rgba(17,24,39,.92)", color: "#fff", padding: "10px 14px", borderRadius: 999, opacity: 0, pointerEvents: "none", transition: "opacity 200ms ease" }} />
@@ -831,7 +669,7 @@ export default function VerifiedHostPage() {
           </div>
         </div>
       </div>
-    </PageLayout>
+    </div>
   );
 }
 
