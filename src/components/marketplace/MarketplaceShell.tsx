@@ -23,6 +23,10 @@ import { DigitalMasterButtonModal } from "@/components/marketplace/digital/Digit
 import { searchCatalog, getAutocompleteSuggestions } from "@/lib/search-engine";
 
 import { TOP_CATEGORIES, getSubcategories, SUBCATEGORY_PRODUCTS } from "@/data/categories";
+
+const BOOKING_ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
+  Camera, Home, UtensilsCrossed, Tickets, Truck, FileText, GraduationCap, Wrench,
+};
 import { useCart } from "@/hooks/use-cart";
 import {
   BOOKING_CATEGORY_ICONS,
@@ -465,7 +469,7 @@ export function MarketplaceShell() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {Object.entries(BOOKING_CATEGORY_LABELS).map(([key, title]) => {
                   const selected = activeBookingService === key;
-                  const svcIcon = BOOKING_CATEGORY_ICONS[key as keyof typeof BOOKING_CATEGORY_ICONS];
+                  const svcIcon = BOOKING_ICON_MAP[BOOKING_CATEGORY_ICONS[key as keyof typeof BOOKING_CATEGORY_ICONS]];
                   const svcSubtitle = key === "restaurant" ? "Restaurants & cuisine booking" : title;
                   const svcSubtitle2 = key === "farm_stay" ? "Farm stays & accommodations" : svcSubtitle;
                   const svcDescription = key === "restaurant"
@@ -473,9 +477,9 @@ export function MarketplaceShell() {
                     : "Book experiences with availability, premium confirmation and modern booking flow.";
                   return (
                     <button
-                      key={svc.key}
+                      key={key}
                       onClick={() => {
-                        setActiveBookingService(svc.key);
+                        setActiveBookingService(key);
                         setViewMode('bookings');
                         setBookingHubOpen(false);
                       }}
@@ -484,14 +488,14 @@ export function MarketplaceShell() {
                       <div className="p-4">
                         <div className="flex items-center gap-3">
                           <div className={`w-11 h-11 rounded-2xl flex items-center justify-center bg-muted/70 ${selected ? 'text-primary' : 'text-muted-foreground'}`}>
-                            <svc.icon />
+                            {svcIcon && <svcIcon />}
                           </div>
                           <div>
-                    <div className="font-extrabold text-foreground leading-tight">{svc.title}</div>
+                    <div className="font-extrabold text-foreground leading-tight">{title}</div>
                             <div className="text-xs text-muted-foreground mt-0.5">{svcSubtitle2}</div>
                           </div>
                         </div>
-                        <div className="mt-3 text-sm text-muted-foreground line-clamp-3">{svc.description}</div>
+                        <div className="mt-3 text-sm text-muted-foreground line-clamp-3">{svcDescription}</div>
 
                         <div className="mt-4 flex items-center justify-between">
                           <div className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground">
