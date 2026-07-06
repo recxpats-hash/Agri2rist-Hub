@@ -1,0 +1,6 @@
+[build]
+command = "pnpm build"
+
+[start]
+command = "node -e \"const http=require('http');const fs=require('fs');const path=require('path');const dist=path.join(process.cwd(),'dist');const mime={'.html':'text/html','.js':'application/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.webp':'image/webp','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon'};const server=http.createServer((req,res)=>{let u=req.url.split('?')[0];if(u==='/'||u==='')u='/index.html';const fp=path.join(dist,u);if(!fp.startsWith(dist))return res.writeHead(403).end('Forbidden');fs.readFile(fp,(err,data)=>{if(err){fs.readFile(path.join(dist,'index.html'),(e2,d2)=>{if(e2){res.writeHead(404).end('Not found');}else{res.writeHead(200,{'Content-Type':'text/html'});res.end(d2);}});}else{res.writeHead(200,{'Content-Type':mime[path.extname(fp)]||'application/octet-stream'});res.end(data);}});});const port=process.env.PORT||3000;server.listen(port,()=>console.log('listening on '+port));\""
+
