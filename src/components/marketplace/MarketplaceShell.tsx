@@ -163,9 +163,8 @@ export function MarketplaceShell() {
               <Stat value="10" label="Verified Farmers" />
             </div>
 
-              {/* Master Booking Button */}
+              {/* Digital Products & Services Master Button */}
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                {/* Digital Products & Services Master Button */}
                 <button
                   onClick={() => setDigitalModalOpen(true)}
                   className="inline-flex items-center justify-center gap-2 rounded-2xl bg-secondary px-6 py-3 text-secondary-foreground font-bold shadow-lg shadow-secondary/20 hover:bg-secondary/90 transition"
@@ -173,22 +172,6 @@ export function MarketplaceShell() {
                   <Sparkles size={18} />
                   Digital Marketplace
                   <ArrowRight size={16} className="ml-1" />
-                </button>
-
-                {/* Booking experiences */}
-                <Link
-                  to="/booking"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-secondary px-6 py-3 text-secondary-foreground font-bold shadow-lg shadow-secondary/20 hover:bg-secondary/90 transition"
-                >
-                  <Sparkles size={18} />
-                  Book Experiences
-                  <ArrowRight size={16} className="ml-1" />
-                </Link>
-                <button
-                  onClick={() => {}}
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary-foreground/10 px-6 py-3 text-white font-bold border border-primary-foreground/25 hover:bg-primary-foreground/15 transition"
-                >
-                  Explore Marketplace
                 </button>
               </div>
           </div>
@@ -205,13 +188,6 @@ export function MarketplaceShell() {
             >
               All Products
             </button>
-
-            <Link
-              to="/booking"
-              className="px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap bg-secondary/10 text-secondary border-secondary/40 hover:bg-secondary hover:text-secondary-foreground"
-            >
-              🗓 Bookings
-            </Link>
 
               {TOP_CATEGORIES.map((cat) => (
               <button
