@@ -26,6 +26,7 @@ import {
   Wrench,
   FileText,
   Menu,
+  Languages,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -190,7 +191,7 @@ const SECTION_TILES: Array<{
     key: "translation",
     title: "Translation Services",
     description: "Certified and curated translations for websites, manuals, support.",
-    icon: <Translation size={18} className="text-emerald-600" />,
+    icon: <Languages size={18} className="text-emerald-600" />,
     href: "/digital/translation",
   },
   {
