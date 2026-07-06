@@ -1,6 +1,6 @@
 /**
  * Agri2rist Hub – Application Router
- * All routes are lazy-loaded for performance (Phase 10).
+ * All routes are lazy-loaded for performance.
  * Keep catch-all "*" last.
  */
 import { lazy, Suspense } from "react";
