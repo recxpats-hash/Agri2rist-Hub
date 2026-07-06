@@ -125,7 +125,7 @@ export default function HomePage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
-            <Link to="/explore">
+            <Link to="/booking">
               <Button
                 size="lg"
                 className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-bold px-8 shadow-gold"

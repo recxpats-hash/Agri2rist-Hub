@@ -131,7 +131,7 @@ export function Navbar() {
                 {t("nav.becomeHost")}
               </Button>
             </Link>
-            <Link to="/explore">
+            <Link to="/booking">
               <Button
                 size="sm"
                 className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold shadow-gold"
@@ -221,7 +221,7 @@ export function Navbar() {
                   {t("nav.becomeHost")}
                 </Button>
               </Link>
-              <Link to="/explore" onClick={() => setMobileOpen(false)}>
+              <Link to="/booking" onClick={() => setMobileOpen(false)}>
                 <Button className="w-full bg-secondary text-secondary-foreground">
                   {t("home.hero.cta.book")}
                 </Button>

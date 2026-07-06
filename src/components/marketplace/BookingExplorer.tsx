@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { BookingItem } from "@/types/marketplace";
 import { BOOKING_CATEGORY_LABELS } from "@/types/marketplace";
 import { getBookingItemsByCategory } from "@/data/booking-catalog";

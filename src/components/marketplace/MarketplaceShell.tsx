@@ -16,22 +16,10 @@ import { Separator } from "@/components/ui/separator";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProductCard } from "@/components/marketplace/ProductCard";
 import { CartSidebar } from "@/components/marketplace/CartSidebar";
-import BookingExplorer from "@/components/marketplace/BookingExplorer";
-import { UtensilsCrossed, Tickets, Home, Wrench, GraduationCap, Truck, FileText, Camera } from "lucide-react";
 import { DigitalMasterButtonModal } from "@/components/marketplace/digital/DigitalMasterButtonModal";
-
 import { searchCatalog, getAutocompleteSuggestions } from "@/lib/search-engine";
-
 import { TOP_CATEGORIES, getSubcategories, SUBCATEGORY_PRODUCTS } from "@/data/categories";
-
-const BOOKING_ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
-  Camera, Home, UtensilsCrossed, Tickets, Truck, FileText, GraduationCap, Wrench,
-};
 import { useCart } from "@/hooks/use-cart";
-import {
-  BOOKING_CATEGORY_ICONS,
-  BOOKING_CATEGORY_LABELS,
-} from "@/types/marketplace";
 import type { ProductSearchFilters } from "@/types/marketplace";
 
 
@@ -51,11 +39,7 @@ export function MarketplaceShell() {
   const [cartOpen, setCartOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
-  const [bookingHubOpen, setBookingHubOpen] = useState(false);
   const [digitalModalOpen, setDigitalModalOpen] = useState(false);
-
-  const [viewMode, setViewMode] = useState<'products'|'bookings'>('products');
-  const [activeBookingService, setActiveBookingService] = useState<string>('restaurant');
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -192,23 +176,16 @@ export function MarketplaceShell() {
                 </button>
 
                 {/* Booking experiences */}
-                <button
-
-                onClick={() => {
-                  setActiveBookingService('restaurant');
-                  setViewMode('bookings');
-                  setBookingHubOpen(true);
-                }}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 text-primary-foreground font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition"
-              >
-                <Sparkles size={18} />
-                Book Experiences
-                <ArrowRight size={16} className="ml-1" />
-              </button>
+                <Link
+                  to="/booking"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 text-primary-foreground font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition"
+                >
+                  <Sparkles size={18} />
+                  Book Experiences
+                  <ArrowRight size={16} className="ml-1" />
+                </Link>
               <button
-                onClick={() => {
-                  setViewMode('products');
-                }}
+                onClick={() => {}}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary-foreground/10 px-6 py-3 text-white font-bold border border-primary-foreground/25 hover:bg-primary-foreground/15 transition"
               >
                 Explore Marketplace
@@ -223,24 +200,24 @@ export function MarketplaceShell() {
         <div className="container mx-auto px-4">
           <div className="flex gap-2 min-w-max">
             <button
-              onClick={() => { setViewMode('products'); updateFilter("categoryId", undefined); }}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${!filters.categoryId && viewMode==='products' ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border hover:border-primary hover:text-primary"}`}
+              onClick={() => { updateFilter("categoryId", undefined); }}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${!filters.categoryId ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border hover:border-primary hover:text-primary"}`}
             >
               All Products
             </button>
 
-            <button
-              onClick={() => { setViewMode('bookings'); }}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${viewMode==='bookings' ? "bg-secondary text-secondary-foreground border-secondary" : "bg-card text-foreground border-border hover:border-secondary hover:text-secondary"}`}
+            <Link
+              to="/booking"
+              className="px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap bg-card text-foreground border-border hover:border-secondary hover:text-secondary"
             >
               Bookings
-            </button>
+            </Link>
 
-            {TOP_CATEGORIES.map((cat) => (
+              {TOP_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => { setViewMode('products'); updateFilter("categoryId", filters.categoryId === cat.id ? undefined : cat.id); }}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${filters.categoryId === cat.id && viewMode==='products' ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border hover:border-primary hover:text-primary"}`}
+                onClick={() => { updateFilter("categoryId", filters.categoryId === cat.id ? undefined : cat.id); }}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap ${filters.categoryId === cat.id ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground border-border hover:border-primary hover:text-primary"}`}
               >
                 {cat.name}
               </button>
@@ -446,87 +423,6 @@ export function MarketplaceShell() {
         )}
       </section>
 
-      {/* Master Booking Services Mega-Panel */}
-      {bookingHubOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={() => setBookingHubOpen(false)}>
-          <div className="absolute left-0 right-0 top-14 mx-auto w-full max-w-6xl bg-background/90 border border-border rounded-3xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            <div className="p-5 sm:p-6 border-b border-border flex items-start justify-between gap-4">
-              <div>
-                <div className="text-xs font-semibold tracking-wider text-muted-foreground">AGRI2RIST HUB</div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground">Choose a Booking Service</h2>
-                <p className="text-sm text-muted-foreground mt-1">Restaurants, farm-to-table dining, chef experiences, private events & more.</p>
-              </div>
-              <button
-                className="rounded-xl border border-border bg-card hover:bg-muted transition p-2"
-                onClick={() => setBookingHubOpen(false)}
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            <div className="p-5 sm:p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {Object.entries(BOOKING_CATEGORY_LABELS).map(([key, title]) => {
-                  const selected = activeBookingService === key;
-                  const svcIcon = BOOKING_ICON_MAP[BOOKING_CATEGORY_ICONS[key as keyof typeof BOOKING_CATEGORY_ICONS]];
-                  const svcSubtitle = key === "restaurant" ? "Restaurants & cuisine booking" : title;
-                  const svcSubtitle2 = key === "farm_stay" ? "Farm stays & accommodations" : svcSubtitle;
-                  const svcDescription = key === "restaurant"
-                    ? "OpenTable-style dining reservations with farm-to-table storytelling, availability & instant confirmations."
-                    : "Book experiences with availability, premium confirmation and modern booking flow.";
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => {
-                        setActiveBookingService(key);
-                        setViewMode('bookings');
-                        setBookingHubOpen(false);
-                      }}
-                      className={`text-left rounded-2xl border transition overflow-hidden group ${selected ? 'border-primary bg-primary/10' : 'border-border bg-card hover:border-primary/80'}`}
-                    >
-                      <div className="p-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-11 h-11 rounded-2xl flex items-center justify-center bg-muted/70 ${selected ? 'text-primary' : 'text-muted-foreground'}`}>
-                            {svcIcon && <svcIcon />}
-                          </div>
-                          <div>
-                    <div className="font-extrabold text-foreground leading-tight">{title}</div>
-                            <div className="text-xs text-muted-foreground mt-0.5">{svcSubtitle2}</div>
-                          </div>
-                        </div>
-                        <div className="mt-3 text-sm text-muted-foreground line-clamp-3">{svcDescription}</div>
-
-                        <div className="mt-4 flex items-center justify-between">
-                          <div className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-                            <ArrowRight size={14} />
-                            Browse
-                          </div>
-                          <div className="opacity-70 group-hover:opacity-100 transition">
-                            {selected ? 'Selected' : ''}
-                          </div>
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-border bg-card p-4">
-                  <div className="font-bold text-foreground">Premium Booking Experience</div>
-                  <p className="text-sm text-muted-foreground mt-1">Enjoy OpenTable-style availability, farm-to-table storytelling, and modern confirmations.</p>
-                </div>
-                <div className="rounded-2xl border border-border bg-card p-4">
-                  <div className="font-bold text-foreground">Instant Search & Filters</div>
-                  <p className="text-sm text-muted-foreground mt-1">Date, time slots, guests, indoor/outdoor, cuisine, occasion, and payment options.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Main Content */}
       <section className="py-8 bg-background">
         <div className="container mx-auto px-4">
@@ -570,11 +466,8 @@ export function MarketplaceShell() {
             </div>
           )}
 
-          {/* Product Grid with slide animation or Bookings explorer */}
-          {viewMode === 'bookings' ? (
-            <BookingExplorer activeService={activeBookingService} />
-          ) : (
-            result.products.length > 0 ? (
+          {/* Product Grid with slide animation */}
+          {result.products.length > 0 ? (
               <div
                 key={animKey}
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
@@ -598,7 +491,7 @@ export function MarketplaceShell() {
                 <Button variant="outline" onClick={clearFilters}>Clear Filters</Button>
               </div>
             )
-          )}
+          }
 
           {/* Pagination */}
           {result.total > 0 && (
