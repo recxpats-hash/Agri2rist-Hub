@@ -11,7 +11,8 @@ import {
   deleteBooking,
   buildBookingRef,
 } from "@/lib/booking-store";
-import type { Booking, BookingCategory, BookingItem } from "@/types/marketplace";
+import { addNotification } from "@/lib/notification-store";
+import type { Booking, BookingItem } from "@/types/marketplace";
 
 export function useBooking() {
   const bookings = useMemo(() => getBookings(), []);
@@ -21,7 +22,7 @@ export function useBooking() {
     form: Record<string, unknown>,
     paymentMethod: string
   ): Booking => {
-    const subtotal = item.price;
+    const subtotal = item.price * ((form.guests as number) || (form.nights as number) || (form.tickets as number) || 1);
     const serviceFee = Math.round(subtotal * 0.025);
     const total = subtotal + serviceFee;
 
@@ -53,17 +54,28 @@ export function useBooking() {
       serviceFee,
       total,
       paymentMethod,
-      paymentStatus: paymentMethod === "pay_now" ? "paid" : "pending",
+      paymentStatus: (paymentMethod === "pay_now" || paymentMethod === "mobile_money" || paymentMethod === "card") ? "paid" : "pending",
       status: "confirmed",
       notes: form.notes as string | undefined,
       createdAt: new Date().toISOString(),
     };
 
     saveBooking(base);
-    toast({
-      title: "Booking confirmed",
-      description: `Reference: ${base.bookingRef}`,
+
+    // ── Persist notification so it shows in navbar bell + account page ──
+    addNotification({
+      type: "booking_confirmed",
+      title: "Booking Confirmed",
+      body: `${item.name} — ${base.date}. Ref: ${base.bookingRef}`,
+      ref: base.bookingRef,
+      link: "/account",
     });
+
+    toast({
+      title: "Booking confirmed ✓",
+      description: `Ref: ${base.bookingRef} — check your account for details.`,
+    });
+
     return base;
   };
 

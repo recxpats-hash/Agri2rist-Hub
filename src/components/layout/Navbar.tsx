@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Clock, LayoutDashboard, LogOut, Mail, Menu, MessageCircle, Phone, Search, ShoppingCart, UserRound, X } from "lucide-react";
+import { Bell, CalendarCheck, Clock, LayoutDashboard, LogOut, Mail, Menu, MessageCircle, Phone, ShoppingCart, UserRound, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
@@ -11,6 +11,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { useCart } from "@/hooks/use-cart";
 import { CartSidebar } from "@/components/marketplace/CartSidebar";
 import { SearchBar } from "@/components/marketplace/SearchBar";
+import { useNotifications } from "@/hooks/use-notifications";
 
 const navLinkKeys = ["home", "explore", "marketplace", "community", "about"] as const;
 const navHrefMap: Record<string, string> = {
@@ -24,10 +25,12 @@ const navHrefMap: Record<string, string> = {
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [bellOpen, setBellOpen] = useState(false);
   const location = useLocation();
   const { user, logout, isAdmin } = useAuth();
   const { count: cartCount } = useCart();
   const { t } = useTranslation();
+  const { notifications, unreadCount, markAllRead, markRead } = useNotifications();
 
   return (
     <>
@@ -139,6 +142,77 @@ export function Navbar() {
                 {t("home.hero.cta.book")}
               </Button>
             </Link>
+            {/* Notification bell */}
+            <div className="relative">
+              <button
+                onClick={() => { setBellOpen(v => !v); if (!bellOpen) markAllRead(); }}
+                className="relative rounded-md bg-primary-light px-3 py-2 text-primary-foreground hover:text-secondary transition-colors"
+                aria-label={`Notifications (${unreadCount} unread)`}
+              >
+                <Bell size={18} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Dropdown */}
+              {bellOpen && (
+                <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl border border-border bg-card shadow-xl z-50 overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/40">
+                    <div className="flex items-center gap-2">
+                      <Bell size={15} className="text-primary" />
+                      <span className="font-bold text-sm text-foreground">Notifications</span>
+                    </div>
+                    <button onClick={() => setBellOpen(false)} className="text-muted-foreground hover:text-foreground">
+                      <X size={16} />
+                    </button>
+                  </div>
+
+                  {notifications.length === 0 ? (
+                    <div className="px-4 py-8 text-center">
+                      <Bell size={28} className="mx-auto text-muted-foreground/40 mb-2" />
+                      <p className="text-sm text-muted-foreground">No notifications yet</p>
+                      <p className="text-xs text-muted-foreground/70 mt-1">Booking confirmations will appear here</p>
+                    </div>
+                  ) : (
+                    <ul className="max-h-72 overflow-y-auto divide-y divide-border">
+                      {notifications.map(n => (
+                        <li key={n.id}>
+                          <Link
+                            to={n.link || "/account"}
+                            onClick={() => { markRead(n.id); setBellOpen(false); }}
+                            className={`flex items-start gap-3 px-4 py-3 hover:bg-muted/50 transition ${!n.read ? "bg-primary/5" : ""}`}
+                          >
+                            <div className={`mt-0.5 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${n.type === "booking_confirmed" ? "bg-green-100 text-green-600" : "bg-primary/10 text-primary"}`}>
+                              <CalendarCheck size={15} />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-xs font-bold text-foreground leading-tight">{n.title}</p>
+                              <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{n.body}</p>
+                              <p className="text-[10px] text-muted-foreground/60 mt-1">
+                                {new Date(n.createdAt).toLocaleDateString("en-UG", { day:"numeric", month:"short", hour:"2-digit", minute:"2-digit" })}
+                              </p>
+                            </div>
+                            {!n.read && <span className="w-2 h-2 rounded-full bg-primary mt-1.5 flex-shrink-0" />}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {notifications.length > 0 && (
+                    <div className="px-4 py-2.5 border-t border-border flex items-center justify-between bg-muted/30">
+                      <Link to="/account" onClick={() => setBellOpen(false)} className="text-xs text-primary font-semibold hover:underline">
+                        View all in account
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* Cart button */}
             <button
               onClick={() => setCartOpen(true)}
