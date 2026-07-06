@@ -25,6 +25,7 @@ const CheckoutPage      = lazy(() => import("./Checkout"));
 const WishlistPage      = lazy(() => import("./Wishlist"));
 const CommunityPage     = lazy(() => import("./Community"));
 const GetListedPage     = lazy(() => import("./GetListed"));
+const BookingHubPage    = lazy(() => import("@/pages/BookingHub"));
 const VerifiedHostShell = lazy(() => import("@/components/verified-host/VerifiedHostShell"));
 const VerifiedHostPage  = lazy(() => import("@/components/verified-host/VerifiedHostPage"));
 const CertificationLevelsPage = lazy(() => import("@/components/verified-host/CertificationLevelsPage"));
@@ -69,6 +70,7 @@ export const routers = [
   { path: "/marketplace/wishlist",     name: "wishlist",      element: <S><WishlistPage /></S> },
   { path: "/community",                name: "community",     element: <S><CommunityPage /></S> },
   { path: "/get-listed",               name: "getListed",     element: <S><GetListedPage /></S> },
+  { path: "/booking",                  name: "bookingHub",    element: <S><BookingHubPage /></S> },
   {
     path: "/verified-host",
     name: "verifiedHost",
