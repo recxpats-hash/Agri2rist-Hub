@@ -15,6 +15,7 @@ const ExplorePage       = lazy(() => import("./Explore"));
 const FarmDetailPage    = lazy(() => import("./FarmDetail"));
 const BookingPage       = lazy(() => import("./Booking"));
 const MarketplacePage   = lazy(() => import("./Marketplace"));
+const DigitalMarketplaceLandingPage = lazy(() => import("@/components/marketplace/digital/DigitalMarketplaceLandingPage"));
 const ProductDetailPage = lazy(() => import("./ProductDetail"));
 const FarmerStorePage   = lazy(() => import("./FarmerStore"));
 const MarketplaceSearchPage = lazy(() => import("./MarketplaceSearch"));
@@ -57,6 +58,8 @@ export const routers = [
   { path: "/explore",                  name: "explore",       element: <S><ExplorePage /></S> },
   { path: "/farm/:id",                 name: "farmDetail",    element: <S><FarmDetailPage /></S> },
   { path: "/marketplace",              name: "marketplace",   element: <S><MarketplacePage /></S> },
+  { path: "/digital",                 name: "digitalMarketplace", element: <S><DigitalMarketplaceLandingPage /></S> },
+
   { path: "/marketplace/search",       name: "search",        element: <S><MarketplaceSearchPage /></S> },
   { path: "/marketplace/catalog",      name: "catalog",       element: <S><CatalogExplorerPage /></S> },
   { path: "/marketplace/catalog/editor/:productId?", name: "productEditor", element: <S><ProductEditorPage /></S> },

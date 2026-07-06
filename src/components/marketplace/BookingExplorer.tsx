@@ -5,8 +5,17 @@ import { getBookingItemsByCategory } from "@/data/booking-catalog";
 import { Button } from "@/components/ui/button";
 import BookingModal from "@/components/marketplace/BookingModal";
 
-export default function BookingExplorer() {
-  const [category, setCategory] = useState<string>("agritourism");
+export default function BookingExplorer({ activeService }: { activeService?: string }) {
+  const [category, setCategory] = useState<string>(activeService === 'restaurant' ? 'restaurant' : activeService === 'events_festivals' ? 'events_festivals' : activeService === 'transportation' ? 'transportation' : 'agritourism');
+
+  // keep selected category synced when switching booking services from the mega-panel
+  useEffect(() => {
+    if (!activeService) return;
+    if (activeService === 'restaurant') setCategory('restaurant');
+    else if (activeService === 'events_festivals') setCategory('events_festivals');
+    else if (activeService === 'transportation') setCategory('transportation');
+    else if (activeService === 'agritourism') setCategory('agritourism');
+  }, [activeService]);
   const [selected, setSelected] = useState<BookingItem | null>(null);
   const [open, setOpen] = useState(false);
 
