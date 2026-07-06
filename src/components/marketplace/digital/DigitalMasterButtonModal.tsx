@@ -1,4 +1,5 @@
 import { ReactNode, useMemo } from "react";
+import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Box,
@@ -70,7 +71,7 @@ const SECTION_TILES: Array<{
     description: "Farm business plans, records, templates, and manuals.",
     icon: <Download size={18} className="text-emerald-600" />,
     badge: { label: "Premium", tone: "gold" },
-    href: "/digital/downloads",
+    href: "/digital?category=Downloads",
   },
   {
     key: "learning",
@@ -78,7 +79,7 @@ const SECTION_TILES: Array<{
     description: "Courses, paths, certifications, and guided learning.",
     icon: <GraduationCap size={18} className="text-blue-600" />,
     badge: { label: "Verified", tone: "success" },
-    href: "/digital/learning",
+    href: "/digital?category=Learning",
   },
   {
     key: "memberships",
@@ -86,14 +87,14 @@ const SECTION_TILES: Array<{
     description: "Free → Enterprise tiers with upgrade paths.",
     icon: <Users size={18} className="text-amber-600" />,
     badge: { label: "Best Value", tone: "gold" },
-    href: "/digital/memberships",
+    href: "/digital?category=All",
   },
   {
     key: "software",
     title: "Farm Software",
     description: "Inventory, livestock, crop records, GPS, and workflows.",
     icon: <Box size={18} className="text-amber-600" />,
-    href: "/digital/software",
+    href: "/digital?category=Software",
   },
   {
     key: "ai",
@@ -101,105 +102,105 @@ const SECTION_TILES: Array<{
     description: "Advisors, diagnosis, planning tools, and AI reports.",
     icon: <Sparkles size={18} className="text-indigo-600" />,
     badge: { label: "AI Powered", tone: "primary" },
-    href: "/digital/ai",
+    href: "/digital?category=AI+Services",
   },
   {
     key: "gis",
     title: "GIS & Maps",
     description: "Interactive farm, route, tourism, and wildlife mapping.",
     icon: <Map size={18} className="text-teal-600" />,
-    href: "/digital/gis",
+    href: "/digital?category=GIS+%26+Maps",
   },
   {
     key: "marketing",
     title: "Digital Marketing",
     description: "Campaign packs: social, email, banner, and sponsored listings.",
     icon: <Rocket size={18} className="text-orange-600" />,
-    href: "/digital/marketing",
+    href: "/digital?category=Marketing",
   },
   {
     key: "photography",
     title: "Photography",
     description: "Farm, wildlife, drone, and tourism image collections + licenses.",
     icon: <Camera size={18} className="text-purple-600" />,
-    href: "/digital/photography",
+    href: "/digital?category=Photography",
   },
   {
     key: "video",
     title: "Video Library",
     description: "Training videos, documentaries, and series collections.",
     icon: <PlayCircle size={18} className="text-red-600" />,
-    href: "/digital/video",
+    href: "/digital?category=All",
   },
   {
     key: "library",
     title: "Digital Library",
     description: "eBooks, research papers, manuals, and reader preview.",
     icon: <FileText size={18} className="text-slate-700" />,
-    href: "/digital/library",
+    href: "/digital?category=Downloads",
   },
   {
     key: "certification",
     title: "Certification Services",
     description: "Verified host, inspections, renewals, and verification status.",
     icon: <ShieldCheck size={18} className="text-emerald-700" />,
-    href: "/digital/certification",
+    href: "/digital?category=Certification",
   },
   {
     key: "consultancy",
     title: "Consultancy",
     description: "Business, farm, financial, marketing, and export advisory.",
     icon: <Wrench size={18} className="text-orange-600" />,
-    href: "/digital/consultancy",
+    href: "/digital?category=All",
   },
   {
     key: "bi",
     title: "Business Intelligence",
     description: "Market prices, demand analytics, production stats, trend charts.",
     icon: <ChartNoAxesCombined size={18} className="text-indigo-600" />,
-    href: "/digital/bi-reports",
+    href: "/digital?category=Analytics",
   },
   {
     key: "mobile",
     title: "Mobile Applications",
     description: "App store layout: farm management, marketplaces, AI assistants.",
     icon: <Tv size={18} className="text-blue-600" />,
-    href: "/digital/mobile",
+    href: "/digital?category=Software",
   },
   {
     key: "websites",
     title: "Website Development",
     description: "Farm, tourism, restaurants, hotels, and e-commerce builds.",
     icon: <Globe size={18} className="text-teal-600" />,
-    href: "/digital/websites",
+    href: "/digital?category=All",
   },
   {
     key: "events",
     title: "Digital Events",
     description: "Webinars, virtual farm tours, workshops, schedules, tickets.",
     icon: <Calendar size={18} className="text-emerald-600" />,
-    href: "/digital/events",
+    href: "/digital?category=All",
   },
   {
     key: "apis",
     title: "Premium APIs",
     description: "Weather, market prices, booking signals, maps, logistics.",
     icon: <Calculator size={18} className="text-indigo-600" />,
-    href: "/digital/apis",
+    href: "/digital?category=All",
   },
   {
     key: "translation",
     title: "Translation Services",
     description: "Certified and curated translations for websites, manuals, support.",
     icon: <Languages size={18} className="text-emerald-600" />,
-    href: "/digital/translation",
+    href: "/digital?category=All",
   },
   {
     key: "advertising",
     title: "Advertising Marketplace",
     description: "Homepage banners, sponsored listings, newsletter & mobile ads.",
     icon: <Rocket size={18} className="text-amber-600" />,
-    href: "/digital/advertising",
+    href: "/digital?category=Marketing",
   },
   {
     key: "subscriptions",
@@ -207,7 +208,7 @@ const SECTION_TILES: Array<{
     description: "Learning + software + growth packages for teams and enterprises.",
     icon: <Users size={18} className="text-emerald-700" />,
     badge: { label: "Enterprise", tone: "warning" },
-    href: "/digital/bundles",
+    href: "/digital?category=All",
   },
 ];
 
@@ -242,9 +243,9 @@ export function DigitalMasterButtonModal({ open, onOpenChange }: { open: boolean
           <div className="p-5 sm:p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {SECTION_TILES.map((tile) => (
-                <a
+                <Link
                   key={tile.key}
-                  href={tile.href}
+                  to={tile.href}
                   className="group rounded-2xl border border-border bg-card hover:border-primary/50 hover:shadow-sm transition overflow-hidden"
                   onClick={() => onOpenChange(false)}
                 >
@@ -283,7 +284,7 @@ export function DigitalMasterButtonModal({ open, onOpenChange }: { open: boolean
                       <span className="text-[11px] text-muted-foreground group-hover:text-primary/80 transition">UI</span>
                     </div>
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
 

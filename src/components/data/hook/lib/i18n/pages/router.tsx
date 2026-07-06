@@ -60,6 +60,7 @@ export const routers = [
   { path: "/farm/:id",                 name: "farmDetail",    element: <S><FarmDetailPage /></S> },
   { path: "/marketplace",              name: "marketplace",   element: <S><MarketplacePage /></S> },
   { path: "/digital",                 name: "digitalMarketplace", element: <S><DigitalMarketplaceLandingPage /></S> },
+  { path: "/digital/:section",        name: "digitalSection",     element: <S><DigitalMarketplaceLandingPage /></S> },
 
   { path: "/marketplace/search",       name: "search",        element: <S><MarketplaceSearchPage /></S> },
   { path: "/marketplace/catalog",      name: "catalog",       element: <S><CatalogExplorerPage /></S> },

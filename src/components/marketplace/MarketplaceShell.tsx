@@ -178,7 +178,7 @@ export function MarketplaceShell() {
                 {/* Booking experiences */}
                 <Link
                   to="/booking"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 text-primary-foreground font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-secondary px-6 py-3 text-secondary-foreground font-bold shadow-lg shadow-secondary/20 hover:bg-secondary/90 transition"
                 >
                   <Sparkles size={18} />
                   Book Experiences

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams, useParams } from "react-router-dom";
 import {
   ArrowRight, ArrowLeft, BadgeCheck, BookOpen, Box, ChartNoAxesCombined,
   Check, ChevronRight, Download, GraduationCap, Image as ImageIcon,
@@ -394,16 +394,49 @@ function ProductCard({ product, onAction }: { product: DigitalProduct; onAction:
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function DigitalMarketplaceLandingPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { section } = useParams<{ section?: string }>();
+
+  // Map /digital/:section path segments → category names
+  const SECTION_TO_CATEGORY: Record<string, string> = {
+    downloads: "Downloads", learning: "Learning", software: "Software",
+    "ai": "AI Services", gis: "GIS & Maps", marketing: "Marketing",
+    photography: "Photography", certification: "Certification",
+    analytics: "Analytics", bi: "Analytics", "bi-reports": "Analytics",
+    video: "All", library: "Downloads", consultancy: "All",
+    mobile: "Software", websites: "All", events: "All",
+    apis: "All", translation: "All", advertising: "Marketing",
+    bundles: "All", memberships: "All", subscriptions: "All",
+  };
+
+  const initialCategory = useMemo(() => {
+    // Priority: ?category= query param first, then :section path param
+    const qcat = searchParams.get("category");
+    if (qcat) return decodeURIComponent(qcat);
+    if (section && SECTION_TO_CATEGORY[section]) return SECTION_TO_CATEGORY[section];
+    return "All";
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [payModal, setPayModal] = useState<{ product: DigitalProduct; mode: "buy"|"rent" } | null>(null);
+
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    setSearchParams(cat === "All" ? {} : { category: cat });
+  };
 
   const filtered = useMemo(() => {
     let list = PRODUCTS;
     if (activeCategory !== "All") list = list.filter(p => p.category === activeCategory);
     if (search.trim()) {
       const q = search.toLowerCase();
-      list = list.filter(p => p.title.toLowerCase().includes(q) || p.subtitle.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+      list = list.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        p.subtitle.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q)
+      );
     }
     return list;
   }, [search, activeCategory]);
@@ -499,7 +532,7 @@ export default function DigitalMarketplaceLandingPage() {
             {CATEGORIES.map(cat => (
               <button
                 key={cat}
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => handleCategoryChange(cat)}
                 className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
                   activeCategory === cat
                     ? "bg-primary text-primary-foreground border-primary shadow-sm"
@@ -514,7 +547,7 @@ export default function DigitalMarketplaceLandingPage() {
       </section>
 
       {/* ── Product Grid ── */}
-      <section className="py-10 bg-background">
+      <section className="py-10 bg-background min-h-[60vh]">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
             <div>
@@ -533,7 +566,7 @@ export default function DigitalMarketplaceLandingPage() {
           </div>
 
           {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
               {filtered.map(p => (
                 <ProductCard
                   key={p.id}
@@ -549,7 +582,7 @@ export default function DigitalMarketplaceLandingPage() {
               </div>
               <h3 className="font-bold text-foreground text-lg">No results found</h3>
               <p className="text-muted-foreground text-sm mt-1 max-w-xs">Try a different keyword or browse another category.</p>
-              <Button variant="outline" className="mt-4 rounded-xl" onClick={() => { setSearch(""); setActiveCategory("All"); }}>
+              <Button variant="outline" className="mt-4 rounded-xl" onClick={() => { setSearch(""); handleCategoryChange("All"); }}>
                 Clear filters
               </Button>
             </div>
