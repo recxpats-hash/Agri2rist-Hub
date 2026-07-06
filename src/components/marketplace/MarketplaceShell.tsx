@@ -184,13 +184,13 @@ export function MarketplaceShell() {
                   Book Experiences
                   <ArrowRight size={16} className="ml-1" />
                 </Link>
-              <button
-                onClick={() => {}}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary-foreground/10 px-6 py-3 text-white font-bold border border-primary-foreground/25 hover:bg-primary-foreground/15 transition"
-              >
-                Explore Marketplace
-              </button>
-            </div>
+                <button
+                  onClick={() => {}}
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary-foreground/10 px-6 py-3 text-white font-bold border border-primary-foreground/25 hover:bg-primary-foreground/15 transition"
+                >
+                  Explore Marketplace
+                </button>
+              </div>
           </div>
         </div>
       </section>
@@ -208,9 +208,9 @@ export function MarketplaceShell() {
 
             <Link
               to="/booking"
-              className="px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap bg-card text-foreground border-border hover:border-secondary hover:text-secondary"
+              className="px-4 py-1.5 rounded-full text-sm font-medium border transition-colors whitespace-nowrap bg-secondary/10 text-secondary border-secondary/40 hover:bg-secondary hover:text-secondary-foreground"
             >
-              Bookings
+              🗓 Bookings
             </Link>
 
               {TOP_CATEGORIES.map((cat) => (
