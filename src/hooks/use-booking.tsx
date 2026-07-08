@@ -84,7 +84,7 @@ export function useBooking() {
       bicycleRental: form.bicycleRental as boolean | undefined,
       fishingEquipment: form.fishingEquipment as boolean | undefined,
       horseRental: form.horseRental as boolean | undefined,
-      paymentStatus: form.paymentStatus as string | undefined,
+      // paymentStatus will be computed below based on method
       invoiceNumber: form.invoiceNumber as string | undefined,
       receiptNumber: form.receiptNumber as string | undefined,
       amountPaid: form.amountPaid as string | undefined,
@@ -100,8 +100,6 @@ export function useBooking() {
       preferredVehicle: form.preferredVehicle as string | undefined,
       distanceKm: form.distanceKm as number | undefined,
       estimatedTravelTime: form.estimatedTravelTime as string | undefined,
-      adults: form.adults as number | undefined,
-      children: form.children as number | undefined,
       seniors: form.seniors as number | undefined,
       luggage: form.luggage as number | undefined,
       pets: form.pets as number | undefined,
@@ -109,7 +107,7 @@ export function useBooking() {
       roadCondition: form.roadCondition as string | undefined,
       weatherCondition: form.weatherCondition as string | undefined,
       routeDifficulty: form.routeDifficulty as string | undefined,
-      emergencyContact: form.emergencyContact as string | undefined,
+      // emergencyContact already mapped above
       airConditioning: form.airConditioning as boolean | undefined,
       wifi: form.wifi as boolean | undefined,
       childSeat: form.childSeat as boolean | undefined,
