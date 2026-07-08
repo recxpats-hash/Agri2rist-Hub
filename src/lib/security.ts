@@ -136,11 +136,16 @@ export const secureStorage = {
 // Call once at app startup in main.tsx to inject a CSP meta tag.
 
 export function injectCspMetaTag(): void {
+  // Avoid overriding CSP on production hosts (e.g. Vercel).
+  // On Vercel the correct CSP should be set via HTTP headers.
+  // Injecting a meta CSP here can break chunk loading or XHR/fetch.
+  if (import.meta.env.PROD) return;
+
   if (document.querySelector('meta[http-equiv="Content-Security-Policy"]')) return;
 
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline'",   // unsafe-inline needed for Vite dev
+    "script-src 'self' 'unsafe-inline'", // unsafe-inline needed for Vite dev
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
@@ -156,6 +161,7 @@ export function injectCspMetaTag(): void {
   meta.setAttribute("content", csp);
   document.head.prepend(meta);
 }
+
 
 // ─── ENV GUARD ────────────────────────────────────────────────────────────────
 // Warns at startup if dangerous env vars are exposed to the client bundle.

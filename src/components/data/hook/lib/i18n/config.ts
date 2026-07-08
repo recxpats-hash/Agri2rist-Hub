@@ -12,10 +12,6 @@ import {
 
 export * from "./util";
 
-const baseUrl = import.meta.env.BASE_URL.endsWith("/")
-  ? import.meta.env.BASE_URL
-  : `${import.meta.env.BASE_URL}/`;
-
 void i18n
   .use(HttpBackend)
   .use(LanguageDetector)
@@ -23,8 +19,10 @@ void i18n
   .init({
     fallbackLng,
     supportedLngs,
-    backend: { loadPath: `${baseUrl}locale/{{lng}}.json` },
+    // Ensure backend config is strictly for JSON.
+    backend: { loadPath: '/locale/{{lng}}.json' },
     detection: {
+
       order: ["cookie", "navigator", "htmlTag"],
       lookupCookie: "i18next",
       caches: ["cookie"],

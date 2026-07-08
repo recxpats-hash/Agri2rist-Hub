@@ -18,13 +18,13 @@ export function Footer() {
           <Link to="/" className="flex items-center gap-3">
             <span className="h-11 w-11 overflow-hidden rounded-full bg-primary-foreground">
               <img
-                src={FARM_IMAGES.logo}
+                src="/assets/Logo.png"
                 alt="Agri2rist Hub"
                 width={44}
                 height={44}
                 loading="lazy"
                 decoding="async"
-                className="h-full w-full scale-125 object-cover"
+                className="h-full w-full object-contain"
               />
             </span>
             <div>

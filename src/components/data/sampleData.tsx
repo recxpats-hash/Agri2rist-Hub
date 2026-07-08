@@ -72,7 +72,7 @@ export const FARM_IMAGES = {
   fishNet: "/locale/fish-net.webp",
   tilapia: "/locale/tilapia.webp",
   groupTour: "/locale/group-tour.webp",
-  logo: "/locale/agri2rist-logo.webp",
+  logo: "/assets/Logo.png",
   equipment: "/locale/Equipments/HG101 (1).jpg",
   equipment2: "/locale/Equipments/Factory-Direct-Sale-Tilapia-Egg-Hatchery-Jar-Tilapia-Incubation.jpg",
   equipment3: "/locale/Equipments/Solar system installed.jpeg",

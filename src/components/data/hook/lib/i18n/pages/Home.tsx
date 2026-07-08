@@ -88,14 +88,14 @@ export default function HomePage() {
           <div className="flex justify-center mb-6">
             <span className="h-24 w-24 overflow-hidden rounded-full shadow-hero animate-float md:h-32 md:w-32">
               <img
-                src={FARM_IMAGES.logo}
+                src="/assets/Logo.png"
                 alt="Agri2rist Hub"
                 width={128}
                 height={128}
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
-                className="h-full w-full scale-125 object-cover"
+                className="h-full w-full object-contain"
               />
             </span>
           </div>

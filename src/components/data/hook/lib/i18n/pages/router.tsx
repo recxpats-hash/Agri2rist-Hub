@@ -31,6 +31,14 @@ const VerifiedHostPage  = lazy(() => import("@/components/verified-host/Verified
 const CertificationLevelsPage = lazy(() => import("@/components/verified-host/CertificationLevelsPage"));
 const TrainingModulesPage = lazy(() => import("@/components/verified-host/TrainingModulesPage"));
 const StudentsPage      = lazy(() => import("@/components/verified-host/StudentsPage"));
+const RegisterStudentPage = lazy(() => import("@/components/verified-host/RegisterStudentPage"));
+const ScheduleTrainingPage = lazy(() => import("@/components/verified-host/ScheduleTrainingPage"));
+const IssueCertificatePage = lazy(() => import("@/components/verified-host/IssueCertificatePage"));
+const GenerateReportPage = lazy(() => import("@/components/verified-host/GenerateReportPage"));
+const HostApplicationPage = lazy(() => import("@/components/verified-host/HostApplicationPage"));
+const SupportPage = lazy(() => import("@/components/verified-host/SupportPage"));
+const ManageCertificationsPage = lazy(() => import("@/components/verified-host/ManageCertificationsPage"));
+const NewCohortPage = lazy(() => import("@/components/verified-host/NewCohortPage"));
 const AboutPage         = lazy(() => import("./About"));
 const AuthPage          = lazy(() => import("./Auth"));
 const AccountPage       = lazy(() => import("./Account"));
@@ -81,6 +89,14 @@ export const routers = [
       { path: "certification-levels", element: <S><CertificationLevelsPage /></S> },
       { path: "training-modules", element: <S><TrainingModulesPage /></S> },
       { path: "students", element: <S><StudentsPage /></S> },
+      { path: "register-student", element: <S><RegisterStudentPage /></S> },
+      { path: "schedule-training", element: <S><ScheduleTrainingPage /></S> },
+      { path: "issue-certificate", element: <S><IssueCertificatePage /></S> },
+      { path: "generate-report", element: <S><GenerateReportPage /></S> },
+      { path: "host-application", element: <S><HostApplicationPage /></S> },
+      { path: "support", element: <S><SupportPage /></S> },
+      { path: "manage-certifications", element: <S><ManageCertificationsPage /></S> },
+      { path: "new-cohort", element: <S><NewCohortPage /></S> },
     ],
   },
   { path: "/about",                    name: "about",         element: <S><AboutPage /></S> },

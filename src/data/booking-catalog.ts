@@ -329,3 +329,7 @@ export function getBookingItemsByCategory(category: string): BookingItem[] {
 export function getBookingItemById(id: string): BookingItem | undefined {
   return BOOKING_ITEMS.find((item) => item.id === id);
 }
+
+export function getAllBookingItems(): BookingItem[] {
+  return BOOKING_ITEMS;
+}

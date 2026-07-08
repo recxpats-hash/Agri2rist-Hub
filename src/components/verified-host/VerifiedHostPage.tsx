@@ -1,24 +1,18 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  LayoutDashboard, Users, FileText, Receipt, Sparkles, TrendingUp, Heart, Zap,
+  ArrowRight, Download, Printer, Settings, LogOut, Menu, X, BadgeCheck, BookOpen,
+  Calendar, CheckCircle2, BarChart3, Shield, MessageCircle, Award
+} from "lucide-react";
 
 export default function VerifiedHostPage() {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [globalSearch, setGlobalSearch] = useState("");
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-
-  // LMS UI-only: notification + dropdown state
-  const [openNotif, setOpenNotif] = useState(false);
-  const [openMsg, setOpenMsg] = useState(false);
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState<
     | "dashboard"
-    | "certification"
     | "students"
-    | "trainers"
     | "schedule"
     | "assessments"
     | "certificates"
@@ -28,690 +22,538 @@ export default function VerifiedHostPage() {
     | "administration"
     | "settings"
   >("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  // Certification Program tabs
-  const [certTab, setCertTab] = useState<
-    | "overview"
-    | "levels"
-    | "modules"
-    | "specialist"
-    | "development"
-    | "fees"
-  >("overview");
+  const [data, setData] = useState<any>(null);
+  const [students, setStudents] = useState([
+    { id: 1, name: "Fatima S.", course: "Hospitality Foundation", status: "Active", email: "fatima@agri2rist.com" },
+    { id: 2, name: "Hassan K.", course: "Agricultural Experience", status: "Enrolled", email: "hassan@agri2rist.com" },
+    { id: 3, name: "Siti Nur", course: "Food Safety Practicals", status: "Pending", email: "siti@agri2rist.com" },
+  ]);
+  const [sessions, setSessions] = useState([
+    { id: 1, time: "09:00", title: "Hospitality Foundation", venue: "Training Hall A" },
+    { id: 2, time: "11:30", title: "Agricultural Experience", venue: "Lab Room 2" },
+    { id: 3, time: "14:00", title: "Food Safety Practicals", venue: "Kitchen Lab" },
+  ]);
+
+  const [crudPanelOpen, setCrudPanelOpen] = useState(false);
+  const [crudType, setCrudType] = useState<"student" | "session">("student");
+  const [crudMode, setCrudMode] = useState<"add" | "edit">("add");
+  const [studentForm, setStudentForm] = useState({ id: 0, name: "", course: "", status: "Active", email: "" });
+  const [sessionForm, setSessionForm] = useState({ id: 0, time: "", title: "", venue: "" });
 
   useEffect(() => {
     let mounted = true;
-    async function load() {
-      setLoading(true);
-      const seeded = {
-        total_students: 842,
-        total_trainers: 67,
-        active_courses: 24,
-        certificates: 214,
-        revenue: 1280000000,
-        pending_payments: 38,
-        upcoming_classes: 12,
-        today_schedule: [
-          { time: "09:00", title: "Hospitality Foundation", venue: "Training Hall A" },
-          { time: "11:30", title: "Agricultural Experience", venue: "Lab Room 2" },
-          { time: "14:00", title: "Food Safety Practicals", venue: "Kitchen Lab" },
-        ],
-        recent_activity: [
-          { who: "Fatima S.", action: "Enrolled", meta: "Wheelchair-friendly transport module" },
-          { who: "Hassan K.", action: "Completed", meta: "Emergency Preparedness quiz" },
-          { who: "Siti Nur", action: "Submitted", meta: "Assessment result uploaded" },
-        ],
-      };
-      await new Promise((r) => setTimeout(r, 350));
-      if (mounted) setData(seeded);
-      if (mounted) setLoading(false);
-    }
-    load();
+    setTimeout(() => {
+      if (mounted) {
+        setData({
+          total_students: 842,
+          total_trainers: 67,
+          active_courses: 24,
+          certificates: 214,
+          revenue: 1280000000,
+          pending_payments: 38,
+          upcoming_classes: 12,
+          today_schedule: [
+            { time: "09:00", title: "Hospitality Foundation", venue: "Training Hall A" },
+            { time: "11:30", title: "Agricultural Experience", venue: "Lab Room 2" },
+            { time: "14:00", title: "Food Safety Practicals", venue: "Kitchen Lab" },
+          ],
+          recent_activity: [
+            { who: "Fatima S.", action: "Enrolled", meta: "Wheelchair-friendly transport module" },
+            { who: "Hassan K.", action: "Completed", meta: "Emergency Preparedness quiz" },
+            { who: "Siti Nur", action: "Submitted", meta: "Assessment result uploaded" },
+          ],
+        });
+        setLoading(false);
+      }
+    }, 300);
     return () => {
       mounted = false;
     };
   }, []);
 
-  const primary = "#16A34A";
-  const secondary = "#166534";
-  const accent = "#EAB308";
-
   const sections = [
-    { key: "dashboard" as const, label: "Dashboard", icon: "LayoutDashboard" },
-    { key: "certification" as const, label: "Certification Program", icon: "BadgeCheck" },
-    { key: "students" as const, label: "Students", icon: "Users" },
-    { key: "trainers" as const, label: "Trainers", icon: "UserRound" },
-    { key: "schedule" as const, label: "Training Schedule", icon: "CalendarDays" },
-    { key: "assessments" as const, label: "Assessments", icon: "ClipboardCheck" },
-    { key: "certificates" as const, label: "Certificates", icon: "Badge" },
-    { key: "payments" as const, label: "Payments", icon: "Receipt" },
-    { key: "resources" as const, label: "Learning Resources", icon: "BookOpen" },
-    { key: "reports" as const, label: "Reports", icon: "FileSpreadsheet" },
-    { key: "administration" as const, label: "Administration", icon: "Shield" },
-    { key: "settings" as const, label: "Settings", icon: "Settings" },
+    { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { key: "students", label: "Students", icon: Users },
+    { key: "schedule", label: "Training Schedule", icon: Calendar },
+    { key: "assessments", label: "Assessments", icon: CheckCircle2 },
+    { key: "certificates", label: "Certificates", icon: Award },
+    { key: "payments", label: "Payments", icon: Receipt },
+    { key: "resources", label: "Learning Resources", icon: BookOpen },
+    { key: "reports", label: "Reports", icon: BarChart3 },
+    { key: "administration", label: "Administration", icon: Shield },
+    { key: "settings", label: "Settings", icon: Settings },
   ];
 
-  const searchResults = useMemoLikeGlobalSearch(globalSearch);
+  const handleQuickAction = (action: string) => {
+    const routes: Record<string, string> = {
+      "Register Student": "/verified-host/register-student",
+      "Schedule Training": "/verified-host/schedule-training",
+      "Issue Certificate": "/verified-host/issue-certificate",
+      "Generate Report": "/verified-host/generate-report",
+    };
+    navigate(routes[action] || "/verified-host");
+  };
+
+  const openCrudModal = (type: "student" | "session", mode: "add" | "edit", item?: any) => {
+    setCrudType(type);
+    setCrudMode(mode);
+    if (type === "student") {
+      setStudentForm(item ? { ...item } : { id: Date.now(), name: "", course: "", status: "Active", email: "" });
+    } else {
+      setSessionForm(item ? { ...item } : { id: Date.now(), time: "", title: "", venue: "" });
+    }
+    setCrudPanelOpen(true);
+  };
+
+  const closeCrudModal = () => setCrudPanelOpen(false);
+
+  const handleCrudSave = () => {
+    if (crudType === "student") {
+      if (crudMode === "edit") {
+        setStudents((prev) => prev.map((student) => (student.id === studentForm.id ? studentForm : student)));
+      } else {
+        setStudents((prev) => [studentForm, ...prev]);
+      }
+    } else {
+      if (crudMode === "edit") {
+        setSessions((prev) => prev.map((session) => (session.id === sessionForm.id ? sessionForm : session)));
+      } else {
+        setSessions((prev) => [sessionForm, ...prev]);
+      }
+    }
+    closeCrudModal();
+  };
+
+  const handleCrudDelete = (type: "student" | "session", id: number) => {
+    if (type === "student") {
+      setStudents((prev) => prev.filter((student) => student.id !== id));
+    } else {
+      setSessions((prev) => prev.filter((session) => session.id !== id));
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50">
       <style>{`
-        :root{--a2r-primary:${primary};--a2r-secondary:${secondary};--a2r-accent:${accent};--a2r-bg:#F8FAFC;--a2r-card:#ffffff;}
-        .a2r-app{background:var(--a2r-bg); min-height:100vh;}
-        .a2r-brand-pill{background:rgba(22,163,74,.10);border:1px solid rgba(22,163,74,.20);color:${secondary};}
-        .a2r-sidebar{transition:width .2s ease; border-right:1px solid rgba(0,0,0,.06); background:#fff;}
-        .a2r-navitem{cursor:pointer; border-radius:14px; padding:10px 12px; display:flex; align-items:center; gap:10px; border:1px solid transparent; color:#0f172a;}
-        .a2r-navitem:hover{background:rgba(22,163,74,.06); border-color:rgba(22,163,74,.18);} 
-        .a2r-navitem[data-active="true"]{background:rgba(22,163,74,.10); border-color:rgba(22,163,74,.25);} 
-        .a2r-shell{display:grid; grid-template-columns: 280px 1fr; gap:0;}
-        @media (max-width: 992px){ .a2r-shell{grid-template-columns: 1fr;} .a2r-sidebar{display:none;} .a2r-shell[data-mobile="true"] .a2r-sidebar{display:block; position:fixed; inset:64px auto 0 0; width:280px; z-index:60; box-shadow:0 18px 60px rgba(0,0,0,.12);} }
-        .a2r-pagewrap{padding:22px;}
-        .a2r-card{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:18px;box-shadow:0 10px 30px rgba(2,6,23,.04);} 
-        .a2r-glassbar{background:rgba(248,250,252,.7);} 
-        .a2r-badge{font-weight:700; border-radius:999px; padding:6px 10px; border:1px solid rgba(0,0,0,.06);} 
-        .a2r-muted{color:rgba(15,23,42,.62);} 
-        .a2r-skeleton{position:relative; overflow:hidden; background:rgba(2,6,23,.05);} 
-        .a2r-skeleton::after{content:""; position:absolute; inset:0; transform:translateX(-100%); background:linear-gradient(90deg, transparent, rgba(255,255,255,.9), transparent); animation:a2r-shimmer 1.1s infinite;} 
-        @keyframes a2r-shimmer{100%{transform:translateX(100%);} }
-        .a2r-table td,.a2r-table th{white-space:nowrap;}
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-in { animation: slideIn 0.5s ease-out; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(22, 163, 74, 0.15); }
+        .overlap-badge { position: relative; margin-bottom: -20px; z-index: 10; }
+        .stat-card-1 { animation: slideIn 0.5s ease-out 0.1s backwards; }
+        .stat-card-2 { animation: slideIn 0.5s ease-out 0.2s backwards; }
+        .stat-card-3 { animation: slideIn 0.5s ease-out 0.3s backwards; }
+        .stat-card-4 { animation: slideIn 0.5s ease-out 0.4s backwards; }
       `}</style>
 
-      {/* App wrapper */}
-      <div className="a2r-app">
-
-        {/* Global search toast */}
-        <div id="a2r-global-search-toast" data-show="false" style={{ position: "fixed", left: "50%", transform: "translateX(-50%)", bottom: 18, zIndex: 80, background: "rgba(17,24,39,.92)", color: "#fff", padding: "10px 14px", borderRadius: 999, opacity: 0, pointerEvents: "none", transition: "opacity 200ms ease" }} />
-        <style>{`#a2r-global-search-toast[data-show="true"]{opacity:1;}`}</style>
-
-        <div className="container-fluid p-0">
-          <div className="a2r-shell" data-mobile={!sidebarOpen ? "true" : "false"}>
-            {/* Sidebar */}
-            {sidebarOpen && (
-              <aside className="a2r-sidebar" style={{ width: 280, padding: 14 }}>
-                <div className="a2r-card p-3" style={{ marginBottom: 12 }}>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div>
-                      <div className="fw-extrabold">Host Console</div>
-                      <div className="small a2r-muted">Admin-grade LMS UI</div>
-                    </div>
-                    <span className="badge" style={{ background: "rgba(234,179,8,.15)", color: secondary, border: "1px solid rgba(234,179,8,.25)" }}>Verified</span>
-                  </div>
-                </div>
-
-                <div className="d-flex flex-column gap-1">
-                  {sections.map((s) => (
-                    <div
-                      key={s.key}
-                      className="a2r-navitem"
-                      data-active={activeSection === s.key}
-                      onClick={() => setActiveSection(s.key)}
-                      role="button"
-                      tabIndex={0}
-                    >
-                      <span className="rounded-circle" style={{ width: 30, height: 30, background: "rgba(22,163,74,.10)", color: secondary, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>•</span>
-                      <span className="fw-semibold">{s.label}</span>
-                    </div>
-                  ))}
-
-                  <div className="mt-3 d-flex gap-2">
-                    <Link to="/get-listed" style={{ textDecoration: "none" }}>
-                      <Button className="w-100" style={{ background: primary, borderColor: primary }}>Become a Host</Button>
-                    </Link>
-                  </div>
-                  <div className="mt-2">
-                    <Button variant="outline" className="w-100">Logout</Button>
-                  </div>
-                </div>
-              </aside>
-            )}
-
-            {/* Main content */}
-            <section className="a2r-pagewrap">
-              {/* Breadcrumb + title + actions */}
-              <div className="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-3">
-                <div>
-                  <nav className="small a2r-muted">Dashboard / Verified Host / {sectionLabel(activeSection)}</nav>
-                  <h2 className="fw-extrabold" style={{ fontSize: 28, marginTop: 6 }}>{pageTitle(activeSection)}</h2>
-                </div>
-
-                <div className="d-flex flex-wrap gap-2">
-                  <Button variant="outline" className="rounded-3">Export Excel</Button>
-                  <Button variant="outline" className="rounded-3">Export PDF</Button>
-                  <Button variant="outline" className="rounded-3">Print</Button>
-                  <Button className="rounded-3" style={{ background: primary, borderColor: primary }}>
-                    Quick Action
-                  </Button>
-                </div>
+      {/* Sidebar + Main Layout */}
+      <div className="flex h-screen">
+        {/* Sidebar */}
+        <aside className={`${sidebarOpen ? "w-72" : "w-0"} bg-white border-r border-gray-200 transition-all duration-300 overflow-hidden flex flex-col`}>
+          <div className="p-6 border-b border-gray-100">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-white font-bold">
+                A2R
               </div>
+              <div>
+                <h3 className="font-extrabold text-lg">Host Console</h3>
+                <p className="text-xs text-gray-500">Verified Dashboard</p>
+              </div>
+            </div>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
+              <BadgeCheck size={16} className="text-emerald-600" />
+              <span className="text-xs font-bold text-emerald-700">Verified</span>
+            </div>
+          </div>
 
-              {/* Content blocks (frontend-only) */}
-              {activeSection === "dashboard" && (
-                <div className="row g-3">
-                  <div className="col-12">
-                    <div className="a2r-card p-3 p-md-4">
-                      <div className="d-flex align-items-center justify-content-between gap-3 flex-wrap">
-                        <div>
-                          <div className="fw-extrabold">Today’s Schedule</div>
-                          <div className="small a2r-muted">UI-only schedule preview</div>
-                        </div>
-                        <div className="d-flex gap-2">
-                          <span className="badge bg-success-subtle text-success border border-success-subtle">Upcoming</span>
-                          <span className="badge bg-warning-subtle text-warning border border-warning-subtle">Assessments</span>
-                        </div>
-                      </div>
+          <nav className="flex-1 p-4 overflow-y-auto">
+            <div className="space-y-2">
+              {sections.map((s) => {
+                const Icon = s.icon;
+                return (
+                  <button
+                    key={s.key}
+                    onClick={() => setActiveSection(s.key as any)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all ${
+                      activeSection === s.key
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        : "text-gray-700 hover:bg-gray-50"
+                    }`}
+                  >
+                    <Icon size={20} />
+                    <span>{s.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
 
-                      <div className="table-responsive mt-3">
-                        <table className="table a2r-table mb-0">
-                          <thead>
-                            <tr>
-                              <th>Time</th>
-                              <th>Training</th>
-                              <th>Venue</th>
-                              <th style={{ width: 180 }}>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {(data?.today_schedule ?? []).map((r: any, idx: number) => (
-                              <tr key={idx}>
-                                <td className="fw-semibold">{r.time}</td>
-                                <td>{r.title}</td>
-                                <td className="text-muted">{r.venue}</td>
-                                <td>
-                                  <div className="d-flex gap-2">
-                                    <Button size="sm" className="rounded-3">View</Button>
-                                    <Button size="sm" variant="outline" className="rounded-3">Add</Button>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))}
-                            {loading && (
-                              Array.from({ length: 3 }).map((_, i) => (
-                                <tr key={i}>
-                                  <td><div className="a2r-skeleton" style={{ height: 14, width: 70 }} /></td>
-                                  <td><div className="a2r-skeleton" style={{ height: 14, width: 220 }} /></td>
-                                  <td><div className="a2r-skeleton" style={{ height: 14, width: 180 }} /></td>
-                                  <td><div className="a2r-skeleton" style={{ height: 30, width: 140, borderRadius: 10 }} /></td>
-                                </tr>
-                              ))
-                            )}
-                          </tbody>
-                        </table>
-                      </div>
+          <div className="p-4 border-t border-gray-100 space-y-2">
+            <Link to="/get-listed">
+              <Button className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-xl h-11 font-bold">
+                Become a Host
+              </Button>
+            </Link>
+            <Button variant="outline" className="w-full rounded-xl h-11 font-bold" onClick={() => navigate("/")}>
+              <LogOut size={18} className="mr-2" />
+              Logout
+            </Button>
+          </div>
+        </aside>
 
-                      <div className="d-flex justify-content-between flex-wrap gap-2 mt-3">
-                        <div className="small a2r-muted">Pagination UI demo</div>
-                        <div className="d-flex gap-2">
-                          <Button size="sm" variant="outline" className="rounded-3">Prev</Button>
-                          <Button size="sm" variant="outline" className="rounded-3">1</Button>
-                          <Button size="sm" variant="outline" className="rounded-3">2</Button>
-                          <Button size="sm" variant="outline" className="rounded-3">Next</Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto">
+          {/* Top Bar */}
+          <div className="sticky top-0 z-30 bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
 
-                  <div className="col-12">
-                    <div className="row g-3">
-                      {[
-                        { k: "total_students", label: "Total Students" },
-                        { k: "total_trainers", label: "Total Trainers" },
-                        { k: "active_courses", label: "Active Courses" },
-                        { k: "certificates", label: "Certificates Issued" },
-                      ].map((x) => (
-                        <div key={x.k} className="col-12 col-md-6 col-xl-3">
-                          <div className="a2r-card p-3">
-                            <div className="small a2r-muted">{x.label}</div>
-                            <div className="fw-extrabold" style={{ fontSize: 30, marginTop: 6 }}>
-                              {loading ? "—" : formatNumber(data?.[x.k])}
-                            </div>
-                            <div className="mt-2">
-                              <span className="badge bg-success-subtle text-success border border-success-subtle">Live</span>
-                            </div>
+            <div className="flex items-center gap-4">
+              <Input
+                type="text"
+                placeholder="Search students, courses, reports..."
+                className="max-w-xs rounded-xl bg-gray-50 border-gray-200"
+              />
+              <Button size="sm" className="rounded-xl" variant="outline">
+                <Download size={18} />
+              </Button>
+              <Button size="sm" className="rounded-xl" variant="outline">
+                <Printer size={18} />
+              </Button>
+            </div>
+          </div>
+
+          {/* Page Content */}
+          <div className="p-8">
+            {/* Breadcrumb */}
+            <div className="mb-8">
+              <p className="text-sm text-gray-500 mb-2">Dashboard / Verified Host / {sections.find(s => s.key === activeSection)?.label}</p>
+              <h1 className="text-4xl font-extrabold text-gray-900">{sections.find(s => s.key === activeSection)?.label}</h1>
+            </div>
+
+            {/* Dashboard Section */}
+            {activeSection === "dashboard" && (
+              <div className="space-y-8">
+                {/* Hero Stats with Overlapping Cards */}
+                <div className="relative mb-12">
+                  {/* Gradient Background */}
+                  <div className="absolute inset-0 h-80 bg-gradient-to-r from-emerald-500 via-emerald-600 to-green-700 rounded-3xl -z-10 blur-sm opacity-20" />
+
+                  {/* Overlapping Stats Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 -mb-8">
+                    {[
+                      { label: "Total Students", value: "842", icon: Users, color: "emerald" },
+                      { label: "Active Courses", value: "24", icon: BookOpen, color: "blue" },
+                      { label: "Certificates", value: "214", icon: Award, color: "purple" },
+                      { label: "Revenue", value: "$1.28M", icon: TrendingUp, color: "orange" },
+                    ].map((item, idx) => {
+                      const Icon = item.icon;
+                      const colors: Record<string, any> = {
+                        emerald: "from-emerald-50 to-emerald-100 border-emerald-200 shadow-emerald-100",
+                        blue: "from-blue-50 to-blue-100 border-blue-200 shadow-blue-100",
+                        purple: "from-purple-50 to-purple-100 border-purple-200 shadow-purple-100",
+                        orange: "from-orange-50 to-orange-100 border-orange-200 shadow-orange-100",
+                      };
+                      return (
+                        <div
+                          key={idx}
+                          className={`stat-card-${idx + 1} bg-gradient-to-br ${colors[item.color]} border rounded-2xl p-6 card-hover relative`}
+                        >
+                          <div className="absolute top-4 right-4 p-3 bg-white rounded-xl shadow-lg">
+                            <Icon size={24} className={`text-${item.color}-600`} />
+                          </div>
+                          <p className="text-gray-600 text-sm font-semibold mb-2">{item.label}</p>
+                          <h3 className="text-4xl font-extrabold text-gray-900">{item.value}</h3>
+                          <div className="mt-4 flex items-center gap-2 text-xs text-gray-500">
+                            <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                            Live
                           </div>
                         </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Feature Badges Below */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-16">
+                    {[
+                      { icon: Zap, title: "Instant Setup", desc: "Start hosting in minutes" },
+                      { icon: TrendingUp, title: "Growth Tools", desc: "Analytics & insights" },
+                      { icon: Heart, title: "Guest Management", desc: "Quality experiences" },
+                      { icon: MessageCircle, title: "24/7 Support", desc: "Expert assistance" },
+                    ].map((item, idx) => {
+                      const Icon = item.icon;
+                      return (
+                        <div
+                          key={idx}
+                          className="bg-white border border-gray-200 rounded-2xl p-6 card-hover group"
+                          style={{ animationDelay: `${idx * 0.1}s` }}
+                        >
+                          <div className="w-14 h-14 bg-gradient-to-br from-emerald-100 to-green-100 rounded-xl flex items-center justify-center group-hover:shadow-lg transition-all mb-4">
+                            <Icon size={24} className="text-emerald-600" />
+                          </div>
+                          <h3 className="font-bold text-gray-900 mb-1">{item.title}</h3>
+                          <p className="text-sm text-gray-600">{item.desc}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Today's Schedule + Quick Actions Row */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {/* Schedule */}
+                  <div className="lg:col-span-2">
+                    <div className="bg-white border border-gray-200 rounded-2xl p-8">
+                      <div className="flex items-center justify-between mb-6">
+                        <div>
+                          <h2 className="text-2xl font-extrabold text-gray-900">Today's Schedule</h2>
+                          <p className="text-sm text-gray-500 mt-1">Upcoming training sessions</p>
+                        </div>
+                        <Calendar className="text-emerald-600" size={28} />
+                      </div>
+
+                      <div className="space-y-4">
+                        {(data?.today_schedule ?? []).map((item: any, idx: number) => (
+                          <div key={idx} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-emerald-50 transition-colors">
+                            <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center text-white font-bold text-sm">
+                              {item.time}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-bold text-gray-900">{item.title}</p>
+                              <p className="text-sm text-gray-500">{item.venue}</p>
+                            </div>
+                            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 rounded-lg">View</Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className="bg-white border border-gray-200 rounded-2xl p-8">
+                    <div className="flex items-center gap-2 mb-6">
+                      <Sparkles className="text-emerald-600" size={24} />
+                      <h2 className="text-2xl font-extrabold text-gray-900">Quick Actions</h2>
+                    </div>
+
+                    <div className="space-y-3">
+                      {["Register Student", "Schedule Training", "Issue Certificate", "Generate Report"].map((action, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleQuickAction(action)}
+                          className="w-full flex items-center justify-between px-4 py-3 rounded-xl font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all group"
+                        >
+                          <span>{action}</span>
+                          <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                        </button>
                       ))}
                     </div>
-                  </div>
 
-                  <div className="col-12 col-lg-7">
-                    <div className="a2r-card p-3 p-md-4 h-100">
-                      <div className="fw-extrabold">Recent Activities</div>
-                      <div className="small a2r-muted">Frontend timeline + status patterns</div>
-                      <div className="mt-3 d-flex flex-column gap-2">
-                        {(data?.recent_activity ?? []).map((a: any, i: number) => (
-                          <div key={i} className="d-flex gap-3 align-items-start">
-                            <div className="rounded-circle" style={{ width: 34, height: 34, background: "rgba(22,163,74,.10)", display: "flex", alignItems: "center", justifyContent: "center", color: secondary, fontWeight: 900 }}>✓</div>
-                            <div>
-                              <div className="fw-semibold">{a.who} <span className="text-muted fw-normal">{a.action}</span></div>
-                              <div className="small a2r-muted">{a.meta}</div>
-                            </div>
-                          </div>
-                        ))}
-                        {loading && (
-                          <>
-                            {Array.from({ length: 3 }).map((_, i) => (
-                              <div key={i} className="d-flex gap-3 align-items-start">
-                                <div className="a2r-skeleton rounded-circle" style={{ width: 34, height: 34 }} />
-                                <div className="flex-grow-1">
-                                  <div className="a2r-skeleton" style={{ height: 14, width: "65%", borderRadius: 10 }} />
-                                  <div className="a2r-skeleton mt-2" style={{ height: 12, width: "42%", borderRadius: 10 }} />
-                                </div>
-                              </div>
-                            ))}
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="col-12 col-lg-5">
-                    <div className="a2r-card p-3 p-md-4 h-100">
-                      <div className="fw-extrabold">Quick Actions</div>
-                      <div className="small a2r-muted">Register, schedule, issue certificate, generate report</div>
-
-                      <div className="mt-3 d-flex flex-column gap-2">
-                        {["Register Student", "Schedule Training", "Issue Certificate", "Generate Report"].map((t) => (
-                          <button
-                            key={t}
-                            type="button"
-                            className="btn btn-outline-success rounded-3 d-flex align-items-center justify-content-between"
-                            onClick={() => {
-                              const el = document.getElementById("a2r-action-toast");
-                              if (el) {
-                                el.textContent = `${t} (UI only)`;
-                                el.setAttribute("data-show", "true");
-                                setTimeout(() => el.setAttribute("data-show", "false"), 2200);
-                              }
-                            }}
-                          >
-                            <span className="fw-semibold">{t}</span>
-                            <span style={{ color: primary }}>→</span>
-                          </button>
-                        ))}
-                      </div>
-
-                      <div className="mt-3">
-                        <div className="fw-extrabold">Revenue</div>
-                        <div className="small a2r-muted">UI-only money widget</div>
-                        <div className="fw-extrabold" style={{ fontSize: 34, marginTop: 6, color: primary }}>
-                          {loading ? "—" : formatMoney(data?.revenue)}
+                    {/* Revenue Widget */}
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                      <p className="text-xs text-gray-500 uppercase tracking-wide font-bold mb-2">Revenue</p>
+                      <h3 className="text-3xl font-extrabold text-emerald-600">{loading ? "—" : "$1.28M"}</h3>
+                      <div className="flex gap-2 mt-3">
+                        <div className="flex-1 bg-orange-50 rounded-lg p-2 text-center">
+                          <p className="text-xs text-gray-600">Pending</p>
+                          <p className="font-bold text-orange-600">38</p>
                         </div>
-                        <div className="mt-2 d-flex gap-2 flex-wrap">
-                          <span className="badge bg-warning-subtle text-warning border border-warning-subtle">Pending: {loading ? "—" : data?.pending_payments}</span>
-                          <span className="badge bg-success-subtle text-success border border-success-subtle">Upcoming: {loading ? "—" : data?.upcoming_classes}</span>
+                        <div className="flex-1 bg-emerald-50 rounded-lg p-2 text-center">
+                          <p className="text-xs text-gray-600">Upcoming</p>
+                          <p className="font-bold text-emerald-600">12</p>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              )}
 
-              {activeSection === "certification" && (
-                <div className="a2r-card p-3 p-md-4">
-                  <div className="d-flex align-items-center justify-content-between gap-3 flex-wrap mb-3">
+                {/* CRUD Operations */}
+                <div className="bg-white border border-gray-200 rounded-2xl p-8">
+                  <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
                     <div>
-                      <div className="fw-extrabold">Certification Program</div>
-                      <div className="small a2r-muted">Tabs + responsive cards + tables (UI-only)</div>
+                      <h2 className="text-2xl font-extrabold text-gray-900">Operations Center</h2>
+                      <p className="text-sm text-gray-500 mt-1">Add, edit, update, and delete students and training sessions directly from here.</p>
                     </div>
-                    <div className="d-flex gap-2">
-                      <Button variant="outline" className="rounded-3" size="sm">Enroll</Button>
-                      <Button className="rounded-3" size="sm" style={{ background: primary, borderColor: primary }}>Compare Levels</Button>
+                    <div className="flex flex-wrap gap-2">
+                      <Button onClick={() => openCrudModal("student", "add")} className="bg-emerald-600 hover:bg-emerald-700 rounded-xl">
+                        Add Student
+                      </Button>
+                      <Button onClick={() => openCrudModal("session", "add")} variant="outline" className="rounded-xl">
+                        Add Session
+                      </Button>
                     </div>
                   </div>
 
-                  <ul className="nav nav-pills flex-wrap gap-2" role="tablist">
-                    {(
-                      [
-                        { id: "overview", label: "Overview" },
-                        { id: "levels", label: "Certification Levels" },
-                        { id: "modules", label: "Training Modules" },
-                        { id: "specialist", label: "Specialist Certifications" },
-                        { id: "development", label: "Professional Development" },
-                        { id: "fees", label: "Fee Structure" },
-                      ] as const
-                    ).map((t) => (
-                      <li key={t.id} className="nav-item" role="presentation">
-                        <button
-                          className={`nav-link rounded-pill ${certTab === t.id ? "active" : ""}`}
-                          onClick={() => setCertTab(t.id)}
-                          type="button"
-                        >
-                          {t.label}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="mt-4">
-                    {certTab === "overview" && (
-                      <div className="row g-3">
-                        <div className="col-12 col-lg-8">
-                          <div className="a2r-card p-3 p-md-4">
-                            <div className="fw-extrabold" style={{ fontSize: 18 }}>Certified, Verified, Enterprise-ready</div>
-                            <div className="small a2r-muted mt-2">A complete LMS + certification CMS UI shell. Backend wiring can be added later.</div>
-
-                            <div className="row g-3 mt-3">
-                              {[{ t: "Learning", d: "Courses, modules, assignments" },{ t: "Assessments", d: "Quizzes, practical checks" },{ t: "Certificates", d: "Digital issuance + verification" },{ t: "Payments", d: "Packages, scholarships, records" }].map((x) => (
-                                <div key={x.t} className="col-12 col-md-6">
-                                  <div className="a2r-card p-3">
-                                    <div className="fw-extrabold">{x.t}</div>
-                                    <div className="small a2r-muted mt-1">{x.d}</div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-
-                            <div className="mt-3 d-flex flex-wrap gap-2">
-                              {["Export PDF", "Export Excel", "Print", "Pagination", "Responsive tables"].map((b) => (
-                                <span key={b} className="badge bg-success-subtle text-success border border-success-subtle">{b}</span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="col-12 col-lg-4">
-                          <div className="a2r-card p-3 p-md-4">
-                            <div className="fw-extrabold">Your status</div>
-                            <div className="small a2r-muted">UI-only verification snapshot</div>
-                            <div className="mt-3">
-                              <div className="fw-extrabold" style={{ fontSize: 28, color: primary }}>{loading ? "—" : "Gold"}</div>
-                              <div className="small a2r-muted">Next step: Complete Specialist module</div>
-                            </div>
-                            <div className="mt-3 progress" style={{ height: 12, borderRadius: 999, background: "rgba(2,6,23,.06)" }}>
-                              <div className="progress-bar" style={{ width: loading ? "25%" : "64%", background: primary }} />
-                            </div>
-                            <div className="mt-3 d-flex gap-2 flex-wrap">
-                              <span className="badge" style={{ background: "rgba(234,179,8,.14)", border: "1px solid rgba(234,179,8,.25)" }}>Fee pending: UI</span>
-                              <span className="badge bg-success-subtle text-success border border-success-subtle">Verified tasks</span>
-                            </div>
-                          </div>
-                        </div>
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                    <div className="rounded-2xl border border-gray-200 p-5 bg-gray-50">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-bold text-gray-900">Students</h3>
+                        <span className="text-sm text-gray-500">{students.length} records</span>
                       </div>
-                    )}
-
-                    {certTab === "levels" && (
-                      <div className="row g-3">
-                        {[
-                          { name: "Level 1", title: "Certified Agri2rist Host", desc: "Start your verification journey.", price: "$99", tone: "bg-white" },
-                          { name: "Level 2", title: "Silver Verified Host", desc: "Stronger safety, deeper module depth.", price: "$199", tone: "bg-success-subtle" },
-                          { name: "Level 3", title: "Gold Verified Host", desc: "Enterprise-ready operations & training.", price: "$399", tone: "bg-warning-subtle" },
-                          { name: "Level 4", title: "Platinum Verified Host", desc: "Advanced assessments and reporting.", price: "$699", tone: "bg-primary-subtle" },
-                          { name: "Level 5", title: "Master Agri2rist Host", desc: "Highest tier: specialist + governance.", price: "$1299", tone: "bg-success-subtle" },
-                        ].map((lvl) => (
-                          <div key={lvl.name} className="col-12 col-md-6 col-lg-4">
-                            <div className="a2r-card p-3 h-100">
-                              <div className="d-flex align-items-start justify-content-between gap-3">
-                                <div>
-                                  <div className="badge bg-success-subtle text-success border border-success-subtle">{lvl.name}</div>
-                                  <div className="fw-extrabold mt-2">{lvl.title}</div>
-                                  <div className="small a2r-muted mt-2">{lvl.desc}</div>
-                                </div>
-                                <div className="text-end">
-                                  <div className="fw-extrabold" style={{ color: primary, fontSize: 26 }}>{lvl.price}</div>
-                                  <div className="small a2r-muted">per program</div>
-                                </div>
-                              </div>
-
-                              <div className="mt-3 d-flex flex-wrap gap-2">
-                                {["Requirements", "Duration", "Modules"].map((x) => (
-                                  <span key={x} className="badge bg-white border">{x}</span>
-                                ))}
-                              </div>
-
-                              <div className="mt-3 d-flex gap-2">
-                                <Button className="rounded-3" style={{ background: primary, borderColor: primary, flex: 1 }}>Enroll</Button>
-                                <Button variant="outline" className="rounded-3" style={{ flex: 1 }}>View</Button>
-                              </div>
+                      <div className="space-y-3">
+                        {students.map((student) => (
+                          <div key={student.id} className="flex items-center justify-between rounded-xl bg-white border border-gray-200 p-4">
+                            <div>
+                              <p className="font-semibold text-gray-900">{student.name}</p>
+                              <p className="text-sm text-gray-500">{student.course}</p>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" className="rounded-lg" onClick={() => openCrudModal("student", "edit", student)}>
+                                Edit
+                              </Button>
+                              <Button size="sm" variant="outline" className="rounded-lg border-red-200 text-red-600 hover:bg-red-50" onClick={() => handleCrudDelete("student", student.id)}>
+                                Delete
+                              </Button>
                             </div>
                           </div>
                         ))}
                       </div>
-                    )}
+                    </div>
 
-                    {certTab === "modules" && (
-                      <div>
-                        <div className="row g-3">
-                          {["Foundation", "Hospitality", "Agricultural Experience", "Business", "Digital Skills", "Food Safety", "Environmental Management", "Legal Compliance", "Emergency Preparedness"].map((cat) => (
-                            <div key={cat} className="col-12 col-md-6">
-                              <div className="a2r-card p-3">
-                                <div className="d-flex align-items-center justify-content-between">
-                                  <div className="fw-extrabold">{cat}</div>
-                                  <button type="button" className="btn btn-outline-success rounded-pill btn-sm" data-bs-toggle="collapse" data-bs-target={`#col_${cat.replace(/\s/g, "_")}`}>Expand</button>
-                                </div>
-                                <div className="collapse mt-3 show" id={`col_${cat.replace(/\s/g, "_")}`}>
-                                  <div className="row g-3">
-                                    {[1, 2, 3].map((n) => (
-                                      <div key={n} className="col-12">
-                                        <div className="a2r-card p-3">
-                                          <div className="d-flex align-items-start justify-content-between gap-3 flex-wrap">
-                                            <div>
-                                              <div className="fw-extrabold">Module {n}</div>
-                                              <div className="small a2r-muted">{cat} — training workflow</div>
-                                              <div className="small a2r-muted mt-1">Duration: {n * 3 + 2} hours • Cost: ${n * 49 + 99}</div>
-                                            </div>
-                                            <div className="d-flex gap-2">
-                                              <Button size="sm" className="rounded-3" style={{ background: primary, borderColor: primary }}>Enroll</Button>
-                                              <Button size="sm" variant="outline" className="rounded-3">View</Button>
-                                            </div>
-                                          </div>
-                                          <div className="mt-2 d-flex flex-wrap gap-2">
-                                            {["Topics", "Trainer", "Status"].map((b) => (
-                                              <span key={b} className="badge bg-success-subtle text-success border border-success-subtle">{b}</span>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                    <div className="rounded-2xl border border-gray-200 p-5 bg-gray-50">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-bold text-gray-900">Training Sessions</h3>
+                        <span className="text-sm text-gray-500">{sessions.length} records</span>
                       </div>
-                    )}
-
-                    {certTab === "specialist" && (
-                      <div className="row g-3">
-                        {[
-                          "Coffee Tourism","Dairy Tourism","Organic Farming","Beekeeping","Aquaculture","Farm-to-Table","Community Tourism","Eco Tourism","Climate Smart Agriculture","Export Ready Farm","Accessible Tourism","Event Hosting"
-                        ].map((s, idx) => (
-                          <div key={s} className="col-12 col-md-6 col-lg-4">
-                            <div className="a2r-card p-3 h-100">
-                              <div className="d-flex align-items-start justify-content-between gap-3">
-                                <div>
-                                  <div className="badge bg-warning-subtle text-warning border border-warning-subtle">Specialist</div>
-                                  <div className="fw-extrabold mt-2">{s}</div>
-                                  <div className="small a2r-muted mt-2">Duration: {idx % 3 === 0 ? "2 weeks" : "3 weeks"} • Price: ${149 + idx * 12}</div>
-                                </div>
-                                <div className="rounded-4" style={{ width: 54, height: 54, background: "linear-gradient(135deg, rgba(22,163,74,.18), rgba(234,179,8,.22))" }} />
-                              </div>
-                              <div className="mt-3 d-flex gap-2">
-                                <Button size="sm" className="rounded-3" style={{ background: primary, borderColor: primary, flex: 1 }}>Enroll</Button>
-                                <Button size="sm" variant="outline" className="rounded-3" style={{ flex: 1 }}>Learn More</Button>
-                              </div>
+                      <div className="space-y-3">
+                        {sessions.map((session) => (
+                          <div key={session.id} className="flex items-center justify-between rounded-xl bg-white border border-gray-200 p-4">
+                            <div>
+                              <p className="font-semibold text-gray-900">{session.title}</p>
+                              <p className="text-sm text-gray-500">{session.time} • {session.venue}</p>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" className="rounded-lg" onClick={() => openCrudModal("session", "edit", session)}>
+                                Edit
+                              </Button>
+                              <Button size="sm" variant="outline" className="rounded-lg border-red-200 text-red-600 hover:bg-red-50" onClick={() => handleCrudDelete("session", session.id)}>
+                                Delete
+                              </Button>
                             </div>
                           </div>
                         ))}
                       </div>
-                    )}
-
-                    {certTab === "development" && (
-                      <div className="row g-3">
-                        {["Leadership","Technology","Business","Agriculture","Artificial Intelligence","Smart Farming","IoT","Drone Technology","Blockchain","Data Analytics"].map((g) => (
-                          <div key={g} className="col-12 col-md-6">
-                            <div className="a2r-card p-3">
-                              <div className="d-flex align-items-center justify-content-between gap-2">
-                                <div className="fw-extrabold">{g}</div>
-                                <span className="badge bg-success-subtle text-success border border-success-subtle">Professional Development</span>
-                              </div>
-                              <div className="small a2r-muted mt-2">UI-only expandable group</div>
-                              <div className="mt-3 d-flex flex-column gap-2">
-                                {["Course A", "Course B", "Course C"].map((c) => (
-                                  <div key={c} className="d-flex align-items-center justify-content-between gap-3 a2r-card p-2" style={{ boxShadow: "none" }}>
-                                    <div>
-                                      <div className="fw-semibold">{c}</div>
-                                      <div className="small a2r-muted">2–4 hours • Self-paced</div>
-                                    </div>
-                                    <Button size="sm" className="rounded-3" style={{ background: primary, borderColor: primary }}>View</Button>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {certTab === "fees" && (
-                      <div>
-                        <div className="d-flex align-items-end justify-content-between gap-3 flex-wrap mb-3">
-                          <div>
-                            <div className="fw-extrabold">Fee Structure</div>
-                            <div className="small a2r-muted">Training fees, assessment fees, packages, additional services</div>
-                          </div>
-                          <div className="d-flex gap-2">
-                            <Button variant="outline" className="rounded-3">Registration</Button>
-                            <Button variant="outline" className="rounded-3">Learning Materials</Button>
-                          </div>
-                        </div>
-
-                        <div className="row g-3">
-                          {[
-                            { plan: "Bronze", price: "$199", features: ["1 training", "Email support", "Basic reporting"] },
-                            { plan: "Silver", price: "$399", features: ["2 trainings", "Priority grading", "Progress tracking"] },
-                            { plan: "Gold", price: "$699", features: ["3 trainings", "Assessments", "Certificate package"] },
-                            { plan: "Platinum", price: "$999", features: ["4 trainings", "Practical assessments", "Verification support"] },
-                            { plan: "Master", price: "$1299", features: ["Unlimited modules", "Governance reporting", "Advanced verification"] },
-                          ].map((p) => (
-                            <div key={p.plan} className="col-12 col-md-6 col-lg-4">
-                              <div className="a2r-card p-3 h-100">
-                                <div className="d-flex align-items-center justify-content-between">
-                                  <div className="fw-extrabold">{p.plan}</div>
-                                  <span className="badge bg-success-subtle text-success border border-success-subtle">Package</span>
-                                </div>
-                                <div className="fw-extrabold" style={{ fontSize: 34, color: primary, marginTop: 8 }}>{p.price}</div>
-                                <div className="small a2r-muted">per cohort</div>
-                                <div className="mt-3 d-flex flex-column gap-2">
-                                  {p.features.map((f) => (
-                                    <div key={f} className="small d-flex gap-2 align-items-start">
-                                      <span style={{ color: primary, fontWeight: 900 }}>✓</span>
-                                      <span className="a2r-muted">{f}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                                <div className="mt-3 d-flex gap-2">
-                                  <Button size="sm" className="rounded-3" style={{ background: primary, borderColor: primary, flex: 1 }}>Enroll</Button>
-                                  <Button size="sm" variant="outline" className="rounded-3" style={{ flex: 1 }}>Compare</Button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="a2r-card p-3 mt-3">
-                          <div className="fw-extrabold">Training Fees Table (UI preview)</div>
-                          <div className="table-responsive mt-3">
-                            <table className="table a2r-table mb-0">
-                              <thead>
-                                <tr>
-                                  <th>Module</th>
-                                  <th>Duration</th>
-                                  <th>Cost</th>
-                                  <th>Action</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                  <tr key={i}>
-                                    <td className="fw-semibold">Module {i}</td>
-                                    <td className="text-muted">{i % 2 === 0 ? "2 weeks" : "3 weeks"}</td>
-                                    <td className="fw-extrabold" style={{ color: primary }}>${199 + i * 87}</td>
-                                    <td>
-                                      <Button size="sm" className="rounded-3" style={{ background: primary, borderColor: primary }}>View</Button>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                          <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
-                            <div className="small a2r-muted">Pagination UI</div>
-                            <div className="d-flex gap-2">
-                              <Button size="sm" variant="outline" className="rounded-3">Prev</Button>
-                              <Button size="sm" variant="outline" className="rounded-3">1</Button>
-                              <Button size="sm" variant="outline" className="rounded-3">2</Button>
-                              <Button size="sm" variant="outline" className="rounded-3">Next</Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                    </div>
                   </div>
                 </div>
-              )}
 
-              {activeSection !== "dashboard" && activeSection !== "certification" && (
-                <div className="a2r-card p-3 p-md-4">
-                  <div className="fw-extrabold">{pageTitle(activeSection)}</div>
-                  <div className="small a2r-muted mt-2">This UI shell is ready; module-by-module pages can be generated next.</div>
-                  <div className="mt-3 d-flex flex-wrap gap-2">
-                    {["Responsive table", "Search", "Filters", "Export Excel", "Export PDF", "Pagination", "Empty state", "Confirm dialog"].map((b) => (
-                      <span key={b} className="badge bg-success-subtle text-success border border-success-subtle">{b}</span>
+                {/* Recent Activities */}
+                <div className="bg-white border border-gray-200 rounded-2xl p-8">
+                  <h2 className="text-2xl font-extrabold text-gray-900 mb-6">Recent Activities</h2>
+
+                  <div className="space-y-4">
+                    {(data?.recent_activity ?? []).map((activity: any, idx: number) => (
+                      <div key={idx} className="flex items-start gap-4 pb-4 border-b border-gray-100 last:border-0">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                          ✓
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-bold text-gray-900">{activity.who} <span className="font-normal text-gray-600">{activity.action}</span></p>
+                          <p className="text-sm text-gray-500 mt-1">{activity.meta}</p>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              <div id="a2r-action-toast" data-show="false" style={{ position: "fixed", left: "50%", transform: "translateX(-50%)", bottom: 18, zIndex: 90, background: "rgba(22,163,74,.92)", color: "#fff", padding: "10px 14px", borderRadius: 999, opacity: 0, pointerEvents: "none", transition: "opacity 200ms ease" }} />
-              <style>{`#a2r-action-toast[data-show="true"]{opacity:1;}`}</style>
-            </section>
+            {crudPanelOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                <div className="w-full max-w-xl rounded-3xl bg-white p-6 shadow-2xl">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-xl font-extrabold text-gray-900">
+                        {crudMode === "add" ? `Add ${crudType === "student" ? "Student" : "Session"}` : `Edit ${crudType === "student" ? "Student" : "Session"}`}
+                      </h3>
+                      <p className="text-sm text-gray-500 mt-1">Changes update instantly on the dashboard.</p>
+                    </div>
+                    <button onClick={closeCrudModal} className="rounded-full p-2 text-gray-500 hover:bg-gray-100">✕</button>
+                  </div>
+
+                  {crudType === "student" ? (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="mb-2 block text-sm font-semibold text-gray-700">Full Name</label>
+                        <Input value={studentForm.name} onChange={(e) => setStudentForm({ ...studentForm, name: e.target.value })} className="rounded-xl" />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm font-semibold text-gray-700">Email</label>
+                        <Input type="email" value={studentForm.email} onChange={(e) => setStudentForm({ ...studentForm, email: e.target.value })} className="rounded-xl" />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm font-semibold text-gray-700">Course</label>
+                        <Input value={studentForm.course} onChange={(e) => setStudentForm({ ...studentForm, course: e.target.value })} className="rounded-xl" />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm font-semibold text-gray-700">Status</label>
+                        <select value={studentForm.status} onChange={(e) => setStudentForm({ ...studentForm, status: e.target.value })} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700">
+                          <option value="Active">Active</option>
+                          <option value="Enrolled">Enrolled</option>
+                          <option value="Pending">Pending</option>
+                        </select>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="mb-2 block text-sm font-semibold text-gray-700">Time</label>
+                        <Input value={sessionForm.time} onChange={(e) => setSessionForm({ ...sessionForm, time: e.target.value })} className="rounded-xl" />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm font-semibold text-gray-700">Title</label>
+                        <Input value={sessionForm.title} onChange={(e) => setSessionForm({ ...sessionForm, title: e.target.value })} className="rounded-xl" />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-sm font-semibold text-gray-700">Venue</label>
+                        <Input value={sessionForm.venue} onChange={(e) => setSessionForm({ ...sessionForm, venue: e.target.value })} className="rounded-xl" />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="mt-8 flex justify-end gap-3">
+                    <Button variant="outline" className="rounded-xl" onClick={closeCrudModal}>Cancel</Button>
+                    <Button className="rounded-xl bg-emerald-600 hover:bg-emerald-700" onClick={handleCrudSave}>
+                      {crudMode === "edit" ? "Update" : "Add"}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Placeholder for other sections */}
+            {activeSection !== "dashboard" && (
+              <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center">
+                <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  {sections.find(s => s.key === activeSection)?.icon && 
+                    (() => {
+                      const Icon = sections.find(s => s.key === activeSection)!.icon;
+                      return <Icon size={32} className="text-gray-400" />;
+                    })()
+                  }
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">{sections.find(s => s.key === activeSection)?.label}</h2>
+                <p className="text-gray-600 mb-6">This section is ready for implementation. Click below to view the dedicated page.</p>
+                <Button 
+                  onClick={() => navigate(`/verified-host/${activeSection}`)}
+                  className="bg-emerald-600 hover:bg-emerald-700 rounded-xl"
+                >
+                  Go to {sections.find(s => s.key === activeSection)?.label}
+                  <ArrowRight size={18} className="ml-2" />
+                </Button>
+              </div>
+            )}
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
 }
-
-function formatNumber(n: number) {
-  if (!Number.isFinite(n)) return "0";
-  return n.toLocaleString();
-}
-function formatMoney(n: number) {
-  if (!Number.isFinite(n)) return "$0";
-  return "$" + n.toLocaleString();
-}
-
-function pageTitle(section: any) {
-  switch (section) {
-    case "dashboard": return "Dashboard";
-    case "certification": return "Certification Program";
-    case "students": return "Students";
-    case "trainers": return "Trainers";
-    case "schedule": return "Training Schedule";
-    case "assessments": return "Assessments";
-    case "certificates": return "Certificates";
-    case "payments": return "Payments";
-    case "resources": return "Learning Resources";
-    case "reports": return "Reports";
-    case "administration": return "Administration";
-    case "settings": return "Settings";
-    default: return "Verified Host";
-  }
-}
-
-function sectionLabel(section: any) {
-  return pageTitle(section);
-}
-
-function useMemoLikeGlobalSearch(q: string) {
-  return [
-    "Students: Hassan K.",
-    "Courses: Food Safety Practicals",
-    "Modules: Emergency Preparedness",
-    "Certificates: Gold Verified Host",
-    "Payments: Pending Course Fees",
-    "Trainers: Aiman Rahman",
-  ].filter((x) => (q || "").trim().length >= 2 ? x.toLowerCase().includes(q.toLowerCase().trim()) : false);
-}
-

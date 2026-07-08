@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { BookOpen, ClipboardList, GraduationCap, Home, Users } from "lucide-react";
+import { BookOpen, ClipboardList, GraduationCap, Home, ShieldCheck, Users, CalendarPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const NAV_ITEMS = [
@@ -7,6 +7,8 @@ const NAV_ITEMS = [
   { path: "certification-levels", label: "Certification Program", icon: GraduationCap },
   { path: "training-modules", label: "Training Modules", icon: ClipboardList },
   { path: "students", label: "Students", icon: Users },
+  { path: "manage-certifications", label: "Manage Certifications", icon: ShieldCheck },
+  { path: "new-cohort", label: "New Cohort", icon: CalendarPlus },
 ];
 
 export default function VerifiedHostShell() {
@@ -20,8 +22,15 @@ export default function VerifiedHostShell() {
             <p className="mt-2 max-w-2xl text-sm text-primary-foreground/80">Enterprise host management, certification, learning, and operational reporting in one polished portal.</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button variant="secondary">Host Application</Button>
-            <Button variant="outline">Support</Button>
+            <Button asChild variant="secondary" className="rounded-2xl">
+              <NavLink to="/">Home</NavLink>
+            </Button>
+            <Button asChild variant="secondary" className="rounded-2xl">
+              <NavLink to="host-application">Host Application</NavLink>
+            </Button>
+            <Button asChild variant="outline" className="rounded-2xl">
+              <NavLink to="support">Support</NavLink>
+            </Button>
           </div>
         </div>
       </div>
@@ -63,8 +72,12 @@ export default function VerifiedHostShell() {
               <h2 className="text-xl font-bold text-foreground">Welcome back, host partner.</h2>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button variant="secondary">Manage certifications</Button>
-              <Button variant="outline">New cohort</Button>
+              <Button asChild variant="secondary" className="rounded-2xl">
+                <NavLink to="host-application">Manage certifications</NavLink>
+              </Button>
+              <Button asChild variant="outline" className="rounded-2xl">
+                <NavLink to="new-cohort">New cohort</NavLink>
+              </Button>
             </div>
           </div>
 

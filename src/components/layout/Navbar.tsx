@@ -84,15 +84,15 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 flex-shrink-0">
-            <span className="h-10 w-10 overflow-hidden rounded-full bg-primary-foreground md:h-12 md:w-12">
+            <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-secondary/90 ring-1 ring-secondary/60 md:h-14 md:w-14">
               <img
-                src={FARM_IMAGES.logo}
+                src="/assets/Logo.png"
                 alt="Agri2rist Hub"
-                width={48}
-                height={48}
+                width={56}
+                height={56}
                 loading="eager"
                 decoding="async"
-                className="h-full w-full scale-125 object-cover"
+                className="h-full w-full object-contain"
               />
             </span>
             <div className="hidden sm:block">
@@ -343,6 +343,7 @@ export function Navbar() {
         </div>
       )}
     </nav>
+
     <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} />
   </>
   );

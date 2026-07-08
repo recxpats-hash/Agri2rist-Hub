@@ -1,17 +1,15 @@
 import { useState, useMemo } from "react";
-import { Link, useNavigate, useSearchParams, useParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
-  ArrowRight, ArrowLeft, BadgeCheck, BookOpen, Box, ChartNoAxesCombined,
-  Check, ChevronRight, Download, GraduationCap, Image as ImageIcon,
-  Map as MapIcon, MessageCircle, PlayCircle, Rocket, Search, ShoppingCart,
-  Sparkles, Star, TrendingUp, Users, Wrench, X, CreditCard, Smartphone,
-  Tag, Lock, Zap, Globe, FileText, Camera,
+  ArrowRight, ArrowLeft, BadgeCheck, Check, ChevronRight, Download, 
+  GraduationCap, MessageCircle, Rocket, Search, ShoppingCart,
+  Sparkles, Star, TrendingUp, X, CreditCard, Smartphone,
+  Tag, Lock, Zap, Globe, FileText, Camera, ChartNoAxesCombined, Box, MapIcon,
 } from "lucide-react";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
@@ -35,7 +33,6 @@ interface DigitalProduct {
   category: string;
   rating: number;
   reviews: number;
-  previewImg?: string;
 }
 
 // ── Tone styles ───────────────────────────────────────────────────────────────
@@ -134,7 +131,6 @@ const PRODUCTS: DigitalProduct[] = [
   },
 ];
 
-// ── Category chips ────────────────────────────────────────────────────────────
 const CATEGORIES = ["All", "Downloads", "Analytics", "AI Services", "Certification", "Marketing", "GIS & Maps", "Learning", "Software", "Photography"];
 
 // ── Payment Modal ─────────────────────────────────────────────────────────────
@@ -160,11 +156,10 @@ function PaymentModal({
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-md rounded-2xl p-0 overflow-hidden">
-        {/* Header */}
         <div className="bg-primary px-5 py-4 flex items-center justify-between">
           <div>
-            <p className="text-xs text-primary-foreground/70 font-medium uppercase tracking-wide">Agri2rist Hub</p>
-            <h3 className="text-primary-foreground font-extrabold text-lg leading-tight">{label}</h3>
+            <p className="text-xs text-primary-foreground/70 font-bold uppercase tracking-wide">Agri2rist Hub</p>
+            <h3 className="text-primary-foreground font-extrabold text-lg">{label}</h3>
           </div>
           <button onClick={handleClose} className="text-primary-foreground/70 hover:text-primary-foreground">
             <X size={20} />
@@ -185,8 +180,8 @@ function PaymentModal({
               </div>
 
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span className="font-semibold">UGX {price.toLocaleString()}</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Service fee (3.5%)</span><span className="font-semibold">UGX {fee.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span className="font-bold">UGX {price.toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Service fee (3.5%)</span><span className="font-bold">UGX {fee.toLocaleString()}</span></div>
                 <Separator />
                 <div className="flex justify-between text-base font-extrabold"><span>Total</span><span className="text-primary">UGX {total.toLocaleString()}</span></div>
               </div>
@@ -194,13 +189,13 @@ function PaymentModal({
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setMethod("mobile")}
-                  className={`flex flex-col items-center gap-2 rounded-xl border p-3 transition text-sm font-semibold ${method === "mobile" ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}
+                  className={`flex flex-col items-center gap-2 rounded-xl border p-3 transition text-sm font-bold ${method === "mobile" ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}
                 >
                   <Smartphone size={20} /> Mobile Money
                 </button>
                 <button
                   onClick={() => setMethod("card")}
-                  className={`flex flex-col items-center gap-2 rounded-xl border p-3 transition text-sm font-semibold ${method === "card" ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}
+                  className={`flex flex-col items-center gap-2 rounded-xl border p-3 transition text-sm font-bold ${method === "card" ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/50"}`}
                 >
                   <CreditCard size={20} /> Card
                 </button>
@@ -216,17 +211,17 @@ function PaymentModal({
             <>
               <p className="text-sm text-muted-foreground">Enter your MTN or Airtel Money number to receive a payment prompt.</p>
               <div>
-                <label className="text-xs font-semibold text-foreground block mb-1">Mobile Money Number</label>
+                <label className="text-xs font-bold text-foreground block mb-2">Mobile Money Number</label>
                 <Input placeholder="+256 7XX XXX XXX" value={phone} onChange={e => setPhone(e.target.value)} className="h-11 rounded-xl" />
               </div>
               <div className="rounded-xl bg-amber-50 border border-amber-200 p-3 text-xs text-amber-700 flex gap-2">
                 <Lock size={13} className="flex-shrink-0 mt-0.5" />
-                Secure payment via Agri2rist escrow. Total: <strong>UGX {total.toLocaleString()}</strong>
+                Secure payment. Total: <strong>UGX {total.toLocaleString()}</strong>
               </div>
               <div className="flex gap-3">
                 <Button variant="outline" className="flex-1 rounded-xl" onClick={() => setStep("details")}>Back</Button>
                 <Button className="flex-1 bg-primary text-primary-foreground rounded-xl font-bold h-11" onClick={() => setStep("done")} disabled={phone.length < 9}>
-                  Pay UGX {total.toLocaleString()}
+                  Pay
                 </Button>
               </div>
             </>
@@ -237,42 +232,42 @@ function PaymentModal({
               <p className="text-sm text-muted-foreground">Enter your Visa or Mastercard details.</p>
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs font-semibold text-foreground block mb-1">Card Number</label>
+                  <label className="text-xs font-bold text-foreground block mb-1.5">Card Number</label>
                   <Input placeholder="1234 5678 9012 3456" value={card.num} onChange={e => setCard(c => ({ ...c, num: e.target.value }))} className="h-11 rounded-xl" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-semibold text-foreground block mb-1">Expiry</label>
+                    <label className="text-xs font-bold text-foreground block mb-1.5">Expiry</label>
                     <Input placeholder="MM / YY" value={card.exp} onChange={e => setCard(c => ({ ...c, exp: e.target.value }))} className="h-11 rounded-xl" />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-foreground block mb-1">CVV</label>
+                    <label className="text-xs font-bold text-foreground block mb-1.5">CVV</label>
                     <Input placeholder="123" value={card.cvv} onChange={e => setCard(c => ({ ...c, cvv: e.target.value }))} className="h-11 rounded-xl" />
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-foreground block mb-1">Cardholder Name</label>
+                  <label className="text-xs font-bold text-foreground block mb-1.5">Cardholder Name</label>
                   <Input placeholder="As on card" value={card.name} onChange={e => setCard(c => ({ ...c, name: e.target.value }))} className="h-11 rounded-xl" />
                 </div>
               </div>
               <div className="flex gap-3">
                 <Button variant="outline" className="flex-1 rounded-xl" onClick={() => setStep("details")}>Back</Button>
                 <Button className="flex-1 bg-primary text-primary-foreground rounded-xl font-bold h-11" onClick={() => setStep("done")} disabled={!card.num || !card.exp || !card.cvv || !card.name}>
-                  Pay UGX {total.toLocaleString()}
+                  Pay
                 </Button>
               </div>
             </>
           )}
 
           {step === "done" && (
-            <div className="py-6 text-center space-y-4">
+            <div className="py-8 text-center space-y-4">
               <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto">
                 <Check size={32} className="text-green-600" />
               </div>
               <div>
-                <h4 className="font-extrabold text-xl text-foreground">Payment Successful!</h4>
+                <h4 className="font-extrabold text-lg text-foreground">Payment Successful!</h4>
                 <p className="text-sm text-muted-foreground mt-1">
-                  <strong>{product.title}</strong> has been added to your account. Check your email for download/access details.
+                  <strong>{product.title}</strong> added to your account. Check your email for access details.
                 </p>
               </div>
               <Button className="w-full bg-primary text-primary-foreground rounded-xl font-bold" onClick={handleClose}>
@@ -286,108 +281,84 @@ function PaymentModal({
   );
 }
 
-// ── Product Card ──────────────────────────────────────────────────────────────
-function ProductCard({ product, onAction }: { product: DigitalProduct; onAction: (p: DigitalProduct, mode: "buy"|"rent") => void }) {
+// ── Custom marketplace solution panel ───────────────────────────────────────
+function MarketplaceSolution({ product, onAction }: { product: DigitalProduct; onAction: (p: DigitalProduct, mode: "buy"|"rent") => void }) {
   const t = TONE[product.tone];
-  return (
-    <div className={`rounded-2xl border bg-card flex flex-col overflow-hidden hover:shadow-lg transition-shadow group ${t.accent}`}>
-      {/* Card top color strip */}
-      <div className={`h-1.5 w-full bg-gradient-to-r ${
-        product.tone === "green" ? "from-emerald-400 to-teal-400" :
-        product.tone === "blue"  ? "from-blue-400 to-indigo-400" :
-        product.tone === "purple"? "from-indigo-400 to-purple-400" :
-        product.tone === "gold"  ? "from-amber-400 to-yellow-400" :
-        product.tone === "orange"? "from-orange-400 to-red-400" :
-        product.tone === "teal"  ? "from-teal-400 to-cyan-400" :
-        "from-rose-400 to-pink-400"
-      }`} />
 
-      <div className="p-5 flex-1 flex flex-col gap-3">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-2">
-          <div className={`w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 ${t.icon}`}>
+  return (
+    <article className="rounded-[28px] border border-border/70 bg-background/90 p-6 shadow-sm transition-all duration-300 hover:border-primary/40 hover:shadow-lg">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex gap-4">
+          <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${t.icon}`}>
             {product.icon}
           </div>
-          <Badge className={`${t.badge} border text-[11px] font-bold flex-shrink-0`}>{product.tier}</Badge>
-        </div>
-
-        {/* Title & subtitle */}
-        <div>
-          <h3 className="font-extrabold text-foreground leading-snug">{product.title}</h3>
-          <p className="text-xs text-muted-foreground mt-1">{product.subtitle}</p>
-        </div>
-
-        {/* Description */}
-        <p className="text-sm text-muted-foreground line-clamp-2 flex-1">{product.description}</p>
-
-        {/* Features */}
-        <ul className="space-y-1.5">
-          {product.features.slice(0, 4).map(f => (
-            <li key={f} className="flex items-start gap-2 text-xs text-foreground/80">
-              <Check size={12} className="mt-0.5 text-green-500 flex-shrink-0" />
-              {f}
-            </li>
-          ))}
-          {product.features.length > 4 && (
-            <li className="text-xs text-muted-foreground pl-5">+{product.features.length - 4} more features</li>
-          )}
-        </ul>
-
-        {/* Rating */}
-        <div className="flex items-center gap-1.5 text-xs">
-          {[1,2,3,4,5].map(s => (
-            <Star key={s} size={11} className={s <= Math.round(product.rating) ? "text-amber-400 fill-amber-400" : "text-muted-foreground"} />
-          ))}
-          <span className="font-semibold text-foreground">{product.rating}</span>
-          <span className="text-muted-foreground">({product.reviews} reviews)</span>
-        </div>
-
-        <Separator />
-
-        {/* Pricing & CTAs */}
-        <div className="space-y-2">
-          {(product.license === "buy" || product.license === "both") && (
-            <div className="flex items-center justify-between gap-2">
-              <div>
-                <span className="text-xs text-muted-foreground flex items-center gap-1"><Tag size={11}/> Buy once</span>
-                <span className="font-extrabold text-primary text-lg">UGX {product.buyPrice?.toLocaleString()}</span>
-              </div>
-              <Button
-                size="sm"
-                className="bg-primary text-primary-foreground rounded-xl px-4 hover:bg-primary/90"
-                onClick={() => onAction(product, "buy")}
-              >
-                <ShoppingCart size={14} className="mr-1.5" /> Buy Now
-              </Button>
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge className={`${t.badge} border text-[10px] font-bold`}>{product.tier}</Badge>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">{product.category}</span>
             </div>
+            <div>
+              <h3 className="text-xl font-semibold text-foreground">{product.title}</h3>
+              <p className="text-sm text-muted-foreground">{product.subtitle}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2 lg:justify-end">
+          {(product.license === "buy" || product.license === "both") && (
+            <Button
+              variant="outline"
+              className="rounded-xl border-primary/20 text-primary hover:bg-primary/10"
+              onClick={() => onAction(product, "buy")}
+            >
+              Buy • UGX {product.buyPrice?.toLocaleString()}
+            </Button>
           )}
           {(product.license === "rent" || product.license === "both") && (
-            <div className="flex items-center justify-between gap-2">
-              <div>
-                <span className="text-xs text-muted-foreground flex items-center gap-1"><Zap size={11}/> Rent / {product.rentUnit}</span>
-                <span className="font-extrabold text-amber-600 text-lg">UGX {product.rentPrice?.toLocaleString()}</span>
-              </div>
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-amber-500 text-amber-700 hover:bg-amber-50 rounded-xl px-4"
-                onClick={() => onAction(product, "rent")}
-              >
-                <Zap size={14} className="mr-1.5" /> Rent
-              </Button>
-            </div>
+            <Button
+              className="rounded-xl bg-amber-500 text-white hover:bg-amber-600"
+              onClick={() => onAction(product, "rent")}
+            >
+              Rent • UGX {product.rentPrice?.toLocaleString()}/{product.rentUnit}
+            </Button>
           )}
         </div>
       </div>
 
-      {/* Preview link */}
-      <div className="px-5 pb-4">
-        <button className="w-full flex items-center justify-center gap-2 text-xs font-semibold text-muted-foreground hover:text-primary transition py-2 border border-dashed border-border rounded-xl hover:border-primary/40">
-          <Search size={12} /> Preview product details
-          <ChevronRight size={12} />
-        </button>
+      <div className="mt-6 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+        <div className="space-y-4">
+          <p className="text-sm leading-6 text-muted-foreground">{product.description}</p>
+          <div className="flex flex-wrap gap-2">
+            {product.features.slice(0, 4).map((feature) => (
+              <span key={feature} className="rounded-full border border-border bg-muted/60 px-3 py-1 text-xs text-foreground/80">
+                {feature}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border/60 bg-muted/30 p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <Star size={14} className="fill-amber-400 text-amber-400" />
+            {product.rating} · {product.reviews} reviews
+          </div>
+          <div className="mt-4 space-y-3 text-sm text-muted-foreground">
+            <div className="flex items-center justify-between">
+              <span>Delivery</span>
+              <span className="font-semibold text-foreground">Instant</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Support</span>
+              <span className="font-semibold text-foreground">Included</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span>Payment</span>
+              <span className="font-semibold text-foreground">Mobile Money / Card</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </article>
   );
 }
 
@@ -395,31 +366,8 @@ function ProductCard({ product, onAction }: { product: DigitalProduct; onAction:
 export default function DigitalMarketplaceLandingPage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { section } = useParams<{ section?: string }>();
-
-  // Map /digital/:section path segments → category names
-  const SECTION_TO_CATEGORY: Record<string, string> = {
-    downloads: "Downloads", learning: "Learning", software: "Software",
-    "ai": "AI Services", gis: "GIS & Maps", marketing: "Marketing",
-    photography: "Photography", certification: "Certification",
-    analytics: "Analytics", bi: "Analytics", "bi-reports": "Analytics",
-    video: "All", library: "Downloads", consultancy: "All",
-    mobile: "Software", websites: "All", events: "All",
-    apis: "All", translation: "All", advertising: "Marketing",
-    bundles: "All", memberships: "All", subscriptions: "All",
-  };
-
-  const initialCategory = useMemo(() => {
-    // Priority: ?category= query param first, then :section path param
-    const qcat = searchParams.get("category");
-    if (qcat) return decodeURIComponent(qcat);
-    if (section && SECTION_TO_CATEGORY[section]) return SECTION_TO_CATEGORY[section];
-    return "All";
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState(initialCategory);
+  const [activeCategory, setActiveCategory] = useState("All");
   const [payModal, setPayModal] = useState<{ product: DigitalProduct; mode: "buy"|"rent" } | null>(null);
 
   const handleCategoryChange = (cat: string) => {
@@ -443,100 +391,112 @@ export default function DigitalMarketplaceLandingPage() {
 
   return (
     <PageLayout>
-      {/* ── Back nav + breadcrumb ── */}
-      <div className="container mx-auto px-4 pt-5 pb-1 flex items-center gap-3">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition font-medium"
-        >
+      {/* ── Breadcrumb ── */}
+      <div className="container mx-auto px-4 pt-6 pb-3 flex items-center gap-2 text-sm">
+        <button onClick={() => navigate(-1)} className="text-muted-foreground hover:text-foreground transition flex items-center gap-1 font-medium">
           <ArrowLeft size={16} /> Back
         </button>
-        <ChevronRight size={14} className="text-muted-foreground/50" />
-        <Link to="/marketplace" className="text-sm text-muted-foreground hover:text-foreground transition">Marketplace</Link>
-        <ChevronRight size={14} className="text-muted-foreground/50" />
-        <span className="text-sm font-semibold text-foreground">Digital Products & Services</span>
+        <ChevronRight size={14} className="text-muted-foreground/40" />
+        <Link to="/marketplace" className="text-muted-foreground hover:text-foreground transition">Marketplace</Link>
+        <ChevronRight size={14} className="text-muted-foreground/40" />
+        <span className="font-bold text-foreground">Digital Products</span>
       </div>
 
-      {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/90 to-emerald-700">
-        <div className="absolute inset-0 opacity-10" style={{backgroundImage:"radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)", backgroundSize:"40px 40px"}} />
-        <div className="container mx-auto px-4 py-12 md:py-16 relative">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div>
-              <Badge className="bg-secondary text-secondary-foreground border-secondary/30 font-bold mb-4">
-                DIGITAL MARKETPLACE
-              </Badge>
-              <h1 className="text-3xl md:text-5xl font-extrabold text-white leading-tight">
-                Buy, Rent & Access<br />
-                <span className="text-secondary">Digital Farm Tools</span>
-              </h1>
-              <p className="mt-4 text-primary-foreground/85 text-base md:text-lg max-w-xl">
-                Enterprise-grade downloads, AI services, analytics, learning, software and maps — built for African agriculture and agritourism.
-              </p>
+      {/* ── Premium Hero Section ── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-950 via-primary to-emerald-700">
+        <div className="absolute inset-0 opacity-20" style={{backgroundImage:"radial-gradient(circle at 30% 60%, rgba(34,197,94,0.3) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(79,70,229,0.2) 0%, transparent 50%)", backgroundSize:"800px 800px"}} />
 
-              {/* Search */}
-              <div className="mt-6 flex gap-2 max-w-lg">
-                <div className="relative flex-1">
-                  <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50" />
-                  <input
-                    type="text"
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    placeholder="Search products, services, tools…"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/15 border border-white/25 text-white placeholder:text-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/60 backdrop-blur"
-                  />
-                </div>
-                <Button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-xl px-5 font-bold flex-shrink-0">
-                  Search
-                </Button>
+        <div className="container mx-auto px-4 py-16 md:py-20 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left */}
+            <div className="space-y-8 animate-fadeIn">
+              <div>
+                <Badge className="bg-emerald-300/20 text-emerald-200 font-bold mb-4 border-emerald-400/40 px-3 py-1.5">
+                  <Sparkles size={13} className="mr-1.5" /> Enterprise Tools For African Farmers
+                </Badge>
+
+                <h1 className="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+                  Digital Farm<br />
+                  <span className="bg-gradient-to-r from-emerald-300 to-cyan-300 bg-clip-text text-transparent">Solutions</span>
+                </h1>
+
+                <p className="text-emerald-100/90 text-lg max-w-xl leading-relaxed">
+                  Download templates, access AI tools, subscribe to analytics, learn new skills — everything you need to scale your agritourism business.
+                </p>
               </div>
 
               {/* Stats */}
-              <div className="mt-8 flex flex-wrap gap-6">
-                {[{n:"120+",l:"Products"},{n:"9",l:"Categories"},{n:"4.7★",l:"Avg Rating"},{n:"1,200+",l:"Customers"}].map(s=>(
-                  <div key={s.l}>
-                    <div className="text-2xl font-extrabold text-white">{s.n}</div>
-                    <div className="text-xs text-primary-foreground/70">{s.l}</div>
+              <div className="grid grid-cols-3 gap-6 py-4">
+                {[
+                  { num: "120+", label: "Products" },
+                  { num: "4.7★", label: "Avg Rating" },
+                  { num: "1.2K+", label: "Users" },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <div className="text-3xl font-extrabold text-emerald-300">{stat.num}</div>
+                    <div className="text-sm text-emerald-100/70">{stat.label}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Right side feature cards */}
-            <div className="hidden lg:grid grid-cols-2 gap-3">
+            {/* Right */}
+            <div className="space-y-3 animate-slideUp" style={{animationDelay: "0.1s"}}>
               {[
-                { icon: <Download size={18}/>, label:"Instant Downloads",   desc:"PDF, XLSX, apps ready immediately" },
-                { icon: <Zap size={18}/>,      label:"Rent Monthly",         desc:"Subscribe & cancel anytime" },
-                { icon: <Lock size={18}/>,     label:"Secure Payments",      desc:"Mobile Money & card supported" },
-                { icon: <Globe size={18}/>,    label:"Works Offline",        desc:"Download once, use anywhere" },
-                { icon: <MessageCircle size={18}/>, label:"Expert Support",  desc:"Chat & email included" },
-                { icon: <TrendingUp size={18}/>, label:"Live Data",          desc:"Market prices updated daily" },
-              ].map(f=>(
-                <div key={f.label} className="rounded-xl bg-white/10 backdrop-blur border border-white/15 p-3 flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-secondary/30 flex items-center justify-center text-secondary flex-shrink-0">{f.icon}</div>
-                  <div>
-                    <div className="text-white font-bold text-sm">{f.label}</div>
-                    <div className="text-white/60 text-xs mt-0.5">{f.desc}</div>
+                { icon: Download, title: "Instant Downloads", desc: "PDF, Excel, mobile apps" },
+                { icon: Zap, title: "Subscribe Monthly", desc: "Cancel anytime, no lock-in" },
+                { icon: Lock, title: "Secure Payments", desc: "Mobile Money & cards" },
+                { icon: Globe, title: "Works Offline", desc: "Download once, use anywhere" },
+                { icon: MessageCircle, title: "Expert Support", desc: "Chat & email included" },
+                { icon: TrendingUp, title: "Live Updates", desc: "Data refreshed daily" },
+              ].map((item) => {
+                const IconComp = item.icon;
+                return (
+                  <div
+                    key={item.title}
+                    className="flex gap-3 p-3.5 rounded-xl bg-white/10 backdrop-blur border border-white/20 hover:bg-white/15 transition-all"
+                  >
+                    <IconComp size={18} className="text-emerald-300 flex-shrink-0 mt-0.5" />
+                    <div className="min-w-0">
+                      <div className="font-bold text-white text-xs">{item.title}</div>
+                      <div className="text-emerald-100/70 text-xs mt-0.5">{item.desc}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Category filter bar ── */}
-      <section className="sticky top-0 z-20 bg-background border-b border-border shadow-sm">
-        <div className="container mx-auto px-4">
-          <div className="flex gap-2 overflow-x-auto py-3 scrollbar-none">
+      {/* ── Search + Categories (Sticky) ── */}
+      <section className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border shadow-sm py-4">
+        <div className="container mx-auto px-4 space-y-4">
+          {/* Search */}
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search products, tools, courses…"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+            </div>
+            <Button className="bg-primary text-primary-foreground rounded-xl px-5 font-bold">Search</Button>
+          </div>
+
+          {/* Categories */}
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
             {CATEGORIES.map(cat => (
               <button
                 key={cat}
                 onClick={() => handleCategoryChange(cat)}
-                className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
+                className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-bold border-2 transition-all ${
                   activeCategory === cat
-                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                    : "bg-card text-muted-foreground border-border hover:border-primary/60 hover:text-foreground"
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-muted-foreground border-border hover:border-primary/60"
                 }`}
               >
                 {cat}
@@ -546,29 +506,30 @@ export default function DigitalMarketplaceLandingPage() {
         </div>
       </section>
 
-      {/* ── Product Grid ── */}
-      <section className="py-10 bg-background min-h-[60vh]">
+      {/* ── Products Grid ── */}
+      <section className="py-12 bg-background min-h-[60vh]">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
             <div>
-              <h2 className="text-xl font-extrabold text-foreground">
-                {activeCategory === "All" ? "All Digital Products & Services" : activeCategory}
+              <h2 className="text-3xl font-extrabold text-foreground">
+                {activeCategory === "All" ? "All Digital Products" : activeCategory}
               </h2>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                {filtered.length} {filtered.length === 1 ? "result" : "results"}
-                {search && <> for "<strong>{search}</strong>"</>}
+              <p className="text-muted-foreground mt-1 text-sm">
+                {filtered.length} {filtered.length === 1 ? "product" : "products"}
+                {search && <> matching "<strong>{search}</strong>"</>}
               </p>
             </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <FileText size={13} className="text-primary" />
-              All products from verified Agri2rist partners
-            </div>
+            <Badge className="bg-primary/10 text-primary border-primary/30 text-xs px-3 py-1.5 font-bold">
+              <BadgeCheck size={12} className="mr-1" /> Verified
+            </Badge>
           </div>
 
+          {/* Custom marketplace list */}
           {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+            <div className="space-y-4">
               {filtered.map(p => (
-                <ProductCard
+                <MarketplaceSolution
                   key={p.id}
                   product={p}
                   onAction={(prod, mode) => setPayModal({ product: prod, mode })}
@@ -576,13 +537,17 @@ export default function DigitalMarketplaceLandingPage() {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4">
-                <Search size={28} className="text-muted-foreground" />
+                <Search size={32} className="text-muted-foreground" />
               </div>
-              <h3 className="font-bold text-foreground text-lg">No results found</h3>
-              <p className="text-muted-foreground text-sm mt-1 max-w-xs">Try a different keyword or browse another category.</p>
-              <Button variant="outline" className="mt-4 rounded-xl" onClick={() => { setSearch(""); handleCategoryChange("All"); }}>
+              <h3 className="font-extrabold text-foreground text-lg">No results found</h3>
+              <p className="text-muted-foreground text-sm mt-1 max-w-xs">Try a different search or browse another category.</p>
+              <Button
+                variant="outline"
+                className="mt-5 rounded-xl font-bold"
+                onClick={() => { setSearch(""); handleCategoryChange("All"); }}
+              >
                 Clear filters
               </Button>
             </div>
@@ -590,27 +555,30 @@ export default function DigitalMarketplaceLandingPage() {
         </div>
       </section>
 
-      {/* ── Trust strip ── */}
-      <section className="bg-muted/50 border-t border-border py-8">
+      {/* ── Trust Signals ── */}
+      <section className="bg-muted/40 border-y border-border py-10">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
-              { icon: <Lock size={20}/>,      label:"Secure Payments",     desc:"Mobile Money & Visa/Mastercard" },
-              { icon: <Download size={20}/>,   label:"Instant Delivery",    desc:"Immediate access after payment" },
-              { icon: <BadgeCheck size={20}/>, label:"Verified Products",   desc:"All products reviewed by our team" },
-              { icon: <MessageCircle size={20}/>, label:"Support Included", desc:"Email & chat support on every purchase" },
-            ].map(t=>(
-              <div key={t.label} className="flex flex-col items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">{t.icon}</div>
-                <div className="font-bold text-sm text-foreground">{t.label}</div>
-                <div className="text-xs text-muted-foreground">{t.desc}</div>
-              </div>
-            ))}
+              { icon: Lock, title: "Secure", desc: "PCI-DSS compliant" },
+              { icon: Download, title: "Instant Access", desc: "Immediate delivery" },
+              { icon: BadgeCheck, title: "Quality", desc: "Reviewed products only" },
+              { icon: MessageCircle, title: "Support", desc: "Included with purchase" },
+            ].map((item) => {
+              const IconComp = item.icon;
+              return (
+                <div key={item.title} className="space-y-2">
+                  <IconComp size={24} className="text-primary mx-auto" />
+                  <div className="font-bold text-sm text-foreground">{item.title}</div>
+                  <div className="text-xs text-muted-foreground">{item.desc}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Payment modal */}
+      {/* Payment Modal */}
       <PaymentModal
         open={!!payModal}
         onClose={() => setPayModal(null)}
